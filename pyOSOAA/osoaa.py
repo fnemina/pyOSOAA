@@ -1,7 +1,6 @@
 import numpy as np
 import os
 
-
 class LND(object):
     """ This is a lognormal distribution for the different models. """
 
@@ -70,3 +69,66 @@ class SEA(object):
         self.dir = dir
         self.ind = ind
         self.depth = depth
+
+
+class LOG(object):
+    """ Log files for the simulation.
+    osoaa       The main logfile gives information on the different routines
+                execution (input/output parameters, warnings, error cases, ...)
+    ang         This logfile gives information about the angles computations:
+                Gauss angles used for the phase functions and radiance
+                calculations, solar zenith angle in the air and sea, user’s
+                angles.
+    profile     This logfile gives information about the atmospheric and marine
+                profiles computation.
+    aer         This logfile gives information about the radiative properties
+                computation for aerosols: phase function of each elementary
+                components, mixed-average phase function, truncation
+                calculations, scattering and extinction cross-sections.
+    aermie      This logfile gives the value of matrix phase function
+                (polarized form) versus the size parameter from Mie
+                calculations.
+    hyd         As for aerosols, this logfile gives information about the
+                radiative properties computation for hydrosols.
+    hydmie      As for aerosols, this logfile gives information about the Mie
+                computations for hydrosols.
+    sea         This logfile gives information about the calculation of
+                interface matrices (RAA, RWW, TAW, TWA): Fresnel matrices,
+                probability function of the waves orientation, etc.
+    sos         This logfile gives information about the successive ord
+    """
+    osoaa = "log_osoaa.txt"
+    ang = "log_ang.txt"
+    profile = "log_profile.txt"
+    aer = "log_aer.txt"
+    aermie = "log_aermie.txt"
+    hyd = "log_hyd.txt"
+    hydmie = "log_aermie.txt"
+    sea = "log_sea.txt"
+    sos = "log_sos.txt"
+
+
+class RESULTS(object):
+    """ Result files for the simulation."""
+    profileatm = None
+    profilesea = None
+    aer = None
+    pytho = None
+    mlp = None
+    angrad = None
+    angmie = None
+    sosbin = None
+    vsvza = None
+    advup = "resfile_advup.txt"
+    advdown = "resfile_advdown.txt"
+    vsz = "resfile_vsz.txt"
+    viewvza = "resfile_viewvza.txt"
+
+
+class DIRMIE(object):
+    """ Directory for hydrosol MIE files storage (complete path)
+    aer     aerosols mie storage
+    hid     hidrosols mie storage
+    """
+    hid = None
+    aer = None
