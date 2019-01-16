@@ -349,3 +349,56 @@ class AP(object):
             self.mot = mot
             self.hr = hr
             self.pressure = None
+
+
+class SF(object):
+    """ Shettle and Fenn atmosphere model class."""
+    # Shettle and Fenn models
+    Tropospheric = 1
+    Urban = 2
+    Maritime = 3
+    Coastal = 4
+
+    def __init__(self, model, rh=95):
+        """ Init method for the Shettle-Fenn model.
+            model       atmospheric aerosol model
+            rh          relative humidity"""
+
+        self.model = model
+        self.rh = rh
+
+
+class AER(object):
+    """ This class contains everything related to the aerosol components
+        of the atmosphere."""
+
+    def __init__(self, waref, aotref, tronca, model=2):
+        """ Init method for the aerosol componentes class
+            waref       reference wavelength
+            aotref      aerosol optical thickness at reference wavelength
+            tronca      allow no truncation of the aerosol phase functions
+            model       aerosol model
+                        0 - mono Modal
+                        1 - WMO multimodal
+                        2 - Shettle & Fenn
+                        3 - LogNormal bimodal
+                        4 - external
+            """
+
+        self.waref = waref
+        self.aotref = aotref
+        self.tronca = tronca
+        self.model = model
+
+class HYD(object):
+    """ This class contains everything related to the hydrosol components
+        of the sea."""
+
+    def __init__(self, model=1):
+        """ Init method for the aerosol componentes class
+            model       hydrosol model
+                        1 - From size distribution
+                        2 - External
+            """
+
+            self.model = model
