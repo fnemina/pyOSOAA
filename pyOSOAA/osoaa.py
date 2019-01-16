@@ -390,6 +390,7 @@ class AER(object):
         self.tronca = tronca
         self.model = model
 
+
 class HYD(object):
     """ This class contains everything related to the hydrosol components
         of the sea."""
@@ -402,3 +403,27 @@ class HYD(object):
             """
 
         self.model = model
+
+
+class ANG(object):
+    """ Angle definitions class."""
+
+    class ANGLES(object):
+        """ Angle class to use within object"""
+
+        def __init__(self, nbgauss, userangfile):
+            """ Init of the angles class
+                nbgaus      number of gauss angles
+                userangfile user angle file
+                """
+
+    def __init__(self, radnb, raduser, mienb, mieuser):
+        """ Init the angle class
+            radnb   radiance computation gauss angles
+            raduser radiance user angle file
+            mienb   mie computation gauss angles
+            mieuser mie user angle file
+            """
+
+        self.rad = self.ANGLES(radnb, raduser)
+        self.mie = self.ANGLES(mienb, mieuser)
