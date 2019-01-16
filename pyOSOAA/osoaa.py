@@ -401,4 +401,4 @@ class HYD(object):
                         2 - External
             """
 
-            self.model = model
+        self.model = model
