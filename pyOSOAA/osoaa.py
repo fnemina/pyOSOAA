@@ -427,3 +427,15 @@ class ANG(object):
 
         self.rad = self.ANGLES(radnb, raduser)
         self.mie = self.ANGLES(mienb, mieuser)
+
+
+class SOS(object):
+    """ SOS class definition"""
+
+    def __init__(self, igmax):
+        """ Init method for the SOS class
+            igmax   maximal order of atmospheric and sea scattering and Surface
+                    reflection/transmission
+                    """
+
+        self.igmax = igmax
