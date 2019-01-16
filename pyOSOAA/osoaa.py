@@ -316,4 +316,5 @@ class ABS(object):
             self.swa = None
         elif abs440 > 0:
             self.swa = swa
-        else: raise Exception("Invalid absorption value.")
+        else:
+            raise Exception("Invalid absorption value.")
