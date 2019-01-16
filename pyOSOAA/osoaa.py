@@ -299,3 +299,21 @@ class SED(object):
             """
 
         self.tm = LND(mrwa, miwa, sdradius, sdvar, rate)
+
+
+class ABS(object):
+    """ Absorption class to be used with yellow substance and detritus"""
+
+    def __init__(self, abs440, swa):
+        """ Init function for the absorption class.ABS
+            abs440      Absorption coefficient 1/m
+            swa         spectral variation coefficient
+        """
+
+        self.abs440 = abs440
+
+        if abs440 == 0:
+            self.swa = None
+        elif abs440 > 0:
+            self.swa = swa
+        else: raise Exception("Invalid absorption value.")
