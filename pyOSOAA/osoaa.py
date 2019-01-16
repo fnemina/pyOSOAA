@@ -157,7 +157,7 @@ class PHYTO(object):
     Gaussian = 2
     UserDefined = 3
 
-    def __init__(self, chl):
+    def __init__(self, chl=0):
         """ Init function for the Phytoplanckton profiles
         chl     Phytoplanckton concentration
         """
@@ -245,3 +245,57 @@ class PHYTO(object):
                 self.usefile = userfile
             except FileNotFoundError:
                 print("File {} not found".format(userfile))
+
+
+class SED(object):
+    """ Sediment class"""
+
+    def __init__(self, csed=0):
+        """ Init function for the sediment profiles
+        csed     mineral like particles concentration mg/l
+        """
+
+        self.csed = csed
+        self.jd = None
+        self.sm = None
+        self.tm = None
+
+    def SetPrimaryMode(self, mrwa, miwa, slope, rmin, rmax, rate):
+        """ Sets the primary mode using Junge's law
+            mrwa        Real part of the refractive index at simulation
+                        wavelength
+            miwa        Imaginary part of the refractive index at simulation
+                        wavelength
+            slope       Slope of Junge's law
+            rmin        Minimal radius for Junge's law
+            rmax        Maximal radius for Junge's law
+            rate        Ratio of the mode in the global distribution
+            """
+
+        self.jd = JD(mrwa, miwa, slope, rmin, rmax, rate)
+
+    def SetSecondaryMode(self, mrwa, miwa, sdradius, sdvar, rate):
+        """ Sets the secondary mode using lognormal distribution
+            mrwa        Real part of the refractive index at simulation
+                        wavelength
+            miwa        Imaginary part of the refractive index at simulation
+                        wavelength
+            sdradius    Modal radius of the lognormal distribution
+            sdvar       Standar deviation of the lognormal distribution
+            rate        Ratio of the mode in the global distribution
+            """
+
+        self.sm = LND(mrwa, miwa, sdradius, sdvar, rate)
+
+    def SetTertiaryMode(self, mrwa, miwa, sdradius, sdvar, rate):
+        """ Sets the secondary mode using lognormal distribution
+            mrwa        Real part of the refractive index at simulation
+                        wavelength
+            miwa        Imaginary part of the refractive index at simulation
+                        wavelength
+            sdradius    Modal radius of the lognormal distribution
+            sdvar       Standar deviation of the lognormal distribution
+            rate        Ratio of the mode in the global distribution
+            """
+
+        self.tm = LND(mrwa, miwa, sdradius, sdvar, rate)
