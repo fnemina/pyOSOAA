@@ -439,3 +439,23 @@ class SOS(object):
                     """
 
         self.igmax = igmax
+
+
+class VIEW(object):
+    """ View class for the osoaa object"""
+
+    def __init__(self, phi, level, z=None):
+        """ This method inits the class for certain view conditions
+            phi     Relative azimuth angle for output
+            level   Output level definition
+                    1 - Top of the atmosphere
+                    2 - Sea bottom
+                    3 - Over sea surface 0+
+                    4 - Under sea surface 0-
+                    5 - User defined
+            z       altitude if level =5
+            """
+
+        self.phi = phi
+        self.level = level
+        self.z = z
