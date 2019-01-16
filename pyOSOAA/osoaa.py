@@ -459,3 +459,34 @@ class VIEW(object):
         self.phi = phi
         self.level = level
         self.z = z
+
+class OSOAA(object):
+    """ This class creates the OSOAA objecto which configures and runs the
+        simulation"""
+
+    def __init__(self, wa=0.55, resroot=None):
+        """ This method initiates the OSOAA class
+        wa      wavelength for the computations
+        resroot OSOAA directory
+        """
+
+        self.wa = wa
+        if resroot is None:
+            self.resroot = os.getenv("OSOAA_ROOT")
+        else:
+            self.resroot = resroot
+
+        self.sea = SEA()
+        self.log = LOG()
+        self.results = RESULTS()
+        self.dirmie = DIRMIE()
+        self.phyto = PHYTO()
+        self.sef = SED()
+        self.ys = ABS()
+        self.det = ABS()
+        self.ap = AP()
+        self.aer = AER()
+        self.hyd = HYD()
+        self.ang = ANG()
+        self.sos = SOS()
+        self.view = VIEW()
