@@ -50,7 +50,7 @@ class SEA(object):
     """ This is the SEA class which defines the interfaces at the bottom of the
         ocean and the interface with the air. """
 
-    def __init__(self, surfalb, bottype, botalb, log, wind, dir, ind, depth):
+    def __init__(self, surfalb=0, bottype=0, botalb=0, wind=1, ind=1.3, depth=0):
         """ Init function for the SEA class.
             surfalb     Foam lambertian reflectance for the current wavelength.
             bottype     Type of seabottom for albedo definition.
@@ -65,9 +65,7 @@ class SEA(object):
         self.surfalb = surfalb
         self.bottype = bottype
         self.botalb = botalb
-        self.log = log
         self.wind = wind
-        self.dir = dir
         self.ind = ind
         self.depth = depth
 
@@ -304,7 +302,7 @@ class SED(object):
 class ABS(object):
     """ Absorption class to be used with yellow substance and detritus"""
 
-    def __init__(self, abs440, swa):
+    def __init__(self, abs440, swa=None):
         """ Init function for the absorption class.ABS
             abs440      Absorption coefficient 1/m
             swa         spectral variation coefficient
@@ -372,7 +370,7 @@ class AER(object):
     """ This class contains everything related to the aerosol components
         of the atmosphere."""
 
-    def __init__(self, waref, aotref, tronca, model=2):
+    def __init__(self, waref=0.55, aotref=0.1, tronca=None, model=2):
         """ Init method for the aerosol componentes class
             waref       reference wavelength
             aotref      aerosol optical thickness at reference wavelength
@@ -417,7 +415,10 @@ class ANG(object):
                 userangfile user angle file
                 """
 
-    def __init__(self, radnb, raduser, mienb, mieuser):
+            self.nbgauss = nbgauss
+            self.userangfile = userangfile
+
+    def __init__(self, radnb=None, raduser=None, mienb=None, mieuser=None):
         """ Init the angle class
             radnb   radiance computation gauss angles
             raduser radiance user angle file
@@ -432,7 +433,7 @@ class ANG(object):
 class SOS(object):
     """ SOS class definition"""
 
-    def __init__(self, igmax):
+    def __init__(self, igmax=None):
         """ Init method for the SOS class
             igmax   maximal order of atmospheric and sea scattering and Surface
                     reflection/transmission
@@ -444,7 +445,7 @@ class SOS(object):
 class VIEW(object):
     """ View class for the osoaa object"""
 
-    def __init__(self, phi, level, z=None):
+    def __init__(self, phi=0, level=1, z=None):
         """ This method inits the class for certain view conditions
             phi     Relative azimuth angle for output
             level   Output level definition
@@ -459,6 +460,7 @@ class VIEW(object):
         self.phi = phi
         self.level = level
         self.z = z
+
 
 class OSOAA(object):
     """ This class creates the OSOAA objecto which configures and runs the
@@ -482,8 +484,8 @@ class OSOAA(object):
         self.dirmie = DIRMIE()
         self.phyto = PHYTO()
         self.sef = SED()
-        self.ys = ABS()
-        self.det = ABS()
+        self.ys = ABS(0)
+        self.det = ABS(0)
         self.ap = AP()
         self.aer = AER()
         self.hyd = HYD()
