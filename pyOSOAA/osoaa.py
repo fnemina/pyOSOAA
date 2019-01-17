@@ -736,15 +736,16 @@ class OSOAA(object):
         """
 
         self.wa = wa
+        self.root = os.getenv("OSOAA_ROOT")
         if resroot is None:
-            self.resroot = os.getenv("OSOAA_ROOT")+"/results/"
+            self.resroot = self.root+"/results/"
         else:
             self.resroot = resroot
 
         self.sea = SEA()
         self.log = LOG()
         self.results = RESULTS()
-        self.dirmie = DIRMIE(osoaaroot=os.getenv("OSOAA_ROOT"))
+        self.dirmie = DIRMIE(osoaaroot=self.root)
         self.phyto = PHYTO()
         self.sed = SED()
         self.sef = SED()
@@ -762,8 +763,8 @@ class OSOAA(object):
                                     + string.ascii_lowercase
                                     + string.digits) for _ in range(16))
         resroot = self.resroot+rnd
-        print(resroot)
-        sc = ""
+
+        sc = "{}/exe/OSOAA_MAIN.exe \\".format(self.root)
         #   Definition of the working folder :
         #   ----------------------------------
         sc = sc+"\n"+"-OSOAA.ResRoot {} \\".format(resroot)
@@ -1018,6 +1019,12 @@ class OSOAA(object):
 
         if not os.path.exists(resroot):
             os.makedirs(resroot)
+        if not os.path.exists(self.dirmie.aer):
+            os.makedirs(self.dirmie.aer)
+        if not os.path.exists(self.dirmie.hid):
+            os.makedirs(self.dirmie.hid)
+        if not os.path.exists(self.dirmie.sea):
+            os.makedirs(self.dirmie.sea)
 
-        with open(resroot+"/pepe-script.kzh", 'w') as file:
+        with open(resroot+"/script.kzh", 'w') as file:
             file.write(sc)
