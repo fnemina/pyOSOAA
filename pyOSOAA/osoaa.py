@@ -609,7 +609,7 @@ class AER(object):
     """ This class contains everything related to the aerosol components
         of the atmosphere."""
 
-    def __init__(self, waref=0.0, aotref=0.1, tronca=None, model=2):
+    def __init__(self, waref=0.550, aotref=0.1, tronca=None, model=2):
         """ Init method for the aerosol componentes class
             waref       Wavelength (microns) for reference aerosol optical
                         thickness.
@@ -808,10 +808,11 @@ class OSOAA(object):
                 self.results.advup)
             sc = sc+"\n"+"-OSOAA.ResFile.Adv.Down {} \\".format(
                 self.results.advdown)
-            sc = sc+"\n"+"-OSOAA.View.VZA {} \\".format(self.results.vsz)
-            sc = sc+"\n"+"-OSOAA.ResFile.vsZ  {} \\".format(self.view.vza)
+            sc = sc+"\n"+"-OSOAA.View.VZA {} \\".format(self.view.vza)
+            sc = sc+"\n"+"-OSOAA.ResFile.vsZ  {} \\".format(self.results.vsz)
         if self.results.vsvza is not None:
-            sc = sc+"\n"+"-OSOAA.ResFile.vsVZA {} \\".format(self.results.vsvza)
+            sc = sc+"\n"+"-OSOAA.ResFile.vsVZA {} \\".format(
+                self.results.vsvza)
         #
         if self.log.sos is not None:
             sc = sc+"\n"+"-SOS.Log {} \\".format(self.log.sos)
@@ -831,11 +832,10 @@ class OSOAA(object):
                 self.results.profileatm)
         if self.ap.mot is not None:
             sc = sc+"\n"+"-AP.MOT {} \\".format(self.ap.mot)
-            sc = sc+"\n"+"-AP.HR {} \\".format(self.ap.hr)
+        sc = sc+"\n"+"-AP.HR {} \\".format(self.ap.hr)
         if self.ap.pressure is not None:
             sc = sc+"\n"+"-AP.Pressure {} \\".format(self.ap.pressure)
-        if self.aer.aotref >= 0.0001:
-            sc = sc+"\n"+"-AP.HA {} \\".format(self.ap.ha)
+        sc = sc+"\n"+"-AP.HA {} \\".format(self.ap.ha)
         #
         #     Sea Profile parameters
         if self.results.profilesea is not None:
@@ -874,7 +874,7 @@ class OSOAA(object):
             sc = sc+"\n"+"-AER.MieLog {} \\".format(self.log.aermie)
         sc = sc+"\n"+"-AER.Waref  {} \\".format(self.aer.waref)
         sc = sc+"\n"+"-AER.AOTref {} \\".format(self.aer.aotref)
-        if self.aer.tronca is not 1:
+        if self.aer.tronca is not None:
             sc = sc+"\n"+"-AER.Tronca {} \\".format(self.aer.tronca)
         if self.aer.aotref >= 0.0001:
             sc = sc+"\n"+"-AER.Model {} \\".format(self.aer.model)
@@ -1014,7 +1014,7 @@ class OSOAA(object):
         if self.sea.wind > 0:
             sc = sc+"\n"+"-SEA.Dir {} \\".format(self.dirmie.sea)
             sc = sc+"\n"+"-SEA.Ind {} \\".format(self.sea.ind)
-        sc = sc+"\n"+"-SEA.Wind {} \\".format(self.sea.wind)
+        sc = sc+"\n"+"-SEA.Wind {} ".format(self.sea.wind)
         # Check if directory exists
 
         if not os.path.exists(resroot):
