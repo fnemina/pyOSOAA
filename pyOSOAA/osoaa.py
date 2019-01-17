@@ -946,7 +946,8 @@ class OSOAA(object):
         if self.hyd.model is 1:
             #     Junge main mode :
             if self.phyto.jd is not None:
-                sc = sc+"\n"+"-PHYTO.JD.slope {} \\".format(self.phyto.jd.slope)
+                sc = sc+"\n"+"-PHYTO.JD.slope {} \\".format(
+                    self.phyto.jd.slope)
                 sc = sc+"\n"+"-PHYTO.JD.rmin {} \\".format(self.phyto.jd.rmin)
                 sc = sc+"\n"+"-PHYTO.JD.rmax {} \\".format(self.phyto.jd.rmax)
                 sc = sc+"\n"+"-PHYTO.JD.MRwa {} \\".format(self.phyto.jd.mrwa)
@@ -990,7 +991,8 @@ class OSOAA(object):
             if self.sed.sm is not None:
                 sc = sc+"\n"+"-SED.LND.SM.SDradius {} \\".format(
                     self.sed.sm.sdradius)
-                sc = sc+"\n"+"-SED.LND.SM.SDvar {} \\".format(self.sed.sm.sdvar)
+                sc = sc+"\n"+"-SED.LND.SM.SDvar {} \\".format(
+                    self.sed.sm.sdvar)
                 sc = sc+"\n"+"-SED.LND.SM.MRwa {} \\".format(self.sed.sm.mrwa)
                 sc = sc+"\n"+"-SED.LND.SM.MIwa {} \\".format(self.sed.sm.miwa)
                 sc = sc+"\n"+"-SED.LND.SM.rate {} \\".format(self.sed.sm.rate)
@@ -998,7 +1000,8 @@ class OSOAA(object):
             if self.sed.tm is not None:
                 sc = sc+"\n"+"-SED.LND.TM.SDradius {} \\".format(
                     self.sed.tm.sdradius)
-                sc = sc+"\n"+"-SED.LND.TM.SDvar {} \\".format(self.sed.tm.sdvar)
+                sc = sc+"\n"+"-SED.LND.TM.SDvar {} \\".format(
+                    self.sed.tm.sdvar)
                 sc = sc+"\n"+"-SED.LND.TM.MRwa {} \\".format(self.sed.tm.mrwa)
                 sc = sc+"\n"+"-SED.LND.TM.MIwa {} \\".format(self.sed.tm.miwa)
                 sc = sc+"\n"+"-SED.LND.TM.rate {} \\".format(self.sed.tm.rate)
@@ -1026,5 +1029,9 @@ class OSOAA(object):
         if not os.path.exists(self.dirmie.sea):
             os.makedirs(self.dirmie.sea)
 
+        # We generate the script
         with open(resroot+"/script.kzh", 'w') as file:
             file.write(sc)
+
+        # Run script with ksh
+        os.system("ksh "+resroot+"/script.kzh")
