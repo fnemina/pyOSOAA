@@ -1,6 +1,7 @@
 import numpy as np
 import os
-
+import random
+import string
 
 
 class SEA(object):
@@ -166,16 +167,21 @@ class RESULTS(object):
 
 
 class DIRMIE(object):
-    """ Directory for hydrosol MIE files storage (complete path)
-        aer         Storage directory for MIE files producted by OSOAA_AEROSOLS
-                    computations (complete path).
-        hid         Storage directory for MIE files producted by
-                    HYDROSOLS_AEROSOLS computations (complete path).
-        SEA         Directory for SURFACE files storage (complete path).
+    """ Directory for hydrosol MIE files storage
     """
-    hid = "/DATABASE/MIE_HYD"
-    aer = "/DATABASE/MIE_AER"
-    sea = "/DATABASE/SURF_MATR"
+
+    def __init__(self, resroot, hid="/DATABASE/MIE_HYD",
+                 aer="/DATABASE/MIE_AER", sea="/DATABASE/SURF_MATR"):
+        """Directory for hydrosol MIE files storage (complete path)
+            aer         Storage directory for MIE files producted by
+                        OSOAA_AEROSOLS computations (complete path).
+            hid         Storage directory for MIE files producted by
+                        HYDROSOLS_AEROSOLS computations (complete path).
+            SEA         Directory for SURFACE files storage (complete path).
+            """
+        self.hid = resroot+hid
+        self.aer = resroot+aer
+        self.sea = resroot+sea
 
 
 class GP(object):
@@ -199,7 +205,6 @@ class PHYTO(object):
     Homogeneous = 1
     Gaussian = 2
     UserDefined = 3
-
 
     class JD(object):
         """ This is a Junge distribution for the different models. """
@@ -231,7 +236,6 @@ class PHYTO(object):
             self.rmin = rmin
             self.rmax = rmax
             self.rate = rate
-
 
     class LND(object):
         """ This is a lognormal distribution for the different models. """
@@ -267,11 +271,11 @@ class PHYTO(object):
 
         self.chl = chl
         self.profiltype = self.Homogeneous
-        self.jd = JD()
+        self.jd = self.JD()
         self.sm = None
         self.tm = None
 
-    def SetPrimaryMode(self, self, mrwa=1.05, miwa=-0.0, slope=4.0,
+    def SetPrimaryMode(self, mrwa=1.05, miwa=-0.0, slope=4.0,
                        rmin=0.01, rmax=200, rate=1.0):
         """ Sets the primary mode using Junge's law
                 mrwa        Real part of the refractive index for phytoplankton
@@ -292,7 +296,7 @@ class PHYTO(object):
                             amount of phytoplankton particles.
             """
 
-        self.jd = JD(mrwa, miwa, slope, rmin, rmax, rate)
+        self.jd = self.JD(mrwa, miwa, slope, rmin, rmax, rate)
 
     def SetSecondaryMode(self, mrwa, miwa, sdradius, sdvar, rate):
         """ Sets the secondary mode using lognormal distribution
@@ -312,7 +316,7 @@ class PHYTO(object):
                             amount of phytoplankton particles.
             """
 
-        self.sm = LND(mrwa, miwa, sdradius, sdvar, rate)
+        self.sm = self.LND(mrwa, miwa, sdradius, sdvar, rate)
 
     def SetTertiaryMode(self, mrwa, miwa, sdradius, sdvar, rate):
         """ Sets the secondary mode using lognormal distribution
@@ -332,7 +336,7 @@ class PHYTO(object):
                             amount of phytoplankton particles.
             """
 
-        self.tm = LND(mrwa, miwa, sdradius, sdvar, rate)
+        self.tm = self.LND(mrwa, miwa, sdradius, sdvar, rate)
 
     def SetProfilType(self, profiltype, chlbg, deep, width, userfile):
         """ This method sets the profile type for the Phytoplanckton
@@ -377,7 +381,6 @@ class PHYTO(object):
 class SED(object):
     """ Sediment class"""
 
-
     class JD(object):
         """ This is a Junge distribution for the different models. """
 
@@ -407,7 +410,6 @@ class SED(object):
             self.rmin = rmin
             self.rmax = rmax
             self.rate = rate
-
 
     class LND(object):
         """ This is a lognormal distribution for the different models. """
@@ -467,7 +469,7 @@ class SED(object):
                             amount of mineral-like particles.
             """
 
-        self.jd = JD(mrwa, miwa, slope, rmin, rmax, rate)
+        self.jd = self.JD(mrwa, miwa, slope, rmin, rmax, rate)
 
     def SetSecondaryMode(self, mrwa, miwa, sdradius, sdvar, rate):
         """ Sets the secondary mode using lognormal distribution
@@ -487,7 +489,7 @@ class SED(object):
                             amount of mineral-like particles.
             """
 
-        self.sm = LND(mrwa, miwa, sdradius, sdvar, rate)
+        self.sm = self.LND(mrwa, miwa, sdradius, sdvar, rate)
 
     def SetTertiaryMode(self, mrwa, miwa, sdradius, sdvar, rate):
         """ Sets the secondary mode using lognormal distribution
@@ -507,7 +509,7 @@ class SED(object):
                             amount of mineral-like particles.
             """
 
-        self.tm = LND(mrwa, miwa, sdradius, sdvar, rate)
+        self.tm = self.LND(mrwa, miwa, sdradius, sdvar, rate)
 
 
 class YS(object):
@@ -529,6 +531,7 @@ class YS(object):
         else:
             raise Exception("Invalid absorption value.")
 
+
 class DET(object):
     """ Absorption class to be used with detritus"""
 
@@ -547,6 +550,7 @@ class DET(object):
             self.swa = swa
         else:
             raise Exception("Invalid absorption value.")
+
 
 class AP(object):
     """ Atmospheric profile parameters object."""
@@ -626,6 +630,9 @@ class AER(object):
         self.tronca = tronca
         self.model = model
 
+        if model is 2:
+            self.sf = SF()
+
 
 class HYD(object):
     """ This class contains everything related to the hydrosol components
@@ -675,6 +682,7 @@ class ANG(object):
 
         self.rad = self.ANGLES(radnb, raduser)
         self.mie = self.ANGLES(mienb, mieuser)
+        self.thetas = thetas
 
 
 class SOS(object):
@@ -713,6 +721,7 @@ class VIEW(object):
         self.phi = phi
         self.level = level
         self.z = z
+        self.vza = vza
 
 
 class OSOAA(object):
@@ -728,15 +737,16 @@ class OSOAA(object):
 
         self.wa = wa
         if resroot is None:
-            self.resroot = os.getenv("OSOAA_ROOT")
+            self.resroot = os.getenv("OSOAA_ROOT")+"/results/"
         else:
             self.resroot = resroot
 
         self.sea = SEA()
         self.log = LOG()
         self.results = RESULTS()
-        self.dirmie = DIRMIE()
+        self.dirmie = DIRMIE(resroot=self.resroot)
         self.phyto = PHYTO()
+        self.sed = SED()
         self.sef = SED()
         self.ys = YS()
         self.det = DET()
@@ -748,3 +758,266 @@ class OSOAA(object):
         self.view = VIEW()
 
     def run(self):
+        rnd = ''.join(random.choice(string.ascii_uppercase
+                                    + string.ascii_lowercase
+                                    + string.digits) for _ in range(16))
+        resroot = self.resroot+rnd
+        print(resroot)
+        sc = ""
+        #   Definition of the working folder :
+        #   ----------------------------------
+        sc = sc+"\n"+"-OSOAA.ResRoot {}\\".format(resroot)
+        #
+        #   Angles calculation parameters :
+        #   --------------------------------
+        sc = sc+"\n"+"-ANG.Thetas {}\\".format(self.ang.thetas)
+        if self.ang.rad.nbgauss is not None:
+            sc = sc+"\n"+"-ANG.Rad.NbGauss {}\\".format(self.ang.rad.nbgauss)
+        if self.ang.rad.userangfile is not None:
+            sc = sc+"\n"+"-ANG.Rad.UserAngFile {}\\".format(
+                self.ang.rad.userangfile)
+        if self.results.angrad is not None:
+            sc = sc+"\n"+"-ANG.Rad.ResFile {}\\".format(self.results.angrad)
+        if self.ang.mie.nbgauss is not None:
+            sc = sc+"\n"+"-ANG.Mie.NbGauss {}\\".format(self.ang.mie.nbgauss)
+        if self.ang.mie.userangfile is not None:
+            sc = sc+"\n"+"-ANG.Mie.UserAngFile {}\\".format(
+                self.ang.mie.userangfile)
+        if self.results.angmie is not None:
+            sc = sc+"\n"+"-ANG.Mie.ResFile {}\\".format(self.results.angmie)
+        if self.log.ang is not None:
+            sc = sc+"\n"+"-ANG.Log {}\\".format(self.log.ang)
+        #
+        #   Radiance calculation parameters :
+        #   --------------------------------
+        if self.log.osoaa is not None:
+            sc = sc+"\n"+"-OSOAA.Log {}\\".format(self.log.osoaa)
+        sc = sc+"\n"+"-OSOAA.Wa  {}\\".format(self.wa)
+        #
+        sc = sc+"\n"+"-SEA.SurfAlb {}\\".format(self.sea.surfalb)
+        sc = sc+"\n"+"-SEA.BotType {}\\".format(self.sea.bottype)
+        if self.sea.bottype is 1:
+            sc = sc+"\n"+"-SEA.BotAlb {}\\".format(self.sea.botalb)
+        #
+        sc = sc+"\n"+"-OSOAA.View.Phi {}\\".format(self.view.phi)
+        sc = sc+"\n"+"-OSOAA.View.Level {}\\".format(self.view.level)
+        if self.view.level is 5:
+            sc = sc+"\n"+"-OSOAA.View.Z {}\\".format(self.view.z)
+            sc = sc+"\n"+"-OSOAA.ResFile.Adv.Up {}\\".format(
+                self.results.advup)
+            sc = sc+"\n"+"-OSOAA.ResFile.Adv.Down {}\\".format(
+                self.results.advdown)
+            sc = sc+"\n"+"-OSOAA.View.VZA {}\\".format(self.results.vsz)
+            sc = sc+"\n"+"-OSOAA.ResFile.vsZ  {}\\".format(self.view.vza)
+        if self.results.vsvza is not None:
+            sc = sc+"\n"+"-OSOAA.ResFile.vsVZA {}\\".format(self.results.vsvza)
+        #
+        if self.log.sos is not None:
+            sc = sc+"\n"+"-SOS.Log {}\\".format(self.log.sos)
+        if self.sos.igmax is not None:
+            sc = sc+"\n"+"-SOS.IGmax {}\\".format(self.sos.igmax)
+        if self.results.sosbin is not None:
+            sc = sc+"\n"+"-SOS.ResFile.Bin {}\\".format(self.results.sosbin)
+        #
+        #   Profile parameters :
+        #   -------------------
+        if self.log.profile is not None:
+            sc = sc+"\n"+"-PROFILE.Log {}\\".format(self.log.profile)
+        #
+        #     Atmospheric Profile parameters
+        if self.results.profileatm is not None:
+            sc = sc+"\n"+"-PROFILE_ATM.ResFile {}\\".format(
+                self.results.profileatm)
+        if self.ap.mot is not None:
+            sc = sc+"\n"+"-AP.MOT {}\\".format(self.ap.mot)
+            sc = sc+"\n"+"-AP.HR {}\\".format(self.ap.hr)
+        if self.ap.pressure is not None:
+            sc = sc+"\n"+"-AP.Pressure {}\\".format(self.ap.pressure)
+        if self.aer.aotref >= 0.0001:
+            sc = sc+"\n"+"-AP.HA {}\\".format(self.ap.ha)
+        #
+        #     Sea Profile parameters
+        if self.results.profilesea is not None:
+            sc = sc+"\n"+"-PROFILE_SEA.ResFile {}\\".format(
+                self.results.profilesea)
+        if self.sea.depth is not None:
+            sc = sc+"\n"+"-SEA.Depth {}\\".format(self.sea.depth)
+        sc = sc+"\n"+"-PHYTO.Chl {}\\".format(self.phyto.chl)
+        if self.phyto.chl >= 0:
+            sc = sc+"\n"+"-PHYTO.ProfilType {}\\".format(self.phyto.profiltype)
+        if self.phyto.profiltype == 2:
+            sc = sc+"\n"+"-PHYTO.GP.Chlbg {}\\".format(self.phyto.gp.chlbg)
+            sc = sc+"\n"+"-PHYTO.GP.Deep {}\\".format(self.phyto.gp.deep)
+            sc = sc+"\n"+"-PHYTO.GP.Width {}\\".format(self.phyto.gp.width)
+        if self.phyto.profiltype == 3:
+            sc = sc+"\n"+"-PHYTO.Userfile {}\\".format(self.phyto.usefile)
+        sc = sc+"\n"+"-SED.Csed {}\\".format(self.sed.csed)
+        sc = sc+"\n"+"-YS.Abs440 {}\\".format(self.ys.abs440)
+        if self.ys.abs440 > 0:
+            if self.ys.swa is not None:
+                sc = sc+"\n"+"-YS.Swa {}\\".format(self.ys.swa)
+        sc = sc+"\n"+"-DET.Abs440 {}\\".format(self.det.abs440)
+        if self.det.abs440 > 0:
+            if self.det.swa is not None:
+                sc = sc+"\n"+"-DET.Swa {}\\".format(self.det.swa)
+        #
+        #   Aerosols parameters :
+        #   ---------------------
+        if self.results.aer is not None:
+            sc = sc+"\n"+"-AER.ResFile {}\\".format(self.results.aer)
+        if self.log.aer is not None:
+            sc = sc+"\n"+"-AER.Log {}\\".format(self.log.aer)
+        if self.aer.aotref >= 0.0001:
+            sc = sc+"\n"+"-AER.DirMie  {}\\".format(self.dirmie.aer)
+        if self.log.aermie is not None:
+            sc = sc+"\n"+"-AER.MieLog {}\\".format(self.log.aermie)
+        sc = sc+"\n"+"-AER.Waref  {}\\".format(self.aer.waref)
+        sc = sc+"\n"+"-AER.AOTref {}\\".format(self.aer.aotref)
+        if self.aer.tronca is not 1:
+            sc = sc+"\n"+"-AER.Tronca {}\\".format(self.aer.tronca)
+        if self.aer.aotref >= 0.0001:
+            sc = sc+"\n"+"-AER.Model {}\\".format(self.aer.model)
+        #     Aerosols parameters for mono-modal models :
+        if self.aer.model is 0:
+            raise ValueError('Model {} not supported '.format(self.aer.model))
+            # sc = sc+"\n"+"-AER.MMD.MRwa {}\\".format()
+            # sc = sc+"\n"+"-AER.MMD.MIwa {}\\".format()
+            # sc = sc+"\n"+"-AER.MMD.MRwaref {}\\".format()
+            # sc = sc+"\n"+"-AER.MMD.MIwaref {}\\".format()
+            # sc = sc+"\n"+"-AER.MMD.SDtype {}\\".format()
+            # sc = sc+"\n"+"-AER.MMD.LNDradius {}\\".format()
+            # sc = sc+"\n"+"-AER.MMD.LNDvar {}\\".format()
+            # sc = sc+"\n"+"-AER.MMD.JD.slope {}\\".format()
+            # sc = sc+"\n"+"-AER.MMD.JD.rmin {}\\".format()
+            # sc = sc+"\n"+"-AER.MMD.JD.rmax {}\\".format()
+        #     Aerosols parameters for WMO models :
+        elif self.aer.model is 1:
+            raise ValueError('Model {} not supported '.format(self.aer.model))
+            # sc = sc+"\n"+"-AER.WMO.Model {}\\".format()
+            # sc = sc+"\n"+"-AER.WMO.DL {}\\".format()
+            # sc = sc+"\n"+"-AER.WMO.WS {}\\".format()
+            # sc = sc+"\n"+"-AER.WMO.OC {}\\".format()
+            # sc = sc+"\n"+"-AER.WMO.SO {}\\".format()
+        #     Aerosols parameters for Shettle&Fenn models :
+        elif self.aer.model is 2:
+            sc = sc+"\n"+"-AER.SF.Model {}\\".format(self.aer.sf.model)
+            sc = sc+"\n"+"-AER.SF.RH {}\\".format(self.aer.sf.rh)
+        #     Aerosols parameters for LND bi-modal models :
+        elif self.aer.model is 3:
+            raise ValueError('Model {} not supported '.format(self.aer.model))
+            # sc = sc+"\n"+"-AER.BMD.VCdef {}\\".format()
+            # sc = sc+"\n"+"-AER.BMD.CoarseVC {}\\".format()
+            # sc = sc+"\n"+"-AER.BMD.FineVC {}\\".format()
+            # sc = sc+"\n"+"-AER.BMD.RAOT {}\\".format()
+            # sc = sc+"\n"+"-AER.BMD.CM.MRwa {}\\".format()
+            # sc = sc+"\n"+"-AER.BMD.CM.MIwa {}\\".format()
+            # sc = sc+"\n"+"-AER.BMD.CM.MRwaref {}\\".format()
+            # sc = sc+"\n"+"-AER.BMD.CM.MIwaref {}\\".format()
+            # sc = sc+"\n"+"-AER.BMD.CM.SDradius {}\\".format()
+            # sc = sc+"\n"+"-AER.BMD.CM.SDvar {}\\".format()
+            # sc = sc+"\n"+"-AER.BMD.FM.MRwa {}\\".format()
+            # sc = sc+"\n"+"-AER.BMD.FM.MIwa {}\\".format()
+            # sc = sc+"\n"+"-AER.BMD.FM.MRwaref {}\\".format()
+            # sc = sc+"\n"+"-AER.BMD.FM.MIwaref {}\\".format()
+            # sc = sc+"\n"+"-AER.BMD.FM.SDradius {}\\".format()
+            # sc = sc+"\n"+"-AER.BMD.FM.SDvar {}\\".format()
+        #    Aerosols parameters for external data (phase functions, scattering
+        #    and extinction coefficients) :
+        elif self.aer.model is 4:
+            raise ValueError('Model {} not supported '.format(self.aer.model))
+            # sc = sc+"\n"+"-AER.ExtData {}\\".format()
+        #
+        #   Hydrosols parameters :
+        #   ---------------------
+        if self.results.pytho is not None:
+            sc = sc+"\n"+"-PHYTO.ResFile {}\\".format(self.results.phyto)
+        if self.results.mlp is not None:
+            sc = sc+"\n"+"-MLP.ResFile {}\\".format(self.results.mlp)
+        if self.log.hyd is not None:
+            sc = sc+"\n"+"-HYD.Log {}\\".format(self.log.hyd)
+        if self.phyto.chl > 0 or self.sed.csed > 0:
+            sc = sc+"\n"+"-HYD.DirMie {}\\".format(self.dirmie.hid)
+        if self.log.hydmie is not None:
+            sc = sc+"\n"+"-HYD.MieLog {}\\".format(self.log.hydmie)
+        if self.phyto.chl > 0 or self.sed.csed > 0:
+            sc = sc+"\n"+"-HYD.Model {}\\".format(self.hyd.model)
+        #     Phytoplankton model :
+        if self.hyd.model is 1:
+            #     Junge main mode :
+            if self.phyto.jd is not None:
+                sc = sc+"\n"+"-PHYTO.JD.slope {}\\".format(self.phyto.jd.slope)
+                sc = sc+"\n"+"-PHYTO.JD.rmin {}\\".format(self.phyto.jd.rmin)
+                sc = sc+"\n"+"-PHYTO.JD.rmax {}\\".format(self.phyto.jd.rmax)
+                sc = sc+"\n"+"-PHYTO.JD.MRwa {}\\".format(self.phyto.jd.mrwa)
+                sc = sc+"\n"+"-PHYTO.JD.MIwa {}\\".format(self.phyto.jd.miwa)
+                sc = sc+"\n"+"-PHYTO.JD.rate {}\\".format(self.phyto.jd.rate)
+            #     Secondary LND mode :
+            if self.phyto.sm is not None:
+                sc = sc+"\n"+"-PHYTO.LND.SM.SDradius {}\\".format(
+                    self.phyto.sm.sdradius)
+                sc = sc+"\n"+"-PHYTO.LND.SM.SDvar {}\\".format(
+                    self.phyto.sm.sdvar)
+                sc = sc+"\n"+"-PHYTO.LND.SM.MRwa {}\\".format(
+                    self.phyto.sm.mrwa)
+                sc = sc+"\n"+"-PHYTO.LND.SM.MIwa {}\\".format(
+                    self.phyto.sm.miwa)
+                sc = sc+"\n"+"-PHYTO.LND.SM.rate {}\\".format(
+                    self.phyto.sm.rate)
+            #     Tertiary LND mode :"
+            if self.phyto.tm is not None:
+                sc = sc+"\n"+"-PHYTO.LND.TM.SDradius {}\\".format(
+                    self.phyto.tm.sdradius)
+                sc = sc+"\n"+"-PHYTO.LND.TM.SDvar {}\\".format(
+                    self.phyto.tm.sdvar)
+                sc = sc+"\n"+"-PHYTO.LND.TM.MRwa {}\\".format(
+                    self.phyto.tm.mrwa)
+                sc = sc+"\n"+"-PHYTO.LND.TM.MIwa {}\\".format(
+                    self.phyto.tm.miwa)
+                sc = sc+"\n"+"-PHYTO.LND.TM.rate {}\\".format(
+                    self.phyto.tm.rate)
+        if self.sed.csed > 0.0:
+            #     Mineral-like particles model :
+            #     Junge main mode :
+            if self.sed.jd is not None:
+                sc = sc+"\n"+"-SED.JD.slope {}\\".format(self.sed.jd.slope)
+                sc = sc+"\n"+"-SED.JD.rmin {}\\".format(self.sed.jd.rmin)
+                sc = sc+"\n"+"-SED.JD.rmax {}\\".format(self.sed.jd.rmax)
+                sc = sc+"\n"+"-SED.JD.MRwa {}\\".format(self.sed.jd.mrwa)
+                sc = sc+"\n"+"-SED.JD.MIwa {}\\".format(self.sed.jd.miwa)
+                sc = sc+"\n"+"-SED.JD.rate {}\\".format(self.sed.jd.rate)
+            #     Secondary LND mode :
+            if self.sed.sm is not None:
+                sc = sc+"\n"+"-SED.LND.SM.SDradius {}\\".format(
+                    self.sed.sm.sdradius)
+                sc = sc+"\n"+"-SED.LND.SM.SDvar {}\\".format(self.sed.sm.sdvar)
+                sc = sc+"\n"+"-SED.LND.SM.MRwa {}\\".format(self.sed.sm.mrwa)
+                sc = sc+"\n"+"-SED.LND.SM.MIwa {}\\".format(self.sed.sm.miwa)
+                sc = sc+"\n"+"-SED.LND.SM.rate {}\\".format(self.sed.sm.rate)
+            #     Tertiary LND mode :
+            if self.sed.tm is not None:
+                sc = sc+"\n"+"-SED.LND.TM.SDradius {}\\".format(
+                    self.sed.tm.sdradius)
+                sc = sc+"\n"+"-SED.LND.TM.SDvar {}\\".format(self.sed.tm.sdvar)
+                sc = sc+"\n"+"-SED.LND.TM.MRwa {}\\".format(self.sed.tm.mrwa)
+                sc = sc+"\n"+"-SED.LND.TM.MIwa {}\\".format(self.sed.tm.miwa)
+                sc = sc+"\n"+"-SED.LND.TM.rate {}\\".format(self.sed.tm.rate)
+        #     Hydrosols parameters for external data (phase functions,
+        #     scattering and extinction coefficients) :
+        if self.hyd.model is 2:
+            sc = sc+"\n"+"-HYD.ExtData {}\\".format(self.hyd.extdata)
+        #
+        #   Sea / atmosphere interface parameters :
+        #   --------------------------------------
+        if self.log.sea is not None:
+            sc = sc+"\n"+"-SEA.Log {}\\".format(self.log.sea)
+        if self.sea.wind > 0:
+            sc = sc+"\n"+"-SEA.Dir {}\\".format(self.dirmie.sea)
+            sc = sc+"\n"+"-SEA.Ind {}\\".format(self.sea.ind)
+        sc = sc+"\n"+"-SEA.Wind {}\\".format(self.sea.wind)
+        # Check if directory exists
+
+        if not os.path.exists(resroot):
+            os.makedirs(resroot)
+
+        with open(resroot+"/pepe-script.kzh", 'w') as file:
+            file.write(sc)
