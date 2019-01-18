@@ -2,6 +2,7 @@ import numpy as np
 import os
 import random
 import string
+from io import open
 
 
 class SEA(object):
@@ -738,7 +739,10 @@ class OSOAA(object):
         self.wa = wa
         self.root = os.getenv("OSOAA_ROOT")
         if resroot is None:
-            self.resroot = self.root+"/results/"
+            rnd = ''.join(random.choice(string.ascii_uppercase
+                                        + string.ascii_lowercase
+                                        + string.digits) for _ in range(16))
+            self.resroot = self.root+"/results/"+rnd
         else:
             self.resroot = resroot
 
@@ -759,15 +763,10 @@ class OSOAA(object):
         self.view = VIEW()
 
     def run(self):
-        rnd = ''.join(random.choice(string.ascii_uppercase
-                                    + string.ascii_lowercase
-                                    + string.digits) for _ in range(16))
-        resroot = self.resroot+rnd
-
         sc = "{}/exe/OSOAA_MAIN.exe \\".format(self.root)
         #   Definition of the working folder :
         #   ----------------------------------
-        sc = sc+"\n"+"-OSOAA.ResRoot {} \\".format(resroot)
+        sc = sc+"\n"+"-OSOAA.ResRoot {} \\".format(self.resroot)
         #
         #   Angles calculation parameters :
         #   --------------------------------
@@ -845,7 +844,8 @@ class OSOAA(object):
             sc = sc+"\n"+"-SEA.Depth {} \\".format(self.sea.depth)
         sc = sc+"\n"+"-PHYTO.Chl {} \\".format(self.phyto.chl)
         if self.phyto.chl >= 0:
-            sc = sc+"\n"+"-PHYTO.ProfilType {} \\".format(self.phyto.profiltype)
+            sc = sc+"\n"+"-PHYTO.ProfilType {} \\".format(
+                self.phyto.profiltype)
         if self.phyto.profiltype == 2:
             sc = sc+"\n"+"-PHYTO.GP.Chlbg {} \\".format(self.phyto.gp.chlbg)
             sc = sc+"\n"+"-PHYTO.GP.Deep {} \\".format(self.phyto.gp.deep)
@@ -1020,8 +1020,8 @@ class OSOAA(object):
         sc = sc+"\n"+"-SEA.Wind {} ".format(self.sea.wind)
         # Check if directory exists
 
-        if not os.path.exists(resroot):
-            os.makedirs(resroot)
+        if not os.path.exists(self.resroot):
+            os.makedirs(self.resroot)
         if not os.path.exists(self.dirmie.aer):
             os.makedirs(self.dirmie.aer)
         if not os.path.exists(self.dirmie.hid):
@@ -1030,8 +1030,8 @@ class OSOAA(object):
             os.makedirs(self.dirmie.sea)
 
         # We generate the script
-        with open(resroot+"/script.kzh", 'w') as file:
+        with open(self.resroot+"/script.kzh", 'w') as file:
             file.write(sc)
 
         # Run script with ksh
-        os.system("ksh "+resroot+"/script.kzh")
+        os.system("ksh "+self.resroot+"/script.kzh")
