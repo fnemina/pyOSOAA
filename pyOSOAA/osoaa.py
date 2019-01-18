@@ -788,17 +788,22 @@ class OUTPUTS(object):
             with open(resroot+"/Standard_outputs/"+filename,
                       encoding="iso-8859-15") as file:
                 self.fulltext = file.readlines()
+            # Read variables not tabulated
             self.vzaless = ExtractValue(self.fulltext,
                                         "for VZA < 0 (sign convention):")
             self.vzamore = ExtractValue(self.fulltext,
                                         "for VZA > 0 (sign convention):")
             self.depth = ExtractValue(self.fulltext,
-                                      "Value of the depth selected for the output (m) :")
-            text = ""
-            for line in self.fulltext:
-                text = text + line
-            self.tmp = self.fulltext
-            self.fulltext = text
+                                      "Value of the depth selected for the "
+                                      + "output (m) :")
+
+            # Get header length to skip it
+            skipheader = [idx for idx, text in enumerate(self.fulltext)
+                          if "VZA    SCA_ANG" in text][0]
+            self.vza, self.scaang, self.I, self.refl, self.polrate, self.lpol,\
+            self.reflpol = np.genfromtxt(resroot+"/Standard_outputs/"+filename,
+                                         skip_header=skipheader+1, unpack=True,
+                                         encoding="iso-8859-15")
 
     def __init__(self, resroot):
         self.vsvza = self.VSVZA(resroot=resroot)
