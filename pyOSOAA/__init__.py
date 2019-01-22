@@ -1,2 +1,2 @@
-from . import osoaa
+from .osoaa import *
 from . import constants
