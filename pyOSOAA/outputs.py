@@ -155,7 +155,7 @@ class BIN(object):
                         is I(LEVEL;WAVE_NUMBER)
             Q           Q Stokes parameters Fourier components. The array
                         is Q(LEVEL;WAVE_NUMBER)
-            Q           Q Stokes parameters Fourier components. The array
+            U           U Stokes parameters Fourier components. The array
                         is U(LEVEL;WAVE_NUMBER)
             """
         # We read the fortran binary file
