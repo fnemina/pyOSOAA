@@ -103,7 +103,7 @@ class RESULTS(object):
                     (defined without directory tree ==> this file will be
                     located in the sub-directory Advanced_outputs of the
                     working folder).
-        pytho       Filename of the result OSOAA_HYDROSOLS computations or
+        phyto       Filename of the result OSOAA_HYDROSOLS computations or
                     phytoplankton particles (defined without directory tree ==>
                     this file will be located in the sub-directory
                     Advanced_outputs of the working folder).
@@ -156,7 +156,7 @@ class RESULTS(object):
     profileatm = None
     profilesea = None
     aer = None
-    pytho = None
+    phyto = None
     mlp = None
     angrad = None
     angmie = None
@@ -930,7 +930,7 @@ class OSOAA(object):
         #
         #   Hydrosols parameters :
         #   ---------------------
-        if self.results.pytho is not None:
+        if self.results.phyto is not None:
             sc = sc+"\n"+"-PHYTO.ResFile {} \\".format(self.results.phyto)
         if self.results.mlp is not None:
             sc = sc+"\n"+"-MLP.ResFile {} \\".format(self.results.mlp)

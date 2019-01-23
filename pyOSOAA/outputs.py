@@ -312,6 +312,109 @@ class PROFILE_ATM(object):
                                    encoding="iso-8859-15")
 
 
+class PM(object):
+    """ Files containing the radiative properties of Aerosols, chlorophyll or
+        Mineral-Like particles
+        """
+
+    def __init__(self, resroot, filename):
+        """ First thirteen header lines provide comments and formatted data on
+            the extinction and scattering cross-sections (in μm 2 ), the
+            asymmetry factor, the volume of the equivalent mean particle
+            (in μm 3 ), the real part of the mean refractive index, the phase
+            function truncation coefficient and the single scattering albedo
+            (adjusted to the truncation).
+
+            The following lines contain the phase matrix coefficients of the
+            development of the Legendre Polynomials of the phase matrix for
+            each order k ranging from k= 0 up to the maximum order of
+            computations (OS_NB).
+
+            resroot     OSOAA results root directory.
+            filename    Filename to look for the results.
+            fulltext    Full file text.
+            extcs       Extinction cross section (mic^2)
+            scacs       Scattering cross section (mic^2)
+            asymm       Asymmetry factor (no truncation)
+            mpd         Mean particules altitude/depth (m)
+            vol         Volume of the mean particule (mic^3)
+            rindex      Mean refractive index (real part)
+            trunca      Truncation coefficient
+            singlesca   Single scattering albedo (truncation)
+
+            alpha       the coefficient alpha Related to the polarized phase
+                        functions
+            beta        the coefficient beta Related to the polarized phase
+                        functions
+            gamma       the coefficient gamma Related to the polarized phase
+                        functions
+            xi          the coefficient xi Related to the polarized phase
+                        functions
+
+            These coefficients are adjusted to a phase function truncation if
+            applied.
+            """
+        # We open the file with the corresponding encoding and convert it
+        # to a text string.
+        with open(resroot+"/Advanced_outputs/"+filename,
+                  encoding="iso-8859-15") as file:
+            self.fulltext = file.readlines()
+        # Read variables not tabulated
+        self.extcs = ExtractValue(self.fulltext,
+                                    "EXTINCTION CROSS SECTION (mic^2)     :")
+        self.scacs = ExtractValue(self.fulltext,
+                                    "SCATTERING CROSS SECTION (mic^2)     :")
+        self.asymm = ExtractValue(self.fulltext,
+                                    "ASYMMETRY FACTOR (no truncation)     :")
+        self.mpd = ExtractValue(self.fulltext,
+                                    "MEAN PARTICULES ALTITUDE/DEPTH (m)   :")
+        self.vol = ExtractValue(self.fulltext,
+                                    "VOLUME OF A MEAN PARTICULE (mic^3)   :")
+        self.rindex = ExtractValue(self.fulltext,
+                                    "MEAN REFRACTIVE INDEX (real part)    :")
+        self.trunca = ExtractValue(self.fulltext,
+                                    "TRUNCATION COEFFICIENT               :")
+        self.singlesca = ExtractValue(self.fulltext,
+                                    "SINGLE SCATTERING ALBEDO (truncation): ")
+
+        # Get header length to skip it
+        skipheader = [idx for idx, text in enumerate(self.fulltext)
+                      if "ALPHA(K)        BETA11(K)" in text][0]
+        self.alpha, self.beta, self.gamma, self.xi = np.genfromtxt(resroot+"/Advanced_outputs/"+filename,
+                                                                   skip_header=skipheader+1, unpack=True,
+                                                                   encoding="iso-8859-15")
+
+
+class FLUX(object):
+    """ 'Flux.txt' file containing the profile of downward and upward fluxes
+        from TOA to the sea bottom, normalised to the solar irradiance at TOA.
+        """
+
+    def __init__(self, resroot, filename="Flux.txt"):
+        """ First five header lines provide comments.
+            The following lines contain the values of fluxes.
+            For each line, this file provides:
+            levels      The level number (or index) k
+            z           The altitude/depth of level k (in m): positive value in
+                        the atmosphere, negative value in the sea
+            Eddir       The direct downward flux
+            Eddif       The diffuse downward flux
+            Ed          The total downward flux (Ed)
+            Eudir       The direct upward flux
+            Eudif       The diffuse upward flux
+            Eu          The total upward flux (Eu)
+            ratio       The ratio Eu/Ed: total upward flux / total downward
+                        flux
+            The fluxes are normalised to the solar irradiance at TOA (no unit).
+            """
+        # Get header length to skip it
+        skipheader = 4
+        self.level, self.z, self.Eddir, self.Eddif, self.Ed, self.Eudir,\
+        self.Eudif, self.Eu, self.ratio = np.genfromtxt(resroot+"/Advanced_outputs/"+filename,
+                                                        skip_header=skipheader+1, unpack=True,
+                                                        encoding="iso-8859-15")
+
+
 class OUTPUTS(object):
     """ This class contains the standard and advanced outputs generated by the
         OSOAA software"""
@@ -342,5 +445,22 @@ class OUTPUTS(object):
             self.profileatm = PROFILE_ATM(resroot)
         else:
             self.profileatm = PROFILE_ATM(resroot, filenames.profileatm)
+
+        if filenames.aer is None:
+            self.aer = PM(resroot, filename="PM_AER.txt")
+        else:
+            self.aer = PM(resroot, filenames.aer)
+
+        if filenames.phyto is None:
+            self.phyto = PM(resroot, filename="PM_PHYTO.txt")
+        else:
+            self.phyto = PM(resroot, filenames.phyto)
+
+        if filenames.mlp is None:
+            self.mlp = PM(resroot, filename="PM_MLP.txt")
+        else:
+            self.mlp = PM(resroot, filenames.mlp)
+
+        self.flux = FLUX(resroot)
 
         self.bin = BIN(resroot)
