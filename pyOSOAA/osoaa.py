@@ -1270,3 +1270,19 @@ class OSOAA(object):
 
         # read OUTPUTS
         self.outputs = OUTPUTS(self.resroot, self.results)
+
+
+def test():
+    s = OSOAA()
+    s.run()
+    print("OSOAA wrapper script by Francisco Nemiña")
+    print("Inspired by Py6S wrapper by Robin Wilson")
+    print("Using OSOAA located at {}".format(s.root))
+    print("Running OSOAA using a set of test parameters")
+    print("The results are:")
+    print("Expected result: 0.128266")
+    print("Actual result: {}".format(s.outputs.vsvza.I[51]))
+    if (s.outputs.vsvza.I[51] == 0.128266):
+        print("#### Results agree, PyOSOAA is working correctly")
+    if (s.outputs.vsvza.I[51] != 0.128266):
+        print("#### Results do not agree, PyOSOAA is not working correctly")
