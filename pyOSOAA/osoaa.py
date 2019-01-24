@@ -727,7 +727,7 @@ class AEROSOLMODELS(object):
                             calculation for the fine mode
                 """
 
-            self.sdtype = vcdef
+            self.vcdef = vcdef
             if vcdef is 1:
                 self.coarsevc = None
                 self.finevc = None
@@ -747,6 +747,7 @@ class AEROSOLMODELS(object):
             self.fmiwaref = None
             self.fsdradius = None
             self.fsdvar = None
+
 
 class AER(object):
     """ This class contains everything related to the aerosol components
@@ -854,7 +855,7 @@ class AER(object):
             self.mm = None
             self.wmo = None
             self.sf = None
-            self.lnd = AEROSOLMODELS.LNB(vcdef)
+            self.lnb = AEROSOLMODELS.LNB(vcdef)
             self.external = None
         elif model is 4:
             self.mm = None
@@ -1109,53 +1110,55 @@ class OSOAA(object):
             sc = sc+"\n"+"-AER.Model {} \\".format(self.aer.model)
         #     Aerosols parameters for mono-modal models :
         if self.aer.model is 0:
-            raise ValueError('Model {} not supported '.format(self.aer.model))
-            # sc = sc+"\n"+"-AER.MMD.MRwa {} \\".format()
-            # sc = sc+"\n"+"-AER.MMD.MIwa {} \\".format()
-            # sc = sc+"\n"+"-AER.MMD.MRwaref {} \\".format()
-            # sc = sc+"\n"+"-AER.MMD.MIwaref {} \\".format()
-            # sc = sc+"\n"+"-AER.MMD.SDtype {} \\".format()
-            # sc = sc+"\n"+"-AER.MMD.LNDradius {} \\".format()
-            # sc = sc+"\n"+"-AER.MMD.LNDvar {} \\".format()
-            # sc = sc+"\n"+"-AER.MMD.JD.slope {} \\".format()
-            # sc = sc+"\n"+"-AER.MMD.JD.rmin {} \\".format()
-            # sc = sc+"\n"+"-AER.MMD.JD.rmax {} \\".format()
+            sc = sc+"\n"+"-AER.MMD.MRwa {} \\".format(self.aer.mm.mrwa)
+            sc = sc+"\n"+"-AER.MMD.MIwa {} \\".format(self.aer.mm.miwa)
+            if self.wa is not self.aer.waref:
+                sc = sc+"\n"+"-AER.MMD.MRwaref {} \\".format(self.aer.mm.mrwaref)
+                sc = sc+"\n"+"-AER.MMD.MIwaref {} \\".format(self.aer.mm.miwaref)
+            sc = sc+"\n"+"-AER.MMD.SDtype {} \\".format(self.aer.mm.sdtype)
+            if self.aer.mm.sdtype is 1:
+                sc = sc+"\n"+"-AER.MMD.LNDradius {} \\".format(self.aer.mm.sdradius)
+                sc = sc+"\n"+"-AER.MMD.LNDvar {} \\".format(self.aer.mm.sdvar)
+            elif self.aer.mm.sdtype is 2:
+                sc = sc+"\n"+"-AER.MMD.JD.slope {} \\".format(self.aer.mm.slope)
+                sc = sc+"\n"+"-AER.MMD.JD.rmin {} \\".format(self.aer.mm.rmin)
+                sc = sc+"\n"+"-AER.MMD.JD.rmax {} \\".format(self.aer.mm.rmax)
         #     Aerosols parameters for WMO models :
         elif self.aer.model is 1:
-            raise ValueError('Model {} not supported '.format(self.aer.model))
-            # sc = sc+"\n"+"-AER.WMO.Model {} \\".format()
-            # sc = sc+"\n"+"-AER.WMO.DL {} \\".format()
-            # sc = sc+"\n"+"-AER.WMO.WS {} \\".format()
-            # sc = sc+"\n"+"-AER.WMO.OC {} \\".format()
-            # sc = sc+"\n"+"-AER.WMO.SO {} \\".format()
+            sc = sc+"\n"+"-AER.WMO.Model {} \\".format(self.aer.wmo.model)
+            if self.aer.wmo.model is 4:
+                sc = sc+"\n"+"-AER.WMO.DL {} \\".format(self.aer.wmo.dl)
+                sc = sc+"\n"+"-AER.WMO.WS {} \\".format(self.aer.wmo.ws)
+                sc = sc+"\n"+"-AER.WMO.OC {} \\".format(self.aer.wmo.oc)
+                sc = sc+"\n"+"-AER.WMO.SO {} \\".format(self.aer.wmo.so)
         #     Aerosols parameters for Shettle&Fenn models :
         elif self.aer.model is 2:
             sc = sc+"\n"+"-AER.SF.Model {} \\".format(self.aer.sf.model)
             sc = sc+"\n"+"-AER.SF.RH {} \\".format(self.aer.sf.rh)
         #     Aerosols parameters for LND bi-modal models :
         elif self.aer.model is 3:
-            raise ValueError('Model {} not supported '.format(self.aer.model))
-            # sc = sc+"\n"+"-AER.BMD.VCdef {} \\".format()
-            # sc = sc+"\n"+"-AER.BMD.CoarseVC {} \\".format()
-            # sc = sc+"\n"+"-AER.BMD.FineVC {} \\".format()
-            # sc = sc+"\n"+"-AER.BMD.RAOT {} \\".format()
-            # sc = sc+"\n"+"-AER.BMD.CM.MRwa {} \\".format()
-            # sc = sc+"\n"+"-AER.BMD.CM.MIwa {} \\".format()
-            # sc = sc+"\n"+"-AER.BMD.CM.MRwaref {} \\".format()
-            # sc = sc+"\n"+"-AER.BMD.CM.MIwaref {} \\".format()
-            # sc = sc+"\n"+"-AER.BMD.CM.SDradius {} \\".format()
-            # sc = sc+"\n"+"-AER.BMD.CM.SDvar {} \\".format()
-            # sc = sc+"\n"+"-AER.BMD.FM.MRwa {} \\".format()
-            # sc = sc+"\n"+"-AER.BMD.FM.MIwa {} \\".format()
-            # sc = sc+"\n"+"-AER.BMD.FM.MRwaref {} \\".format()
-            # sc = sc+"\n"+"-AER.BMD.FM.MIwaref {} \\".format()
-            # sc = sc+"\n"+"-AER.BMD.FM.SDradius {} \\".format()
-            # sc = sc+"\n"+"-AER.BMD.FM.SDvar {} \\".format()
+            sc = sc+"\n"+"-AER.BMD.VCdef {} \\".format(self.aer.lnb.vcdef)
+            if self.aer.lnb.vcdef is 1:
+                sc = sc+"\n"+"-AER.BMD.CoarseVC {} \\".format(self.aer.lnb.coarsevc)
+                sc = sc+"\n"+"-AER.BMD.FineVC {} \\".format(se.aer.lnb.finevc)
+            elif self.aer.lnb.vcdef is 2:
+                sc = sc+"\n"+"-AER.BMD.RAOT {} \\".format(self.aer.lnb.raot)
+            sc = sc+"\n"+"-AER.BMD.CM.MRwa {} \\".format(self.aer.lnb.cmrwa)
+            sc = sc+"\n"+"-AER.BMD.CM.MIwa {} \\".format(self.aer.lnb.cmiwa)
+            sc = sc+"\n"+"-AER.BMD.CM.MRwaref {} \\".format(self.aer.lnb.cmrwaref)
+            sc = sc+"\n"+"-AER.BMD.CM.MIwaref {} \\".format(self.aer.lnb.cmiwaref)
+            sc = sc+"\n"+"-AER.BMD.CM.SDradius {} \\".format(self.aer.lnb.csdradius)
+            sc = sc+"\n"+"-AER.BMD.CM.SDvar {} \\".format(self.aer.lnb.csdvar)
+            sc = sc+"\n"+"-AER.BMD.FM.MRwa {} \\".format(self.aer.lnb.fmrwa)
+            sc = sc+"\n"+"-AER.BMD.FM.MIwa {} \\".format(self.aer.lnb.fmiwa)
+            sc = sc+"\n"+"-AER.BMD.FM.MRwaref {} \\".format(self.aer.lnb.fmrwaref)
+            sc = sc+"\n"+"-AER.BMD.FM.MIwaref {} \\".format(self.aer.lnb.fmiwaref)
+            sc = sc+"\n"+"-AER.BMD.FM.SDradius {} \\".format(self.aer.lnb.fsdradius)
+            sc = sc+"\n"+"-AER.BMD.FM.SDvar {} \\".format(self.aer.lnb.fsdvar)
         #    Aerosols parameters for external data (phase functions, scattering
         #    and extinction coefficients) :
         elif self.aer.model is 4:
-            raise ValueError('Model {} not supported '.format(self.aer.model))
-            # sc = sc+"\n"+"-AER.ExtData {} \\".format()
+            sc = sc+"\n"+"-AER.ExtData {} \\".format(self.aer.extdata)
         #
         #   Hydrosols parameters :
         #   ---------------------
