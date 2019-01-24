@@ -595,7 +595,7 @@ class AEROSOLMODELS(object):
         Maritime = 3
         Coastal = 4
 
-        def __init__(self, model=3, rh=98):
+        def __init__(self, sfmodel, rh):
             """ Init method for the Shettle-Fenn model.
                 model       Type of Shettle & Fenn model.
                                 1 : Tropospheric S&F model.
@@ -604,8 +604,79 @@ class AEROSOLMODELS(object):
                                 4 : Coastal S&F model.
                 rh          Relative humidity (%) for Shettle & Fenn model.
                 """
-            self.model = model
+            self.model = sfmodel
             self.rh = rh
+
+    class MM(object):
+        """ Mono-modal size distribution"""
+
+        def __init__(self, sdtype):
+            """ Init method for the mono-modal size distribution
+                sdtype      Type of mono-modal size distribution
+                                1 : Log Normal size distribution
+                                2 : Junge's law
+                lnd         Log normal size distribution
+                jd          Junge's law size distribution
+                mrwa        Real part of the aerosol refractive index for the
+                            wavelength of radiation calculation
+                miwa        Imaginary part of the aerosol refractive index for
+                            the  wavelength of radiation calculation
+                sdradius    Modal radius (um) of the Log-Noprmal size
+                            distribution
+                sdvar       Standard deviation of the Log-Normal size
+                            distribution
+                slope       Slope of the Junge's law.
+                            Warning: 3 is a singular value.
+                rmin        Minimal radius of Junge's law (um)
+                rmax        Maximal radius of Junge's law (um)
+                mrwaref     Real part of the aerosol refractive index for the
+                            reference wavelength of aerosol properties
+                            calculation.
+                miwaref     Imaginary part of the aerosol refractive index for
+                            the reference wavelength of aerosol properties
+                            calculation.
+                """
+
+            self.sdtype = sdtype
+            self.mrwa = None
+            self.miwa = None
+            self.mrwaref = None
+            self.miwaref = None
+            if sdtype is 1:
+                self.sdradius = None
+                self.sdvar = None
+            elif sdtype is 2:
+                self.slope = None
+                self.rmin = None
+                self.rmax = None
+
+    class WMO(object):
+        """ WMO aerosol models."""
+
+        def __init__(self, wmotype, dl=None, ws=None, oc=None, so=None):
+            """ Init method for the WMO aerosol model
+                wmotype     Type of WMO model
+                                1 : Continental WMO model
+                                2 : Maritime WMO model
+                                3 : Urban WMO model
+                                4 : WMO model by usef definition
+                dl          Volume concentration (between 0 and 1) for
+                            "Dust like" components
+                ws          Volume concentration (between 0 and 1) for
+                            "Water soluble" components
+                oc          Volume concentration (between 0 and 1) for
+                            "Oceanic" components
+                so          Volume concentration (between 0 and 1) for
+                            "Soot" components
+                """
+
+            self.model = wmotype
+
+            if wmotype is 4:
+                self.dl = dl
+                self.ws = ws
+                self.oc = oc
+                self.so = so
 
 
 class AER(object):
@@ -626,38 +697,73 @@ class AER(object):
                             2 : Shettle & Fenn bi-modal
                             3 : Log-Normal bi-modal
                             4 : Phase function from an external source
-            mm          Mono-modal model parameters
-            sf          Shettle and Fenn model parameters
-            wmo         WMO model parameters
-            lnd         Log-Normal bi-modal model parameters
-            external    External phase function
             """
 
         self.waref = waref
         self.aotref = aotref
         self.tronca = tronca
         self.model = model
-        self.sf = AEROSOLMODELS.SF()
+        self.sf = AEROSOLMODELS.SF(sfmodel=3, rh=98)
 
-    def SetModel(self, model=2):
-        """ This methods sets the model for the AER class."""
+    def SetModel(self, model=2,
+                 sdtype=1,
+                 sfmodel=3, rh=98,
+                 wmotype=1, dl=None, ws=None, oc=None, so=None):
+        """ This methods sets the model for the AER class.
+            Mono-modal distribution parameters
+            ----------------------------------
+            mm          Mono-modal model atribute
+            sdtype      Type of mono-modal size distribution
+                            1 : Log Normal size distribution
+                            2 : Junge's law
+
+            WMO model parameters
+            -------------------
+            wmo         WMO model atribute
+            wmotype     Type of WMO model
+                            1 : Continental WMO model
+                            2 : Maritime WMO model
+                            3 : Urban WMO model
+                            4 : WMO model by usef definition
+            dl          Volume concentration (between 0 and 1) for
+                        "Dust like" components
+            ws          Volume concentration (between 0 and 1) for
+                        "Water soluble" components
+            oc          Volume concentration (between 0 and 1) for
+                        "Oceanic" components
+            so          Volume concentration (between 0 and 1) for
+                        "Soot" components
+
+            Shettle and Fenn model parameters
+            ---------------------------------
+            sf          Shettle and Fenn model atribute
+            sfmodel       Type of Shettle & Fenn model.
+                            1 : Tropospheric S&F model.
+                            2 : Urban S&F model.
+                            3 : Maritime S&F model.
+                            4 : Coastal S&F model.
+            rh          Relative humidity (%) for Shettle & Fenn model.
+
+            lnd         Log-Normal bi-modal model atribute
+            external    External phase function
+        """
         self.model = model
         if model is 0:
-            self.mm = None
+            self.mm = AEROSOLMODELS.MM(sdtype)
             self.sf = None
             self.wmo = None
             self.lnd = None
             self.external = None
         elif model is 1:
             self.mm = None
+            self.wmo = AEROSOLMODELS.WMO(wmotype, dl, ws, oc, so)
             self.sf = None
-            self.wmo = None
             self.lnd = None
             self.external = None
         elif model is 2:
             self.mm = None
-            self.sf = AEROSOLMODELS.SF()
             self.wmo = None
+            self.sf = AEROSOLMODELS.SF(sfmodel, rh)
             self.lnd = None
             self.external = None
         elif model is 3:
