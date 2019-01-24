@@ -11,7 +11,9 @@ The OSOAA code simulates:
 - **Hydrosol models**: For phytoplankton and mineral-like particles including scattering and absorving properties.
 - **Sea surface interface**: Both for a flat surface or by a roughsurface using Cox and Munk model.
 
-The `pyOSOAA` interface aims to incorporate the creation of run scripts and parsing of output results for the OSOAA model. It also incorporates helpers to perform common task like calculating the radiance for a certain band instead of a wavelength or runnig the model for multiple wavelengths.
+The `pyOSOAA` interface aims to incorporate the creation of run scripts and parsing of output results for the OSOAA model. It also incorporates helpers to perform common task like calculating the radiance for a certain band instead of a wavelength or runnig the model for multiple wavelengths. 
+
+This code was inspired by [py6S](https://github.com/robintw/Py6S) by Robin Wilson.
 
 
 
