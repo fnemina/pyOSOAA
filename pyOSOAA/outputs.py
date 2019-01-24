@@ -1,4 +1,5 @@
 import numpy as np
+import os
 from scipy.io import FortranFile
 
 
@@ -70,9 +71,6 @@ class VSVZA(object):
                                     "for VZA < 0 (sign convention):")
         self.vzamore = ExtractValue(self.fulltext,
                                     "for VZA > 0 (sign convention):")
-        self.depth = ExtractValue(self.fulltext,
-                                  "Value of the depth selected for the "
-                                  + "output (m) :")
 
         # Get header length to skip it
         skipheader = [idx for idx, text in enumerate(self.fulltext)
@@ -424,17 +422,19 @@ class OUTPUTS(object):
             resroot     Results root Directory
             filenames   Object with all filenames
             """
+        if os.file.exists(resroot+"Standard_outputs"+filenames.vsvza):
+            self.vsvza = VSVZA(resroot, filenames.vsvza)
+        if os.file.exists(resroot+"Standard_outputs"+filenames.vsz):
+            if filenames.vsz is not None:
+                self.vsz = VSZ(resroot, filenames.vsz)
 
-        self.vsvza = VSVZA(resroot, filenames.vsvza)
+        if os.file.exists(resroot+"Advanced_outputs"+filenames.advup):
+            if filenames.advup is not None:
+                self.advup = ADVUPDOWN(resroot, filenames.advup)
 
-        if filenames.vsz is not None:
-            self.vsz = VSZ(resroot, filenames.vsz)
-
-        if filenames.advup is not None:
-            self.advup = ADVUPDOWN(resroot, filenames.advup)
-
-        if filenames.advdown is not None:
-            self.advdown = ADVUPDOWN(resroot, filenames.advdown)
+        if os.file.exists(resroot+"Advanced_outputs"+filenames.advdown):
+            if filenames.advdown is not None:
+                self.advdown = ADVUPDOWN(resroot, filenames.advdown)
 
         if filenames.profilesea is None:
             self.profilesea = PROFILE_SEA(resroot)
