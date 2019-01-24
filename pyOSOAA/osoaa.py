@@ -585,25 +585,168 @@ class AP(object):
             self.pressure = None
 
 
-class SF(object):
-    """ Shettle and Fenn atmosphere model class."""
-    # Shettle and Fenn models
-    Tropospheric = 1
-    Urban = 2
-    Maritime = 3
-    Coastal = 4
+class AEROSOLMODELS(object):
+    """ Aerosol models for the AER class."""
+    class SF(object):
+        """ Shettle and Fenn atmosphere model class."""
+        # Shettle and Fenn models
+        Tropospheric = 1
+        Urban = 2
+        Maritime = 3
+        Coastal = 4
 
-    def __init__(self, model=3, rh=98):
-        """ Init method for the Shettle-Fenn model.
-            model       Type of Shettle & Fenn model.
-                            1 : Tropospheric S&F model.
-                            2 : Urban S&F model.
-                            3 : Maritime S&F model.
-                            4 : Coastal S&F model.
-            rh          Relative humidity (%) for Shettle & Fenn model.
-            """
-        self.model = model
-        self.rh = rh
+        def __init__(self, sfmodel, rh):
+            """ Init method for the Shettle-Fenn model.
+                model       Type of Shettle & Fenn model.
+                                1 : Tropospheric S&F model.
+                                2 : Urban S&F model.
+                                3 : Maritime S&F model.
+                                4 : Coastal S&F model.
+                rh          Relative humidity (%) for Shettle & Fenn model.
+                """
+            self.model = sfmodel
+            self.rh = rh
+
+    class MM(object):
+        """ Mono-modal size distribution"""
+
+        def __init__(self, sdtype):
+            """ Init method for the mono-modal size distribution
+                sdtype      Type of mono-modal size distribution
+                                1 : Log Normal size distribution
+                                2 : Junge's law
+                lnd         Log normal size distribution
+                jd          Junge's law size distribution
+                mrwa        Real part of the aerosol refractive index for the
+                            wavelength of radiation calculation
+                miwa        Imaginary part of the aerosol refractive index for
+                            the  wavelength of radiation calculation
+                sdradius    Modal radius (um) of the Log-Noprmal size
+                            distribution
+                sdvar       Standard deviation of the Log-Normal size
+                            distribution
+                slope       Slope of the Junge's law.
+                            Warning: 3 is a singular value.
+                rmin        Minimal radius of Junge's law (um)
+                rmax        Maximal radius of Junge's law (um)
+                mrwaref     Real part of the aerosol refractive index for the
+                            reference wavelength of aerosol properties
+                            calculation.
+                miwaref     Imaginary part of the aerosol refractive index for
+                            the reference wavelength of aerosol properties
+                            calculation.
+                """
+
+            self.sdtype = sdtype
+            self.mrwa = None
+            self.miwa = None
+            self.mrwaref = None
+            self.miwaref = None
+            if sdtype is 1:
+                self.sdradius = None
+                self.sdvar = None
+            elif sdtype is 2:
+                self.slope = None
+                self.rmin = None
+                self.rmax = None
+
+    class WMO(object):
+        """ WMO aerosol models."""
+
+        def __init__(self, wmotype, dl=None, ws=None, oc=None, so=None):
+            """ Init method for the WMO aerosol model
+                wmotype     Type of WMO model
+                                1 : Continental WMO model
+                                2 : Maritime WMO model
+                                3 : Urban WMO model
+                                4 : WMO model by usef definition
+                dl          Volume concentration (between 0 and 1) for
+                            "Dust like" components
+                ws          Volume concentration (between 0 and 1) for
+                            "Water soluble" components
+                oc          Volume concentration (between 0 and 1) for
+                            "Oceanic" components
+                so          Volume concentration (between 0 and 1) for
+                            "Soot" components
+                """
+
+            self.model = wmotype
+
+            if wmotype is 4:
+                self.dl = dl
+                self.ws = ws
+                self.oc = oc
+                self.so = so
+
+    class LNB(object):
+        """ Log-normal bi-modal aerosol model"""
+
+        def __init__(self, vcdef):
+            """ Log-normal bi-modal aerosol model init functions
+                vcdef       Choide of the mixture description type
+                                1 : Use of predefined volume concentrations.
+                                2 : Use of the ratio of aerosol optical
+                                    thickness (coarse mode ATO / total AOT)
+                coarsevc    User volume concentration of the LND coarse mode
+                finevc      User volume concentration of the LND fine mode
+                raot        User value of the ration AOT_coarse/AOT_total for
+                            the aerosol reference wavelength
+
+                cmrwa       Real part of the aerosol refractive index for the
+                            wavelength of radiation calculation for the coarse
+                            mode
+                cmiwa       Imaginary part of the aerosol refractive index for
+                            the  wavelength of radiation calculationfor the
+                            coarse mode
+                csdradius   Modal radius (um) of the Log-Noprmal size
+                            distribution for the coarse mode
+                csdvar      Standard deviation of the Log-Normal size
+                            distribution for the coarse mode
+                cmrwaref    Real part of the aerosol refractive index for the
+                            reference wavelength of aerosol properties
+                            calculation for the coarse mode
+                cmiwaref    Imaginary part of the aerosol refractive index for
+                            the reference wavelength of aerosol properties
+                            calculation for the coarse mode
+
+                fmrwa       Real part of the aerosol refractive index for the
+                            wavelength of radiation calculation for the fine
+                            mode
+                fmiwa       Imaginary part of the aerosol refractive index for
+                            the  wavelength of radiation calculationfor the
+                            fine mode
+                fsdradius   Modal radius (um) of the Log-Noprmal size
+                            distribution for the fine mode
+                fsdvar      Standard deviation of the Log-Normal size
+                            distribution for the fine mode
+                fmrwaref    Real part of the aerosol refractive index for the
+                            reference wavelength of aerosol properties
+                            calculation for the fine mode
+                fmiwaref    Imaginary part of the aerosol refractive index for
+                            the reference wavelength of aerosol properties
+                            calculation for the fine mode
+                """
+
+            self.vcdef = vcdef
+            if vcdef is 1:
+                self.coarsevc = None
+                self.finevc = None
+            elif vcdef is 2:
+                self.raot = None
+
+            self.cmrwa = None
+            self.cmiwa = None
+            self.cmrwaref = None
+            self.cmiwaref = None
+            self.csdradius = None
+            self.csdvar = None
+
+            self.fmrwa = None
+            self.fmiwa = None
+            self.fmrwaref = None
+            self.fmiwaref = None
+            self.fsdradius = None
+            self.fsdvar = None
 
 
 class AER(object):
@@ -630,9 +773,96 @@ class AER(object):
         self.aotref = aotref
         self.tronca = tronca
         self.model = model
+        self.sf = AEROSOLMODELS.SF(sfmodel=3, rh=98)
 
-        if model is 2:
-            self.sf = SF()
+    def SetModel(self, model=2,
+                 sdtype=1,
+                 sfmodel=3, rh=98,
+                 wmotype=1, dl=None, ws=None, oc=None, so=None,
+                 vcdef=2,
+                 extdata=""):
+        """ This methods sets the model for the AER class.
+            Mono-modal distribution parameters
+            ----------------------------------
+            mm          Mono-modal model atribute
+            sdtype      Type of mono-modal size distribution
+                            1 : Log Normal size distribution
+                            2 : Junge's law
+
+            WMO model parameters
+            -------------------
+            wmo         WMO model atribute
+            wmotype     Type of WMO model
+                            1 : Continental WMO model
+                            2 : Maritime WMO model
+                            3 : Urban WMO model
+                            4 : WMO model by usef definition
+            dl          Volume concentration (between 0 and 1) for
+                        "Dust like" components
+            ws          Volume concentration (between 0 and 1) for
+                        "Water soluble" components
+            oc          Volume concentration (between 0 and 1) for
+                        "Oceanic" components
+            so          Volume concentration (between 0 and 1) for
+                        "Soot" components
+
+            Shettle and Fenn model parameters
+            ---------------------------------
+            sf          Shettle and Fenn model atribute
+            sfmodel       Type of Shettle & Fenn model.
+                            1 : Tropospheric S&F model.
+                            2 : Urban S&F model.
+                            3 : Maritime S&F model.
+                            4 : Coastal S&F model.
+            rh          Relative humidity (%) for Shettle & Fenn model.
+
+            Log-Normal bi-modal model parameters
+            ------------------------------------
+            lnd         Log-Normal bi-modal model atribute
+            vcdef       Choide of the mixture description type
+                            1 : Use of predefined volume concentrations.
+                            2 : Use of the ratio of aerosol optical
+                                thickness (coarse mode ATO / total AOT)
+
+            External phase function
+            -----------------------
+            extdata     Filename (complete path) of user's external phase
+                        function data and radiative parameters (extinction and
+                        scattering coefficients).
+                        The reference aerosol wavelength and the radiance
+                        simulation wavelength must be equal
+        """
+        self.model = model
+        if model is 0:
+            self.mm = AEROSOLMODELS.MM(sdtype)
+            self.wmo = None
+            self.sf = None
+            self.lnd = None
+            self.external = None
+        elif model is 1:
+            self.mm = None
+            self.wmo = AEROSOLMODELS.WMO(wmotype, dl, ws, oc, so)
+            self.sf = None
+            self.lnd = None
+            self.external = None
+        elif model is 2:
+            self.mm = None
+            self.wmo = None
+            self.sf = AEROSOLMODELS.SF(sfmodel, rh)
+            self.lnd = None
+            self.external = None
+        elif model is 3:
+            self.mm = None
+            self.wmo = None
+            self.sf = None
+            self.lnb = AEROSOLMODELS.LNB(vcdef)
+            self.external = None
+        elif model is 4:
+            self.mm = None
+            self.sf = None
+            self.wmo = None
+            self.lnd = None
+            self.extdata = extdata
 
 
 class HYD(object):
@@ -880,53 +1110,55 @@ class OSOAA(object):
             sc = sc+"\n"+"-AER.Model {} \\".format(self.aer.model)
         #     Aerosols parameters for mono-modal models :
         if self.aer.model is 0:
-            raise ValueError('Model {} not supported '.format(self.aer.model))
-            # sc = sc+"\n"+"-AER.MMD.MRwa {} \\".format()
-            # sc = sc+"\n"+"-AER.MMD.MIwa {} \\".format()
-            # sc = sc+"\n"+"-AER.MMD.MRwaref {} \\".format()
-            # sc = sc+"\n"+"-AER.MMD.MIwaref {} \\".format()
-            # sc = sc+"\n"+"-AER.MMD.SDtype {} \\".format()
-            # sc = sc+"\n"+"-AER.MMD.LNDradius {} \\".format()
-            # sc = sc+"\n"+"-AER.MMD.LNDvar {} \\".format()
-            # sc = sc+"\n"+"-AER.MMD.JD.slope {} \\".format()
-            # sc = sc+"\n"+"-AER.MMD.JD.rmin {} \\".format()
-            # sc = sc+"\n"+"-AER.MMD.JD.rmax {} \\".format()
+            sc = sc+"\n"+"-AER.MMD.MRwa {} \\".format(self.aer.mm.mrwa)
+            sc = sc+"\n"+"-AER.MMD.MIwa {} \\".format(self.aer.mm.miwa)
+            if self.wa is not self.aer.waref:
+                sc = sc+"\n"+"-AER.MMD.MRwaref {} \\".format(self.aer.mm.mrwaref)
+                sc = sc+"\n"+"-AER.MMD.MIwaref {} \\".format(self.aer.mm.miwaref)
+            sc = sc+"\n"+"-AER.MMD.SDtype {} \\".format(self.aer.mm.sdtype)
+            if self.aer.mm.sdtype is 1:
+                sc = sc+"\n"+"-AER.MMD.LNDradius {} \\".format(self.aer.mm.sdradius)
+                sc = sc+"\n"+"-AER.MMD.LNDvar {} \\".format(self.aer.mm.sdvar)
+            elif self.aer.mm.sdtype is 2:
+                sc = sc+"\n"+"-AER.MMD.JD.slope {} \\".format(self.aer.mm.slope)
+                sc = sc+"\n"+"-AER.MMD.JD.rmin {} \\".format(self.aer.mm.rmin)
+                sc = sc+"\n"+"-AER.MMD.JD.rmax {} \\".format(self.aer.mm.rmax)
         #     Aerosols parameters for WMO models :
         elif self.aer.model is 1:
-            raise ValueError('Model {} not supported '.format(self.aer.model))
-            # sc = sc+"\n"+"-AER.WMO.Model {} \\".format()
-            # sc = sc+"\n"+"-AER.WMO.DL {} \\".format()
-            # sc = sc+"\n"+"-AER.WMO.WS {} \\".format()
-            # sc = sc+"\n"+"-AER.WMO.OC {} \\".format()
-            # sc = sc+"\n"+"-AER.WMO.SO {} \\".format()
+            sc = sc+"\n"+"-AER.WMO.Model {} \\".format(self.aer.wmo.model)
+            if self.aer.wmo.model is 4:
+                sc = sc+"\n"+"-AER.WMO.DL {} \\".format(self.aer.wmo.dl)
+                sc = sc+"\n"+"-AER.WMO.WS {} \\".format(self.aer.wmo.ws)
+                sc = sc+"\n"+"-AER.WMO.OC {} \\".format(self.aer.wmo.oc)
+                sc = sc+"\n"+"-AER.WMO.SO {} \\".format(self.aer.wmo.so)
         #     Aerosols parameters for Shettle&Fenn models :
         elif self.aer.model is 2:
             sc = sc+"\n"+"-AER.SF.Model {} \\".format(self.aer.sf.model)
             sc = sc+"\n"+"-AER.SF.RH {} \\".format(self.aer.sf.rh)
         #     Aerosols parameters for LND bi-modal models :
         elif self.aer.model is 3:
-            raise ValueError('Model {} not supported '.format(self.aer.model))
-            # sc = sc+"\n"+"-AER.BMD.VCdef {} \\".format()
-            # sc = sc+"\n"+"-AER.BMD.CoarseVC {} \\".format()
-            # sc = sc+"\n"+"-AER.BMD.FineVC {} \\".format()
-            # sc = sc+"\n"+"-AER.BMD.RAOT {} \\".format()
-            # sc = sc+"\n"+"-AER.BMD.CM.MRwa {} \\".format()
-            # sc = sc+"\n"+"-AER.BMD.CM.MIwa {} \\".format()
-            # sc = sc+"\n"+"-AER.BMD.CM.MRwaref {} \\".format()
-            # sc = sc+"\n"+"-AER.BMD.CM.MIwaref {} \\".format()
-            # sc = sc+"\n"+"-AER.BMD.CM.SDradius {} \\".format()
-            # sc = sc+"\n"+"-AER.BMD.CM.SDvar {} \\".format()
-            # sc = sc+"\n"+"-AER.BMD.FM.MRwa {} \\".format()
-            # sc = sc+"\n"+"-AER.BMD.FM.MIwa {} \\".format()
-            # sc = sc+"\n"+"-AER.BMD.FM.MRwaref {} \\".format()
-            # sc = sc+"\n"+"-AER.BMD.FM.MIwaref {} \\".format()
-            # sc = sc+"\n"+"-AER.BMD.FM.SDradius {} \\".format()
-            # sc = sc+"\n"+"-AER.BMD.FM.SDvar {} \\".format()
+            sc = sc+"\n"+"-AER.BMD.VCdef {} \\".format(self.aer.lnb.vcdef)
+            if self.aer.lnb.vcdef is 1:
+                sc = sc+"\n"+"-AER.BMD.CoarseVC {} \\".format(self.aer.lnb.coarsevc)
+                sc = sc+"\n"+"-AER.BMD.FineVC {} \\".format(se.aer.lnb.finevc)
+            elif self.aer.lnb.vcdef is 2:
+                sc = sc+"\n"+"-AER.BMD.RAOT {} \\".format(self.aer.lnb.raot)
+            sc = sc+"\n"+"-AER.BMD.CM.MRwa {} \\".format(self.aer.lnb.cmrwa)
+            sc = sc+"\n"+"-AER.BMD.CM.MIwa {} \\".format(self.aer.lnb.cmiwa)
+            sc = sc+"\n"+"-AER.BMD.CM.MRwaref {} \\".format(self.aer.lnb.cmrwaref)
+            sc = sc+"\n"+"-AER.BMD.CM.MIwaref {} \\".format(self.aer.lnb.cmiwaref)
+            sc = sc+"\n"+"-AER.BMD.CM.SDradius {} \\".format(self.aer.lnb.csdradius)
+            sc = sc+"\n"+"-AER.BMD.CM.SDvar {} \\".format(self.aer.lnb.csdvar)
+            sc = sc+"\n"+"-AER.BMD.FM.MRwa {} \\".format(self.aer.lnb.fmrwa)
+            sc = sc+"\n"+"-AER.BMD.FM.MIwa {} \\".format(self.aer.lnb.fmiwa)
+            sc = sc+"\n"+"-AER.BMD.FM.MRwaref {} \\".format(self.aer.lnb.fmrwaref)
+            sc = sc+"\n"+"-AER.BMD.FM.MIwaref {} \\".format(self.aer.lnb.fmiwaref)
+            sc = sc+"\n"+"-AER.BMD.FM.SDradius {} \\".format(self.aer.lnb.fsdradius)
+            sc = sc+"\n"+"-AER.BMD.FM.SDvar {} \\".format(self.aer.lnb.fsdvar)
         #    Aerosols parameters for external data (phase functions, scattering
         #    and extinction coefficients) :
         elif self.aer.model is 4:
-            raise ValueError('Model {} not supported '.format(self.aer.model))
-            # sc = sc+"\n"+"-AER.ExtData {} \\".format()
+            sc = sc+"\n"+"-AER.ExtData {} \\".format(self.aer.extdata)
         #
         #   Hydrosols parameters :
         #   ---------------------
