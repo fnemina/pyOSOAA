@@ -573,7 +573,7 @@ class AP(object):
     def SetPressure(self, pressure=1013.25):
         """ Define the molecular optical thickness with pressure
             pressure    atmospheric pressure at sea level (mbar)"""
-        self.mOT = None
+        self.mot = None
         self.pressure = pressure
 
     def SetMot(self, mot=0.1, hr=8):
@@ -1105,7 +1105,7 @@ class OSOAA(object):
             sc = sc+"\n"+"-AER.ResFile {} \\".format(self.results.aer)
         if self.log.aer is not None:
             sc = sc+"\n"+"-AER.Log {} \\".format(self.log.aer)
-        if self.aer.aotref >= 0.0001:
+        if self.aer.aotref >= 0.0:
             sc = sc+"\n"+"-AER.DirMie  {} \\".format(self.dirmie.aer)
         if self.log.aermie is not None:
             sc = sc+"\n"+"-AER.MieLog {} \\".format(self.log.aermie)
