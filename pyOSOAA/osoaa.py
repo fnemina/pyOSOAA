@@ -996,6 +996,7 @@ class OSOAA(object):
         """ Run OSOAA. If no root directory is given for OSOAA the one
             configured by the system is used.
             """
+
         if root is not None:
             self.root = root
 
