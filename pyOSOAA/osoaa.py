@@ -585,25 +585,27 @@ class AP(object):
             self.pressure = None
 
 
-class SF(object):
-    """ Shettle and Fenn atmosphere model class."""
-    # Shettle and Fenn models
-    Tropospheric = 1
-    Urban = 2
-    Maritime = 3
-    Coastal = 4
+class AEROSOLMODELS(object):
+    """ Aerosol models for the AER class."""
+    class SF(object):
+        """ Shettle and Fenn atmosphere model class."""
+        # Shettle and Fenn models
+        Tropospheric = 1
+        Urban = 2
+        Maritime = 3
+        Coastal = 4
 
-    def __init__(self, model=3, rh=98):
-        """ Init method for the Shettle-Fenn model.
-            model       Type of Shettle & Fenn model.
-                            1 : Tropospheric S&F model.
-                            2 : Urban S&F model.
-                            3 : Maritime S&F model.
-                            4 : Coastal S&F model.
-            rh          Relative humidity (%) for Shettle & Fenn model.
-            """
-        self.model = model
-        self.rh = rh
+        def __init__(self, model=3, rh=98):
+            """ Init method for the Shettle-Fenn model.
+                model       Type of Shettle & Fenn model.
+                                1 : Tropospheric S&F model.
+                                2 : Urban S&F model.
+                                3 : Maritime S&F model.
+                                4 : Coastal S&F model.
+                rh          Relative humidity (%) for Shettle & Fenn model.
+                """
+            self.model = model
+            self.rh = rh
 
 
 class AER(object):
@@ -624,15 +626,52 @@ class AER(object):
                             2 : Shettle & Fenn bi-modal
                             3 : Log-Normal bi-modal
                             4 : Phase function from an external source
+            mm          Mono-modal model parameters
+            sf          Shettle and Fenn model parameters
+            wmo         WMO model parameters
+            lnd         Log-Normal bi-modal model parameters
+            external    External phase function
             """
 
         self.waref = waref
         self.aotref = aotref
         self.tronca = tronca
         self.model = model
+        self.sf = AEROSOLMODELS.SF()
 
-        if model is 2:
-            self.sf = SF()
+    def SetModel(self, model=2):
+        """ This methods sets the model for the AER class."""
+        self.model = model
+        if model is 0:
+            self.mm = None
+            self.sf = None
+            self.wmo = None
+            self.lnd = None
+            self.external = None
+        elif model is 1:
+            self.mm = None
+            self.sf = None
+            self.wmo = None
+            self.lnd = None
+            self.external = None
+        elif model is 2:
+            self.mm = None
+            self.sf = AEROSOLMODELS.SF()
+            self.wmo = None
+            self.lnd = None
+            self.external = None
+        elif model is 3:
+            self.mm = None
+            self.sf = None
+            self.wmo = None
+            self.lnd = None
+            self.external = None
+        elif model is 4:
+            self.mm = None
+            self.sf = None
+            self.wmo = None
+            self.lnd = None
+            self.external = None
 
 
 class HYD(object):
