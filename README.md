@@ -16,4 +16,36 @@ The `pyOSOAA` interface aims to incorporate the creation of run scripts and pars
 This code was inspired by [py6S](https://github.com/robintw/Py6S) by Robin Wilson.
 
 
+## Installation
 
+The installation of the `pyOSOAA` has two parts.
+
+First you need to install the OSOAA software package from https://github.com/CNES/RadiativeTransferCode-OSOAA.
+
+Second you need to download the last version of the `pyOSOAA` from [github](https://github.com/fnemina/pyOSOAA/releases/latest).
+
+Once downloaded decompress it, go to the folder containing the code and run
+
+```
+python setup.py install
+```
+
+To then check that software installed correctly
+
+```
+# Load pyOSOAA module
+import pyOSOAA
+# Run the test suite
+pyOSOAA.test()
+```
+the following output should appear at the end of the screen
+```
+OSOAA wrapper script by Francisco Nemiña
+Inspired by Py6S wrapper by Robin Wilson
+Using OSOAA located at /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5
+Running OSOAA using a set of test parameters
+The results are:
+Expected result: 0.128266
+Actual result: 0.128266
+#### Results agree, PyOSOAA is working correctly
+```
