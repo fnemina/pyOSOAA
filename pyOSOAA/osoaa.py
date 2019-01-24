@@ -678,6 +678,75 @@ class AEROSOLMODELS(object):
                 self.oc = oc
                 self.so = so
 
+    class LNB(object):
+        """ Log-normal bi-modal aerosol model"""
+
+        def __init__(self, vcdef):
+            """ Log-normal bi-modal aerosol model init functions
+                vcdef       Choide of the mixture description type
+                                1 : Use of predefined volume concentrations.
+                                2 : Use of the ratio of aerosol optical
+                                    thickness (coarse mode ATO / total AOT)
+                coarsevc    User volume concentration of the LND coarse mode
+                finevc      User volume concentration of the LND fine mode
+                raot        User value of the ration AOT_coarse/AOT_total for
+                            the aerosol reference wavelength
+
+                cmrwa       Real part of the aerosol refractive index for the
+                            wavelength of radiation calculation for the coarse
+                            mode
+                cmiwa       Imaginary part of the aerosol refractive index for
+                            the  wavelength of radiation calculationfor the
+                            coarse mode
+                csdradius   Modal radius (um) of the Log-Noprmal size
+                            distribution for the coarse mode
+                csdvar      Standard deviation of the Log-Normal size
+                            distribution for the coarse mode
+                cmrwaref    Real part of the aerosol refractive index for the
+                            reference wavelength of aerosol properties
+                            calculation for the coarse mode
+                cmiwaref    Imaginary part of the aerosol refractive index for
+                            the reference wavelength of aerosol properties
+                            calculation for the coarse mode
+
+                fmrwa       Real part of the aerosol refractive index for the
+                            wavelength of radiation calculation for the fine
+                            mode
+                fmiwa       Imaginary part of the aerosol refractive index for
+                            the  wavelength of radiation calculationfor the
+                            fine mode
+                fsdradius   Modal radius (um) of the Log-Noprmal size
+                            distribution for the fine mode
+                fsdvar      Standard deviation of the Log-Normal size
+                            distribution for the fine mode
+                fmrwaref    Real part of the aerosol refractive index for the
+                            reference wavelength of aerosol properties
+                            calculation for the fine mode
+                fmiwaref    Imaginary part of the aerosol refractive index for
+                            the reference wavelength of aerosol properties
+                            calculation for the fine mode
+                """
+
+            self.sdtype = vcdef
+            if vcdef is 1:
+                self.coarsevc = None
+                self.finevc = None
+            elif vcdef is 2:
+                self.raot = None
+
+            self.cmrwa = None
+            self.cmiwa = None
+            self.cmrwaref = None
+            self.cmiwaref = None
+            self.csdradius = None
+            self.csdvar = None
+
+            self.fmrwa = None
+            self.fmiwa = None
+            self.fmrwaref = None
+            self.fmiwaref = None
+            self.fsdradius = None
+            self.fsdvar = None
 
 class AER(object):
     """ This class contains everything related to the aerosol components
@@ -708,7 +777,9 @@ class AER(object):
     def SetModel(self, model=2,
                  sdtype=1,
                  sfmodel=3, rh=98,
-                 wmotype=1, dl=None, ws=None, oc=None, so=None):
+                 wmotype=1, dl=None, ws=None, oc=None, so=None,
+                 vcdef=2,
+                 extdata=""):
         """ This methods sets the model for the AER class.
             Mono-modal distribution parameters
             ----------------------------------
@@ -744,14 +815,27 @@ class AER(object):
                             4 : Coastal S&F model.
             rh          Relative humidity (%) for Shettle & Fenn model.
 
+            Log-Normal bi-modal model parameters
+            ------------------------------------
             lnd         Log-Normal bi-modal model atribute
-            external    External phase function
+            vcdef       Choide of the mixture description type
+                            1 : Use of predefined volume concentrations.
+                            2 : Use of the ratio of aerosol optical
+                                thickness (coarse mode ATO / total AOT)
+
+            External phase function
+            -----------------------
+            extdata     Filename (complete path) of user's external phase
+                        function data and radiative parameters (extinction and
+                        scattering coefficients).
+                        The reference aerosol wavelength and the radiance
+                        simulation wavelength must be equal
         """
         self.model = model
         if model is 0:
             self.mm = AEROSOLMODELS.MM(sdtype)
-            self.sf = None
             self.wmo = None
+            self.sf = None
             self.lnd = None
             self.external = None
         elif model is 1:
@@ -768,16 +852,16 @@ class AER(object):
             self.external = None
         elif model is 3:
             self.mm = None
-            self.sf = None
             self.wmo = None
-            self.lnd = None
+            self.sf = None
+            self.lnd = AEROSOLMODELS.LNB(vcdef)
             self.external = None
         elif model is 4:
             self.mm = None
             self.sf = None
             self.wmo = None
             self.lnd = None
-            self.external = None
+            self.extdata = extdata
 
 
 class HYD(object):
