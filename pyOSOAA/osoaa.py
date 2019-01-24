@@ -570,19 +570,19 @@ class AP(object):
         self.hr = hr
         self.ha = ha
 
-        def SetPressure(self, pressure=1013.25):
-            """ Define the molecular optical thickness with pressure
-                pressure    atmospheric pressure at sea level (mbar)"""
-            self.mOT = None
-            self.pressure = pressure
+    def SetPressure(self, pressure=1013.25):
+        """ Define the molecular optical thickness with pressure
+            pressure    atmospheric pressure at sea level (mbar)"""
+        self.mOT = None
+        self.pressure = pressure
 
-        def SetMot(self, mot=0.1, hr=8):
-            """ Define the molecular optical thickness
-                mot         molecular optical thicknes
-                hr          height scale for molecules (km)"""
-            self.mot = mot
-            self.hr = hr
-            self.pressure = None
+    def SetMot(self, mot=0.1, hr=8):
+        """ Define the molecular optical thickness
+            mot         molecular optical thicknes
+            hr          height scale for molecules (km)"""
+        self.mot = mot
+        self.hr = hr
+        self.pressure = None
 
 
 class AEROSOLMODELS(object):
