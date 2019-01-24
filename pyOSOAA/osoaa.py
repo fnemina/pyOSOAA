@@ -992,7 +992,13 @@ class OSOAA(object):
         self.sos = SOS()
         self.view = VIEW()
 
-    def run(self):
+    def run(self, root=None):
+        """ Run OSOAA. If no root directory is given for OSOAA the one
+            configured by the system is used.
+            """
+        if root is not None:
+            self.root = root
+
         sc = "{}/exe/OSOAA_MAIN.exe \\".format(self.root)
         #   Definition of the working folder :
         #   ----------------------------------
