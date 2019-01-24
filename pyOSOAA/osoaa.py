@@ -1113,7 +1113,7 @@ class OSOAA(object):
         sc = sc+"\n"+"-AER.AOTref {} \\".format(self.aer.aotref)
         if self.aer.tronca is not None:
             sc = sc+"\n"+"-AER.Tronca {} \\".format(self.aer.tronca)
-        if self.aer.aotref >= 0.0001:
+        if self.aer.aotref > 0.0:
             sc = sc+"\n"+"-AER.Model {} \\".format(self.aer.model)
         #     Aerosols parameters for mono-modal models :
         if self.aer.model is 0:
