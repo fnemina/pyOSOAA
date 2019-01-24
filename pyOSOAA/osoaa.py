@@ -1140,7 +1140,7 @@ class OSOAA(object):
             sc = sc+"\n"+"-AER.BMD.VCdef {} \\".format(self.aer.lnb.vcdef)
             if self.aer.lnb.vcdef is 1:
                 sc = sc+"\n"+"-AER.BMD.CoarseVC {} \\".format(self.aer.lnb.coarsevc)
-                sc = sc+"\n"+"-AER.BMD.FineVC {} \\".format(se.aer.lnb.finevc)
+                sc = sc+"\n"+"-AER.BMD.FineVC {} \\".format(self.aer.lnb.finevc)
             elif self.aer.lnb.vcdef is 2:
                 sc = sc+"\n"+"-AER.BMD.RAOT {} \\".format(self.aer.lnb.raot)
             sc = sc+"\n"+"-AER.BMD.CM.MRwa {} \\".format(self.aer.lnb.cmrwa)
