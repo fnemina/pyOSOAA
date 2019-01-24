@@ -422,17 +422,17 @@ class OUTPUTS(object):
             resroot     Results root Directory
             filenames   Object with all filenames
             """
-        if os.file.exists(resroot+"Standard_outputs"+filenames.vsvza):
+        if os.Path.exists(resroot+"Standard_outputs"+filenames.vsvza):
             self.vsvza = VSVZA(resroot, filenames.vsvza)
-        if os.file.exists(resroot+"Standard_outputs"+filenames.vsz):
+        if os.Path.exists(resroot+"Standard_outputs"+filenames.vsz):
             if filenames.vsz is not None:
                 self.vsz = VSZ(resroot, filenames.vsz)
 
-        if os.file.exists(resroot+"Advanced_outputs"+filenames.advup):
+        if os.Path.exists(resroot+"Advanced_outputs"+filenames.advup):
             if filenames.advup is not None:
                 self.advup = ADVUPDOWN(resroot, filenames.advup)
 
-        if os.file.exists(resroot+"Advanced_outputs"+filenames.advdown):
+        if os.Path.exists(resroot+"Advanced_outputs"+filenames.advdown):
             if filenames.advdown is not None:
                 self.advdown = ADVUPDOWN(resroot, filenames.advdown)
 
