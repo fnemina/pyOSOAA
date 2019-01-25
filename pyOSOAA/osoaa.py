@@ -84,7 +84,7 @@ class LOG(object):
     aer = "log_aer.txt"
     aermie = "log_aermie.txt"
     hyd = "log_hyd.txt"
-    hydmie = "log_aermie.txt"
+    hydmie = "log_hydmie.txt"
     sea = "log_sea.txt"
     sos = "log_sos.txt"
 
