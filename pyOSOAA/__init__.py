@@ -1,3 +1,3 @@
 from .osoaa import *
-from . import osoaahelpers as OSOAAHelpers
+from . import osoaahelpers
 from . import constants
