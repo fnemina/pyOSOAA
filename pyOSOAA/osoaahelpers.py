@@ -34,7 +34,10 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I"):
 
     values = np.array([])
 
-    for wl in wavelengths:
+    if angle.type is int or angle.type is float:
+        angle = np.zeros(np.size(wavelengths))+angle
+
+    for idx, wl in np.ndenumerate(wavelengths):
         # We set the wavelength and run the simulation
         s.wa = wl
         s.run()
@@ -42,6 +45,6 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I"):
         results = vars(s.outputs.vsvza)
         # We interpolte the values and add it to a numpy array
         f = interp1d(results['vza'], results[output])
-        values = np.append(values, f(angle))
+        values = np.append(values, f(angle[idx[0]]))
 
     return values
