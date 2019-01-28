@@ -34,7 +34,7 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I"):
 
     values = np.array([])
 
-    if angle.type is int or angle.type is float:
+    if type(angle) is int or type(angle) is float:
         angle = np.zeros(np.size(wavelengths))+angle
 
     for idx, wl in np.ndenumerate(wavelengths):
