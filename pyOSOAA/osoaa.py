@@ -339,7 +339,9 @@ class PHYTO(object):
 
         self.tm = self.LND(mrwa, miwa, sdradius, sdvar, rate)
 
-    def SetProfilType(self, profiltype, chlbg, deep, width, userfile):
+    def SetProfilType(self, profiltype,
+                      chlbg=None, deep=None, width=None,
+                      userfile=None):
         """ This method sets the profile type for the Phytoplanckton
             distribution. This also configures the parameters for each
             profile type
