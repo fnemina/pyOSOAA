@@ -180,7 +180,7 @@ class DIRMIE(object):
                         HYDROSOLS_AEROSOLS computations (complete path).
             SEA         Directory for SURFACE files storage (complete path).
             """
-        self.hid = osoaaroot+hid
+        self.hyd = osoaaroot+hid
         self.aer = osoaaroot+aer
         self.sea = osoaaroot+sea
 
@@ -1176,7 +1176,7 @@ class OSOAA(object):
         if self.log.hyd is not None:
             sc = sc+"\n"+"-HYD.Log {} \\".format(self.log.hyd)
         if self.phyto.chl > 0 or self.sed.csed > 0:
-            sc = sc+"\n"+"-HYD.DirMie {} \\".format(self.dirmie.hid)
+            sc = sc+"\n"+"-HYD.DirMie {} \\".format(self.dirmie.hyd)
         if self.log.hydmie is not None:
             sc = sc+"\n"+"-HYD.MieLog {} \\".format(self.log.hydmie)
         if self.phyto.chl > 0 or self.sed.csed > 0:
@@ -1263,8 +1263,8 @@ class OSOAA(object):
             os.makedirs(self.resroot)
         if not os.path.exists(self.dirmie.aer):
             os.makedirs(self.dirmie.aer)
-        if not os.path.exists(self.dirmie.hid):
-            os.makedirs(self.dirmie.hid)
+        if not os.path.exists(self.dirmie.hyd):
+            os.makedirs(self.dirmie.hyd)
         if not os.path.exists(self.dirmie.sea):
             os.makedirs(self.dirmie.sea)
 
