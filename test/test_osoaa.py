@@ -166,6 +166,23 @@ class TestOSOAAClasses(unittest.TestCase):
             pyOSOAA.DET(-1)
         self.assertTrue("Invalid absorption value." in str(context.exception))
 
+    def testAP(self):
+        ap = pyOSOAA.AP()
+
+        self.assertEqual(ap.pressure, 1013.00)
+        self.assertEqual(ap.hr, 8.0)
+        self.assertEqual(ap.ha, 2.0)
+        self.assertIsNone(ap.mot)
+
+        ap.SetMot(mot=0.1, hr=6.0)
+        self.assertEqual(ap.mot, 0.1)
+        self.assertEqual(ap.hr, 6.0)
+        self.assertIsNone(ap.pressure)
+
+        ap.SetPressure(1013.25)
+        self.assertEqual(ap.pressure, 1013.25)
+        self.assertIsNone(ap.mot)
+
 
 if __name__ == '__main__':
     unittest.main()
