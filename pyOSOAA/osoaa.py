@@ -374,8 +374,10 @@ class PHYTO(object):
 
         elif profiltype == self.UserDefined:
             # We configure the user defined profile
+
             try:
-                open(userfile, 'r')
+                tmp = open(userfile, 'r')
+                tmp.close()
                 self.usefile = userfile
             except FileNotFoundError:
                 print("File {} not found".format(userfile))
