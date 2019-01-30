@@ -36,7 +36,7 @@ setup(
     name                  = "pyOSOAA",
     packages              = ['pyOSOAA'],
     install_requires      = REQS,
-    version               = "0.3",
+    version               = "0.4 alpha",
     author                = "Francisco Nemiña",
     author_email          = "fnemina@conae.gov.ar",
     description           = SHORT_DESCRIPTION,
