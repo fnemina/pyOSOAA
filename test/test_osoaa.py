@@ -1,4 +1,5 @@
 import unittest
+import os
 import pyOSOAA
 
 
@@ -319,6 +320,31 @@ class TestOSOAAClasses(unittest.TestCase):
         self.assertEqual(view.level, 5)
         self.assertEqual(view.z, -10)
         self.assertEqual(view.vza, 0)
+
+    def testOSOAA(self):
+        s = pyOSOAA.OSOAA(resroot="test")
+        self.assertEqual(s.resroot, "test")
+        self.assertEqual(s.wa, 0.440)
+        s = pyOSOAA.OSOAA()
+        self.assertIsNotNone(s.resroot)
+        self.assertIsNotNone(s.root)
+        self.assertListEqual(list(vars(s).keys()), ["wa", "root",
+                                                    "resroot", "sea",
+                                                    "log", "results",
+                                                    "dirmie", "phyto",
+                                                    "sed", "ys",
+                                                    "det", "ap",
+                                                    "aer", "hyd",
+                                                    "ang", "sos",
+                                                    "view"])
+
+        s.run()
+        self.assertTrue(os.path.exists(s.resroot))
+        self.assertTrue(os.path.exists(s.dirmie.aer))
+        self.assertTrue(os.path.exists(s.dirmie.hyd))
+        self.assertTrue(os.path.exists(s.dirmie.sea))
+        self.assertTrue(os.path.isfile(s.resroot+"/script.kzh"))
+
 
 if __name__ == '__main__':
     unittest.main()
