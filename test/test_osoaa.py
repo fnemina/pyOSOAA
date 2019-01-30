@@ -293,7 +293,32 @@ class TestOSOAAClasses(unittest.TestCase):
         self.assertIsNone(aer.sf)
         self.assertIsNone(aer.lnd)
 
+    def tetHYD(self):
+        hyd = pyOSOAA.HYD()
+        self.assertEqual(hyd.model, 1)
+        self.assertIsNone(hyd.extdata)
 
+    def testANG(self):
+        ang = pyOSOAA.ANG()
+
+        self.assertIsNone(ang.rad.nbgauss)
+        self.assertIsNone(ang.rad.userangfile)
+
+        self.assertIsNone(ang.mie.nbgauss)
+        self.assertIsNone(ang.mie.userangfile)
+
+        self.assertEqual(ang.thetas, 30)
+
+    def testSOS(self):
+        self.assertIsNone(pyOSOAA.SOS().igmax)
+
+    def testVIEW(self):
+        view = pyOSOAA.VIEW()
+
+        self.assertEqual(view.phi, 0)
+        self.assertEqual(view.level, 5)
+        self.assertEqual(view.z, -10)
+        self.assertEqual(view.vza, 0)
 
 if __name__ == '__main__':
     unittest.main()
