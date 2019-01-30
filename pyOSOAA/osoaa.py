@@ -786,6 +786,14 @@ class AER(object):
                  vcdef=2,
                  extdata=""):
         """ This methods sets the model for the AER class.
+
+            model       Type of aerosol model
+                            0 : Mono-modal
+                            1 : WMO multi-modal
+                            2 : Shettle & Fenn bi-modal
+                            3 : Log-Normal bi-modal
+                            4 : Phase function from an external source
+
             Mono-modal distribution parameters
             ----------------------------------
             mm          Mono-modal model atribute
