@@ -994,7 +994,6 @@ class OSOAA(object):
         self.dirmie = DIRMIE(osoaaroot=self.root)
         self.phyto = PHYTO()
         self.sed = SED()
-        self.sef = SED()
         self.ys = YS()
         self.det = DET()
         self.ap = AP()
