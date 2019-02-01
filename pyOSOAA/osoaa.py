@@ -1301,6 +1301,6 @@ def test():
     print("Expected result: 0.128266")
     print("Actual result: {}".format(s.outputs.vsvza.I[51]))
     if (s.outputs.vsvza.I[51] == 0.128266):
-        print("#### Results agree, PyOSOAA is working correctly")
+        print("#### Results agree PyOSOAA is working correctly")
     if (s.outputs.vsvza.I[51] != 0.128266):
-        print("#### Results do not agree, PyOSOAA is not working correctly")
+        print("#### Results do not agree PyOSOAA is not working correctly")
