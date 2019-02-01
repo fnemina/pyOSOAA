@@ -1,0 +1,384 @@
+ WORKING FOLDER DEFINITION
+ -------------------------
+ Working folder :/home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO
+  
+ Standard result folder :/home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Standard_outputs
+  
+ Advanced result folder :/home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Advanced_outputs
+  
+  
+ --> Starting the check of user parameters 
+  
+ Default filename for the radiance angles definition :
+ /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Advanced_outputs/RAD_UsedAngles.txt                                                                                                                                                                                                                                                                                                                                                            
+  
+ Default filename for the Mie angles definition :
+ /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Advanced_outputs/MIE_UsedAngles.txt                                                                                                                                                                                                                                                                                                                                                            
+  
+ Default filename for the Phytoplankton phase function description :
+ /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Advanced_outputs/PM_PHYTO.txt                                                                                                                                                                                                                                                                                                                                                                  
+  
+ Default filename for the Mineral-Like Particles phase function description :
+ /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Advanced_outputs/PM_MLP.txt                                                                                                                                                                                                                                                                                                                                                                    
+  
+ Default filename for the atmospheric profile description :
+ /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Advanced_outputs/PROFILE_ATM.txt                                                                                                                                                                                                                                                                                                                                                               
+  
+ Default filename for the sea profile description :
+ /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Advanced_outputs/PROFILE_SEA.txt                                                                                                                                                                                                                                                                                                                                                               
+  
+ Default filename for the aerosol phase function description :
+ /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Advanced_outputs/PM_AER.txt                                                                                                                                                                                                                                                                                                                                                                    
+  
+ Default filename for the OSOAA binary result file :
+ /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Advanced_outputs/LUM_SF.bin                                                                                                                                                                                                                                                                                                                                                                    
+  
+ User's filename for the OSOAA result file : radiance vs zenith angle :
+ /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Standard_outputs/RESLUM_vsVZA.txt                                                                                                                                                                                                                                                                                                                                                              
+  
+  
+ --> Starting the check of reprocessing with same parameters
+  
+ No change in OSOAA.h file since last process
+  
+ Difference for parameter -OSOAA.Wa :   0.66000000000000003       /   0.44000000000000000     
+  
+ Difference for parameter -SED.JD.rmin :    9.9999997764825821E-003  /    1.0000000000000000E-002
+  
+ Difference for parameter -PHYTO.GP.Chlbg :                        NaN  /    0.0000000000000000     
+  
+ Difference for parameter -PHYTO.GP.Deep :    6.9169190417774516E-323  /    0.0000000000000000     
+  
+ Difference for parameter -PHYTO.GP.Width :    6.9169190417774516E-323  /    0.0000000000000000     
+  
+  
+ ANGLES CALCULATION
+ ------------------
+ --> OSOAA_ANGLES is called with the parameters :
+       NBMU_GAUSS_LUM :     -999
+       TETAS :                30.0000
+       TETASW :               21.9090
+       FICANGLES_USER_LUM : NO_USER_ANGLES                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+       NBMU_GAUSS_MIE :     -999
+       FICANGLES_USER_MIE : NO_USER_ANGLES                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+       FICANGLES_LOG :      NO_LOG_FILE                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+       FICANGLES_RES_LUM :  /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Advanced_outputs/RAD_UsedAngles.txt                                                                                                                                                                                                                                                                                                                                                            
+       FICANGLES_RES_MIE :  /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Advanced_outputs/MIE_UsedAngles.txt                                                                                                                                                                                                                                                                                                                                                            
+  
+  
+ -----------------------------------------
+ AEROSOLS RADIATIVE PROPERTIES COMPUTATION
+ -----------------------------------------
+ Case WA != WAREF
+ => Calculation of aerosol extinction coeff. for WAREF
+ --> OSOAA_AEROSOLS is called with the parameters :
+       FICANGLES_RES_MIE :  /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Advanced_outputs/MIE_UsedAngles.txt                                                                                                                                                                                                                                                                                                                                                            
+       Simulation wavelength (Wa)          :      0.55000
+       AOT                                 :      0.10000
+       Reference wavelength (Waref)        :      0.55000
+       Reference AOT                       :      0.10000
+       Truncature option                   :    1
+       Type of aerosols model              :    2
+       ------------------
+       mono-modal model :
+       ------------------
+       MMD : Refractive index for Waref    :     -999.000    -999.00000
+       Type of size distribution           : -999
+       Size distribution parameters        :   -999.00000    -999.00000      50.00000
+       -----------
+       WMO model :
+       -----------
+       Type of WMO model                   : -999
+       WMO component conc. (DL, WS, OC, SO):   -999.00000    -999.00000    -999.00000    -999.00000
+       ----------------------
+       Shettle & Fenn model :
+       ----------------------
+       Type of Shettle & Fenn model        :    3
+       S&F model : relative humidity       :     98.00000
+       -----------------------
+       Bi-modal distribution :
+       -----------------------
+       BMD : Choice of mixture description : -999
+       BMD : user conc. Coarse / Fine      :   -999.00000    -999.00000
+       BMD : AOT coarse / AOTtot for Waref :   -999.00000
+       Coarse mode :
+         Refractive index for Wa           :     -999.000    -999.00000
+         Refractive index for Waref        :     -999.000    -999.00000
+         Size distr parameters             :   -999.00000    -999.00000
+       Fine mode :
+         Refractive index for Wa           :     -999.000    -999.00000
+         Refractive index for Waref        :     -999.000    -999.00000
+         Size distr parameters             :   -999.00000    -999.00000
+       ---------------
+       External data :
+       ---------------
+       User phaze function file            : NO_USER_AEROSOLS_PHAZE_FCT                                                                                                                                                                                                                                                                                                                                                                                                                                        
+       ------------------
+       MIE computations :
+       ------------------
+       Storage directory for MIE files     : /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/DATABASE/MIE_AER                                                                                                                                                                                                                                                                                              
+       Mie computations log file           : NO_LOG_FILE                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+       --------------
+       Output files :
+       --------------
+       Log file                            : NO_LOG_FILE                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+       Res file                            : /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Advanced_outputs/PM_AER.txt                                                                                                                                                                                                                                                                                                                                                                    
+  
+ => Calculation of aerosol radiative fonctions for WA
+ --> OSOAA_AEROSOLS is called with the parameters :
+       FICANGLES_RES_MIE :  /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Advanced_outputs/MIE_UsedAngles.txt                                                                                                                                                                                                                                                                                                                                                            
+       Simulation wavelength (Wa)          :      0.66000
+       AOT                                 :      0.10000
+       Reference wavelength (Waref)        :      0.55000
+       Reference AOT                       :      0.10000
+       Truncature option                   :    1
+       Type of aerosols model              :    2
+       ------------------
+       mono-modal model :
+       ------------------
+       MMD : Refractive index for Wa       :     -999.000    -999.00000
+       Type of size distribution           : -999
+       Size distribution parameters        :   -999.00000    -999.00000      50.00000
+       -----------
+       WMO model :
+       -----------
+       Type of WMO model                   : -999
+       WMO component conc. (DL, WS, OC, SO):   -999.00000    -999.00000    -999.00000    -999.00000
+       ----------------------
+       Shettle & Fenn model :
+       ----------------------
+       Type of Shettle & Fenn model        :    3
+       S&F model : relative humidity       :     98.00000
+       -----------------------
+       Bi-modal distribution :
+       -----------------------
+       BMD : Choice of mixture description : -999
+       BMD : user conc. Coarse / Fine      :   -999.00000    -999.00000
+       BMD : AOT coarse / AOTtot for Waref :   -999.00000
+       Coarse mode :
+         Refractive index for Wa           :     -999.000    -999.00000
+         Refractive index for Waref        :     -999.000    -999.00000
+         Size distr parameters             :   -999.00000    -999.00000
+       Fine mode :
+         Refractive index for Wa           :     -999.000    -999.00000
+         Refractive index for Waref        :     -999.000    -999.00000
+         Size distr parameters             :   -999.00000    -999.00000
+       ---------------
+       External data :
+       ---------------
+       User phaze function file            : NO_USER_AEROSOLS_PHAZE_FCT                                                                                                                                                                                                                                                                                                                                                                                                                                        
+       ------------------
+       MIE computations :
+       ------------------
+       Storage directory for MIE files     : /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/DATABASE/MIE_AER                                                                                                                                                                                                                                                                                              
+       Mie computations log file           : NO_LOG_FILE                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+       --------------
+       Output files :
+       --------------
+       Log file                            : NO_LOG_FILE                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+       Res file                            : /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Advanced_outputs/PM_AER.txt                                                                                                                                                                                                                                                                                                                                                                    
+  
+ => AOT estimation at WA : 
+     WAREF   :   0.55000000000000004     
+     AOT_REF :   0.10000000000000001     
+     WA      :   0.66000000000000003     
+     Sect eff ext (WAREF) :   0.17439505849685777     
+     Sect eff ext (WA)    :   0.17015125528005176     
+     ===> AOT estimated at WA :    9.7566557645965377E-002
+  
+  
+ ------------------------------------------
+ HYDROSOLS RADIATIVE PROPERTIES COMPUTATION
+ ------------------------------------------
+  
+ => Characterization by models
+    for PHYTOPLANKTON :
+    ----------------- 
+  
+ --> OSOAA_HYDROSOLS is called with the parameters :
+       FICANGLES_RES_MIE :  /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Advanced_outputs/MIE_UsedAngles.txt                                                                                                                                                                                                                                                                                                                                                            
+       Simulation wavelength (Wa)          :      0.66000
+       IMOD_HYD          :        1
+       Concentration     :          0.20000
+       --------------------------
+       Phytoplancton : Mode Junge
+       --------------------------
+       Slope Rmin Rmax   :          4.00000       0.01000     200.00000
+       MR MI             :          1.05000      -0.00000
+       RATE              :          1.00000
+       --------------------------
+       Phytoplancton : Mode LND 1
+       --------------------------
+       Mean Radius, Var  :       -999.00000    -999.00000
+       MR MI             :       -999.00000    -999.00000
+       RATE              :       -999.00000
+       --------------------------
+       Phytoplancton : Mode LND 2
+       --------------------------
+       Mean Radius, Var  :       -999.00000    -999.00000
+       MR MI             :       -999.00000    -999.00000
+       RATE              :       -999.00000
+       ---------------
+       External data :
+       ---------------
+       User data file    :     NO_USER_HYDROSOLS_PHAZE_FCT                                                                                                                                                                                                                                                                                                                                                                                                                                       
+       ------------------
+       MIE computations :
+       ------------------
+       Storage directory for MIE files     : /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/DATABASE/MIE_HYD                                                                                                                                                                                                                                                                                              
+       Mie computations log file           : NO_LOG_FILE                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+       --------------
+       Output files :
+       --------------
+       FICHYD_LOG        :     NO_LOG_FILE                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+       Res file Phyto    :     /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Advanced_outputs/PM_PHYTO.txt                                                                                                                                                                                                                                                                                                                                                                  
+  
+ => Characterization by models
+    for MINERAL-LIKE PARTICLES :
+    -------------------------- 
+  
+ --> OSOAA_HYDROSOLS is called with the parameters :
+       FICANGLES_RES_MIE :  /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Advanced_outputs/MIE_UsedAngles.txt                                                                                                                                                                                                                                                                                                                                                            
+       Simulation wavelength (Wa)          :      0.66000
+       IMOD_HYD          :        1
+       Concentration     :          0.00000
+       ----------------------
+       Sediments : Mode Junge
+       ----------------------
+       Slope Rmin Rmax   :       -999.00000       0.01000     200.00000
+       MR MI             :       -999.00000    -999.00000
+       RATE              :       -999.00000
+       ----------------------
+       Sediments : Mode LND 1
+       ----------------------
+       Mean Radius, Var  :       -999.00000    -999.00000
+       MR MI             :       -999.00000    -999.00000
+       RATE              :       -999.00000
+       ----------------------
+       Sediments : Mode LND 2
+       ----------------------
+       Mean Radius, Var  :       -999.00000    -999.00000
+       MR MI             :       -999.00000    -999.00000
+       RATE              :       -999.00000
+       ---------------
+       External data :
+       ---------------
+       User data file    :     NO_USER_HYDROSOLS_PHAZE_FCT                                                                                                                                                                                                                                                                                                                                                                                                                                       
+       ------------------
+       MIE computations :
+       ------------------
+       Storage directory for MIE files     : /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/DATABASE/MIE_HYD                                                                                                                                                                                                                                                                                              
+       Mie computations log file           : NO_LOG_FILE                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+       --------------
+       Output files :
+       --------------
+       FICHYD_LOG        :     NO_LOG_FILE                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+       Res file MLP      :     /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Advanced_outputs/PM_MLP.txt                                                                                                                                                                                                                                                                                                                                                                    
+  
+  
+ ----------------------------------------
+ ATMOSPHERIC AND SEA PROFILES COMPUTATION
+ ----------------------------------------
+  
+  
+ --> OSOAA_PROFILE is called with the parameters :
+ Wavelength for radiance computation :
+ -----------------------------------
+       WA_SIMU        :      0.66000
+ SEA PARAMETERS :
+ --------------
+ Depth of sea :
+       SEA_DEPTH      :         15.000
+ Chlorophylle :
+       CHL            :          0.200
+       IPHYTO_PROFIL  :        1
+          ==> Homogeneous chlorophyll profile
+       CHL_GP_BG      :            NaN
+       CHL_GP_DEEP    :          0.000
+       CHL_GP_WIDTH   :          0.000
+       FICPHYTO_USER  :     NO_USER_PHYTO_PROFILE                                                                                                                                                                                                                                                                                                                                                                                                                                             
+ Sediment :
+       SED_CSED       :          0.000
+       SED_MRWA       :      -999.0000
+       SED_VSED       :       -999.000
+       SED_KMAT2      :     -999.00000
+       SED_PIZ        :     -999.00000
+ Yellow substance :
+       YS_A440        :        0.00000
+       YS_SWA         :     -999.00000
+ Detritus :
+       DET_A440       :        0.00000
+       DET_SWA        :     -999.00000
+ ATMOSPHERIC PARAMETERS :
+ ---------------------
+ Molecules :
+       Optical thickness  :     -999.00000
+       Atmos pressure     :     1013.00000
+       High scale         :        8.00000
+ Aerosols :
+       Optical thickness  :        0.09757
+       High scale         :        2.00000
+       Single sca alb     :        0.99823
+ PRODUCT FILES :
+ -------------
+       FICPROFIL_LOG  :     NO_LOG_FILE                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+       FICPROFIL_ATM_RES  :     /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Advanced_outputs/PROFILE_ATM.txt                                                                                                                                                                                                                                                                                                                                                               
+       FICPROFIL_SEA_RES  :     /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Advanced_outputs/PROFILE_SEA.txt                                                                                                                                                                                                                                                                                                                                                               
+  
+  
+ -----------------------------------------------
+ SEA / ATMOSPHERE INTERFACE MATRICES COMPUTATION
+ -----------------------------------------------
+  
+ --> OSOAA_SURFACE is called with the parameters :
+       SEA_IND            :      1.34000
+       WIND               :      7.00000
+       FICANGLES_RES_LUM  :     /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Advanced_outputs/RAD_UsedAngles.txt                                                                                                                                                                                                                                                                                                                                                            
+       DIRSEA             :     /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/DATABASE/SURF_MATR                                                                                                                                                                                                                                                                                            
+       FICSURF_LOG        :     NO_LOG_FILE                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+  
+  
+ --------------------
+ RADIANCE COMPUTATION
+ --------------------
+  
+ --> OSOAA_SOS is called with the parameters :
+ File for the angles definition:
+       FICANGLES_RES_LUM  :     /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Advanced_outputs/RAD_UsedAngles.txt                                                                                                                                                                                                                                                                                                                                                            
+ Files for the particles radiative properties definition:
+       FICGRANU_AER       :     /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Advanced_outputs/PM_AER.txt                                                                                                                                                                                                                                                                                                                                                                    
+       FICGRANU_PHYTO     :     /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Advanced_outputs/PM_PHYTO.txt                                                                                                                                                                                                                                                                                                                                                                  
+       FICGRANU_MLP       :     /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Advanced_outputs/PM_MLP.txt                                                                                                                                                                                                                                                                                                                                                                    
+ Files for the profiles definition:
+       FICPROFIL_ATM_RES  :     /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Advanced_outputs/PROFILE_ATM.txt                                                                                                                                                                                                                                                                                                                                                               
+       FICPROFIL_SEA_RES  :     /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Advanced_outputs/PROFILE_SEA.txt                                                                                                                                                                                                                                                                                                                                                               
+ Sea surface parameters:
+       Index for surface matrix use IMAT_SURF :      1
+       DIRSEA             :     /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/DATABASE/SURF_MATR                                                                                                                                                                                                                                                                                            
+       SEA_IND            :      1.34000
+       WIND               :      7.00000
+       Sea surface albedo RHO_SURF  :     0.0000
+       Sea bottom  albedo RHO_BOT   :     0.3000
+ Maximal order of scattering:
+       IGMAX              :      100
+ Output binary file of fourier expansions:
+       FICSOS_RES_BIN     :     /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Advanced_outputs/LUM_SF.bin                                                                                                                                                                                                                                                                                                                                                                    
+ Advanced output files:
+       FICSOS_RES_ADV_UP  :     /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Advanced_outputs/RESLUM_Advanced_UP.txt                                                                                                                                                                                                                                                                                                                                                        
+       FICSOS_RES_ADV_DOWN:     /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Advanced_outputs/RESLUM_Advanced_DOWN.txt                                                                                                                                                                                                                                                                                                                                                      
+ Output parameters:
+       Relative azimuth PHI:       0.000
+   - For an output as a function of the propagation angle:
+       LEVEL_OUT          :        5
+       USER_Z_OUT         :       -10.0000
+       Output file FICSOS_RES_VS_VZA:   /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Standard_outputs/RESLUM_vsVZA.txt                                                                                                                                                                                                                                                                                                                                                              
+   - For an output as a function of Z profile:
+       Angle VZA_OUT      :        0.000
+       Output file FICSOS_RES_VS_Z  :   /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Standard_outputs/RESLUM_vsZ.txt                                                                                                                                                                                                                                                                                                                                                                
+       Output file FIC_FLUX         :   /home/fnemina/Documents/SABIA-Mar/RT/OSOAA_V1.5/OSOAA_RESULTS_DEMO/Advanced_outputs/Flux.txt                                                                                                                                                                                                                                                                                                                                                                      
+ Trace file:
+       FICSOS_LOG                   :   NO_LOG_FILE                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+       CALL OF SOS_CORE             :   TRUE
+  
+ --> Nominal end of processes
+ JOB_STATUS=OK

@@ -3,6 +3,81 @@
 import unittest
 import os
 import pyOSOAA
+import numpy as np
+
+
+class TestOUTPUTSClasses(unittest.TestCase):
+    def testExtractValue(self):
+        from pyOSOAA.outputs import ExtractValue
+        string = ["Zero 0", "One 1"]
+        self.assertEqual(ExtractValue(string, "Zero"), 0)
+        self.assertEqual(ExtractValue(string, "One"), 1)
+
+    def testVSVZA(self):
+        resroot = os.path.dirname(os.path.abspath(__file__))+"/OSOAA_RESULTS"
+        vsvza = pyOSOAA.outputs.VSVZA(resroot, "RESLUM_vsVZA.txt")
+        self.assertEqual(vsvza.vzaless, 180.0)
+        self.assertEqual(vsvza.vzamore, 0.0)
+        self.assertEqual(vsvza.vza[0], -89.07)
+        self.assertEqual(vsvza.vza.size, 102)
+        self.assertEqual(vsvza.scaang[0], 112.84)
+        self.assertEqual(vsvza.scaang.size, 102)
+        self.assertEqual(vsvza.I[0], 0.122260E-04)
+        self.assertEqual(vsvza.I.size, 102)
+        self.assertEqual(vsvza.refl[0], 0.139485E-02)
+        self.assertEqual(vsvza.refl.size, 102)
+        self.assertEqual(vsvza.polrate[0], 66.45)
+        self.assertEqual(vsvza.polrate.size, 102)
+        self.assertEqual(vsvza.lpol[0], 0.812479E-05)
+        self.assertEqual(vsvza.lpol.size, 102)
+        self.assertEqual(vsvza.reflpol[0], 0.926945E-03)
+        self.assertEqual(vsvza.reflpol.size, 102)
+
+    def testVSZ(self):
+        resroot = os.path.dirname(os.path.abspath(__file__))+"/OSOAA_RESULTS"
+        vsz = pyOSOAA.outputs.VSZ(resroot, "RESLUM_vsZ.txt")
+        self.assertEqual(vsz.simazimuth, 0.0)
+        self.assertEqual(vsz.updirecion, 0.0)
+        self.assertEqual(vsz.z[0], -0)
+        self.assertEqual(vsz.z.size, 81)
+        self.assertEqual(vsz.scaang[0], 158.09)
+        self.assertEqual(vsz.scaang.size, 81)
+        self.assertEqual(vsz.I[0], 0.621761E-03)
+        self.assertEqual(vsz.I.size, 81)
+        self.assertEqual(vsz.refl[0], 0.760278E-03)
+        self.assertEqual(vsz.refl.size, 81)
+        self.assertEqual(vsz.polrate[0], 6.45)
+        self.assertEqual(vsz.polrate.size, 81)
+        self.assertEqual(vsz.lpol[0], 0.401063E-04)
+        self.assertEqual(vsz.lpol.size, 81)
+        self.assertEqual(vsz.reflpol[0], 0.490412E-04)
+        self.assertEqual(vsz.reflpol.size, 81)
+
+    def testBIN(self):
+        # This code check the BIN reading method.
+        # To test it the code LUM_SF.f95 is used to generate a matrix and which
+        # Is then read by this code.
+        # By the way FOTRAN saves it matrices there is a missmatch for indices
+        # We solve that by computing k-NBMU here and k in the fortran code.
+        # Comparison is done for an error less than 0.001 that should be enough
+
+        resroot = os.path.dirname(os.path.abspath(__file__))+"/OSOAA_RESULTS"
+        NB_TOT = 107
+        NBMU = 51
+        I3 = np.zeros((NB_TOT+1, 2*NBMU+1))
+        Q3 = np.zeros((NB_TOT+1, 2*NBMU+1))
+        U3 = np.zeros((NB_TOT+1, 2*NBMU+1))
+
+        for j in range(0, NB_TOT+1):
+            for k in range(0, 2*NBMU+1):
+                I3[j, k] = 0+k-NBMU+j/108.
+                Q3[j, k] = 1000+k-NBMU+j/108.
+                U3[j, k] = 2000+k-NBMU+j/108.
+        bin = pyOSOAA.outputs.BIN(resroot)
+
+        self.assertTrue((bin.I-Q3 < 1e-3).all())
+        self.assertTrue((bin.Q-Q3 < 1e-3).all())
+        self.assertTrue((bin.U-U3 < 1e-3).all())
 
 
 class TestOSOAAClasses(unittest.TestCase):
@@ -382,6 +457,7 @@ class TestOSOAAHelpers(unittest.TestCase):
         with self.assertRaises(Exception) as context:
             pyOSOAA.osoaahelpers.RunWavelengths(s, 0.5, 0, "wrong")
         self.assertTrue("Wrong output variable." in str(context.exception))
+
 
 
 if __name__ == '__main__':

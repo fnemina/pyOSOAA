@@ -4,14 +4,15 @@ python:
   - "3.6"
 install:
   - sudo apt-get update
-  # Install OSOAA
+  # Compile OSOAA
   - sudo apt-get install gfortran ksh
   - git clone https://github.com/CNES/RadiativeTransferCode-OSOAA
-  - export OSOAA_ROOT="~/RadiativeTransferCode-OSOAA"
-  - cd RadiativeTransferCode-OSOAA/gen/
-  - gfortran Makefile_OSOAA.gfortran
-  # We do this conditionally because it saves us some downloading if the
-  # version is the same.
+  - export OSOAA_ROOT="/home/travis/build/fnemina/pyOSOAA/RadiativeTransferCode-OSOAA"
+  - mkdir $OSOAA_ROOT/obj
+  - cd $OSOAA_ROOT/gen
+  - make -f Makefile_OSOAA.gfortran
+  - cd /home/travis/build/fnemina/pyOSOAA
+  # Install miniconda
   - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
@@ -30,6 +31,6 @@ install:
 
 script:
   # Your test script goes here
-  python -m pytest -v --junitxml=result.xml --cov Py6S --cov-report term-missing
+  python -m pytest -v --junitxml=result.xml --cov pyOSOAA --cov-report term-missing
 after_success:
   - coveralls

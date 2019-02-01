@@ -46,7 +46,6 @@ class VSVZA(object):
                         (sign convention)
             vzamore     Simulated relative azimuth (degrees) for VZA > 0
                         (sign convention)
-            depth       Value of the depth selected for the output (m)
             vza         Viewing Zenith Angle (deg)
             scaang      Scattering angle (deg)
             I           Stokes parameter at output level Z (in sr-1)
@@ -220,6 +219,9 @@ class ADVUPDOWN(object):
             I, Q, U     Stokes parameters at level Z (in sr-1)
                         normalised to the extraterrestrial solar irradiance
                         (PI * L(z) / Esun)
+                        Values go from from 0 to NT_TOT and -NBMU to NBMU.
+                        Element I[0,0] is I(0,-NBMU) and in general
+                        I[j,k] = I[j,k-NBMU] in the fortran array.
             polang      Polarization angle (deg)
             polrate     Degree of polarization (%)
             lpol        Polarized intensity at level Z (in sr-1)
