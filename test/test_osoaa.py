@@ -344,6 +344,42 @@ class TestOSOAAClasses(unittest.TestCase):
         self.assertTrue(os.path.exists(s.dirmie.hyd))
         self.assertTrue(os.path.exists(s.dirmie.sea))
         self.assertTrue(os.path.isfile(s.resroot+"/script.kzh"))
+        self.assertTrue(os.path.isfile(s.resroot
+                                       + "/Standard_outputs/"
+                                       + "LUM_vsVZA.txt"))
+        self.assertTrue(s.outputs.vsvza.I[51], 0.128266)
+
+
+class TestOSOAAHelpers(unittest.TestCase):
+    def testRunWavelenghtsSameAngle(self):
+        s = pyOSOAA.OSOAA()
+        wl = [0.44, 0.55, 0.66]
+        view = 0
+        expected = [0.128266, 0.639862E-01, 0.399832E-04]
+        result = pyOSOAA.osoaahelpers.RunWavelengths(s, wl, view)
+        self.assertListEqual(list(result), expected)
+
+    def testRunWavelenghtsDifferentAngle(self):
+        s = pyOSOAA.OSOAA()
+        wl = [0.44, 0.55, 0.66]
+        view = [0, 1.43, -1.43]
+        expected = [0.128266, 0.639702E-01, 0.399984E-04]
+        result = pyOSOAA.osoaahelpers.RunWavelengths(s, wl, view)
+        self.assertListEqual(list(result), expected)
+
+    def testRunWavelenghtsOtherOutput(self):
+        s = pyOSOAA.OSOAA()
+        wl = [0.44, 0.55, 0.66]
+        view = 0
+        expected = [0.229523, 0.158827, 0.456162E-02]
+        result = pyOSOAA.osoaahelpers.RunWavelengths(s, wl, view, "refl")
+        self.assertListEqual(list(result), expected)
+
+    def testRunWavelenghtsErrorCatch(self):
+        s = pyOSOAA.OSOAA()
+        with self.assertRaises(Exception) as context:
+            pyOSOAA.osoaahelpers.RunWavelengths(s, 0.5, 0, "wrong")
+        self.assertTrue("Wrong output variable." in str(context.exception))
 
 
 if __name__ == '__main__':
