@@ -1,3 +1,5 @@
+# coding=utf-8
+
 import numpy as np
 import os
 from scipy.io import FortranFile
@@ -423,7 +425,7 @@ class OUTPUTS(object):
             filenames   Object with all filenames
             """
         self.vsvza = VSVZA(resroot, filenames.vsvza)
-        
+
         if os.path.exists(resroot+"Standard_outputs"+filenames.vsz):
             if filenames.vsz is not None:
                 self.vsz = VSZ(resroot, filenames.vsz)

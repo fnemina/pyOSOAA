@@ -1,3 +1,5 @@
+# coding=utf-8
+
 # Sea botton types
 UserDefined = 1
 LightSand = 2
