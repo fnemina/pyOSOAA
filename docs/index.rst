@@ -1,6 +1,8 @@
-# pyOSOAA
+=======
+pyOSOAA
+=======
 
-`pyOSOAA` is a python interface for the Ocean Successive Orders with Atmosphere - Advanced (OSOAA) radiative transfer. The OSOAA is a radiative transfer code developed in the Sorbonne Université by Pr. Malik Chami group and supported by the CNES.
+``pyOSOAA`` is a python interface for the Ocean Successive Orders with Atmosphere - Advanced (OSOAA) radiative transfer. The OSOAA is a radiative transfer code developed in the Sorbonne Université by Pr. Malik Chami group and supported by the CNES.
 
 The coded is based in the successive orders of scattering method and the OSOA code developed by Malik Chami in 2001 that included the computation of the radiance and polarization for the ocean-atmosphere system with a flat surface.
 
@@ -11,10 +13,12 @@ The OSOAA code simulates:
 - **Hydrosol models**: For phytoplankton and mineral-like particles including scattering and absorbing properties.
 - **Sea surface interface**: Both for a flat surface or by a rough surface using Cox and Munk model.
 
-The `pyOSOAA` interface aims to incorporate the creation of run scripts and parsing of output results for the OSOAA model. It also incorporates helpers to perform common tasks like calculating the radiance for a certain band instead of a wavelength or running the model for multiple wavelengths.
+The ``pyOSOAA`` interface aims to incorporate the creation of run scripts and parsing of output results for the OSOAA model. It also incorporates helpers to perform common tasks like calculating the radiance for a certain band instead of a wavelength or running the model for multiple wavelengths.
 
-This code was inspired by [py6S](https://github.com/robintw/Py6S) by Robin Wilson.
+This code was inspired by `py6S <https://github.com/robintw/Py6S>`_ by Robin Wilson.
 
-# Installation
+============
+Installation
+============
 
-You can find installation instructions [here](install)
+
