@@ -22,14 +22,14 @@ The ``pyOSOAA`` interface aims to incorporate the creation of run scripts and pa
 This code was inspired by `py6S <https://github.com/robintw/Py6S>`_ by Robin Wilson.
 
 
-Indices and tables
-==================
-
 .. toctree::
   :maxdepth: 2
   :caption: Contents:
 
   install
+
+Indices and tables
+==================
 
 * :ref:`genindex`
 * :ref:`modindex`
