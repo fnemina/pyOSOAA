@@ -467,4 +467,7 @@ class OUTPUTS(object):
 
         self.flux = FLUX(resroot)
 
-        self.bin = BIN(resroot)
+        if filenames.sosbin is None:
+            self.bin = BIN(resroot)
+        else:
+            self.bin = BIN(resroot, filenames.sosbin)

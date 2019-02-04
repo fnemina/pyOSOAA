@@ -226,6 +226,7 @@ class TestOSOAAClasses(unittest.TestCase):
         self.assertEqual(pyOSOAA.LOG().sos, "log_sos.txt")
 
     def testRESULTS(self):
+        # We test default values
         self.assertIsNone(pyOSOAA.RESULTS().profileatm)
         self.assertIsNone(pyOSOAA.RESULTS().profilesea)
         self.assertIsNone(pyOSOAA.RESULTS().aer)
@@ -238,6 +239,45 @@ class TestOSOAAClasses(unittest.TestCase):
         self.assertEqual(pyOSOAA.RESULTS().advup, "resfile_advup.txt")
         self.assertEqual(pyOSOAA.RESULTS().advdown, "resfile_advdown.txt")
         self.assertEqual(pyOSOAA.RESULTS().vsz, "resfile_vsz.txt")
+        # We test different Values
+        s = pyOSOAA.OSOAA()
+        s.results.vsz = "test_vsz.txt"
+        s.results.vsvza = "test_vsvza.txt"
+
+        s.results.profileatm = "test_profileatm.txt"
+        s.results.profilesea = "test_profilesea.txt"
+        s.results.aer = "test_aer.txt"
+        s.results.phyto = "test_phyto.txt"
+        s.results.mlp = "test_mlp.txt"
+        s.results.angrad = "test_angrad.txt"
+        s.results.angmie = "test_angmie.txt"
+        s.results.sosbin = "test_sosbin"
+        s.results.advup = "test_advup.txt"
+        s.results.advdown = "test_advdown.txt"
+        s.run()
+        self.assertTrue(os.path.exists(s.resroot+"/Standard_outputs/"
+                                       + "test_vsz.txt"))
+        self.assertTrue(os.path.exists(s.resroot+"/Standard_outputs/"
+                                       + "test_vsvza.txt"))
+
+        self.assertTrue(os.path.exists(s.resroot+"/Advanced_outputs/"
+                                       + "test_profileatm.txt"))
+        self.assertTrue(os.path.exists(s.resroot+"/Advanced_outputs/"
+                                       + "test_profilesea.txt"))
+        self.assertTrue(os.path.exists(s.resroot+"/Advanced_outputs/"
+                                       + "test_aer.txt"))
+        self.assertTrue(os.path.exists(s.resroot+"/Advanced_outputs/"
+                                       + "test_phyto.txt"))
+        self.assertTrue(os.path.exists(s.resroot+"/Advanced_outputs/"
+                                       + "test_mlp.txt"))
+        self.assertTrue(os.path.exists(s.resroot+"/Advanced_outputs/"
+                                       + "test_angrad.txt"))
+        self.assertTrue(os.path.exists(s.resroot+"/Advanced_outputs/"
+                                       + "test_sosbin"))
+        self.assertTrue(os.path.exists(s.resroot+"/Advanced_outputs/"
+                                       + "test_advup.txt"))
+        self.assertTrue(os.path.exists(s.resroot+"/Advanced_outputs/"
+                                       + "test_advdown.txt"))
 
     def testDIRMIE(self):
         self.assertEqual(pyOSOAA.DIRMIE("").hyd, "/DATABASE/MIE_HYD")
