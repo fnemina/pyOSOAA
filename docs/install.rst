@@ -1,9 +1,10 @@
 .. toctree::
   :maxdepth: 2
   :caption: Contents:
+  
 
 Installation
-==================
+============
 
 This document describes how to install the ``OSOAA`` and ``pyOSOAA`` software for Ubuntu 18.04 or greater with python 3.6 or greater.
 

@@ -28,6 +28,7 @@ Table of contents
   :caption: Contents:
 
   install
+  case
 
 Indices and tables
 ==================
