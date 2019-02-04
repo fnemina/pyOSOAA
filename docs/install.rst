@@ -2,14 +2,11 @@
   :maxdepth: 2
   :caption: Contents:
 
-
-------------
 Installation
-------------
+==================
 
 This document describes how to install the ``OSOAA`` and ``pyOSOAA`` software for Ubuntu 18.04 or greater with python 3.6 or greater.
 
-------------------
 OSOAA installation
 ------------------
 
@@ -55,7 +52,6 @@ To install ``OSOAA`` we first need to set up some previous software.
 
   $ make -f $OSOAA_ROOT/gen/Makefile_OSOAA.gfortran
 
---------------------
 pyOSOAA installation
 --------------------
 
@@ -90,7 +86,6 @@ and following the onscreen instructions.
 
   $ python setup.py install
 
-------------
 pyOSOAA test
 ------------
 
