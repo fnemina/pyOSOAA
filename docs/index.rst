@@ -1,6 +1,10 @@
-=======
-pyOSOAA
-=======
+.. pyOSOAA documentation master file, created by
+   sphinx-quickstart on Mon Feb  4 09:08:33 2019.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Welcome to pyOSOAA's documentation!
+===================================
 
 ``pyOSOAA`` is a python interface for the Ocean Successive Orders with Atmosphere - Advanced (OSOAA) radiative transfer. The OSOAA is a radiative transfer code developed in the Sorbonne Université by Pr. Malik Chami group and supported by the CNES.
 
@@ -16,3 +20,17 @@ The OSOAA code simulates:
 The ``pyOSOAA`` interface aims to incorporate the creation of run scripts and parsing of output results for the OSOAA model. It also incorporates helpers to perform common tasks like calculating the radiance for a certain band instead of a wavelength or running the model for multiple wavelengths.
 
 This code was inspired by `py6S <https://github.com/robintw/Py6S>`_ by Robin Wilson.
+
+
+Indices and tables
+==================
+
+.. toctree::
+  :maxdepth: 2
+  :caption: Contents:
+
+  install
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
