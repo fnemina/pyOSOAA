@@ -16,9 +16,3 @@ The OSOAA code simulates:
 The ``pyOSOAA`` interface aims to incorporate the creation of run scripts and parsing of output results for the OSOAA model. It also incorporates helpers to perform common tasks like calculating the radiance for a certain band instead of a wavelength or running the model for multiple wavelengths.
 
 This code was inspired by `py6S <https://github.com/robintw/Py6S>`_ by Robin Wilson.
-
-============
-Installation
-============
-
-
