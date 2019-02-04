@@ -32,7 +32,6 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I"):
 
     if output not in ["I", "refl", "polrate", "lpol", "reflpol"]:
         raise(ValueError("Wrong output variable."))
-        return -1
 
     values = np.array([])
 
