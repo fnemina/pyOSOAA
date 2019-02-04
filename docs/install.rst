@@ -51,10 +51,10 @@ and following the onscreen instructions.
   $ conda install numpy scipy matplotlib ipython
 
 
-3. Once python is installed and configured we clone or `download<https://github.com/fnemina/pyOSOAA/releases/latest>`_ the lastest `pyOSOAA` version::
+3. Once python is installed and configured we clone or `download<https://github.com/fnemina/pyOSOAA/releases/latest>`_ the lastest ``pyOSOAA`` version::
   $ git clone https://github.com/fnemina/pyOSOAA.git
 
 
-4. We then go into the `pyOSOAA` folder and install it by running::
+4. We then go into the ``pyOSOAA`` folder and install it by running::
   $ python setup.py install
 
