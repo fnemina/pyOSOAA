@@ -1,7 +1,7 @@
 .. toctree::
   :maxdepth: 2
   :caption: Contents:
-  
+
 
 Installation
 ============
@@ -19,7 +19,7 @@ To install ``OSOAA`` we first need to set up some previous software.
 
   $ sudo apt update
 
-  $ sudo apt install gfortran ksh
+  $ sudo apt install gfortran ksh git make
 
 
 2. We then clone the ``OSOAA`` `repository <https://github.com/CNES/RadiativeTransferCode-OSOAA>`_
@@ -33,7 +33,7 @@ To install ``OSOAA`` we first need to set up some previous software.
 
 ::
 
-  $ echo "export OSOAA_ROOT="FULL PATH TO OSOAA FOLDER" >> ~/.bashrc
+  $ echo 'export OSOAA_ROOT="FULL PATH TO OSOAA FOLDER"' >> ~/.bashrc
 
   $ source ~/.bashrc
 
@@ -41,8 +41,6 @@ To install ``OSOAA`` we first need to set up some previous software.
 4. We then create a folder to contain the object files in the OSOAA folder
 
 ::
-
-  $ bash
 
   $ mkdir $OSOAA_ROOT/obj
 
@@ -65,7 +63,11 @@ pyOSOAA installation
   $ bash Miniconda3-latest-Linux-x86_64.sh
 
 
-and following the onscreen instructions.
+and following the onscreen instructions. Answer yes when the installer wants to add conda to the path. The do
+
+::
+
+  $ source ~/.bashrc
 
 2. We then install the necessary python libraries
 
