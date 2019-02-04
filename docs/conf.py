@@ -21,7 +21,7 @@
 
 project = 'pyOSOAA'
 copyright = '2019, Francisco Nemiña'
-author = 'Francisco Nemiña'
+author = 'Francisco Nemina'
 
 # The short X.Y version
 version = ''
