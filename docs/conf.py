@@ -20,7 +20,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'pyOSOAA'
-copyright = '2019, Francisco Nemiña'
+copyright = '2019, Francisco Nemina'
 author = 'Francisco Nemina'
 
 # The short X.Y version
