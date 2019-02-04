@@ -58,3 +58,33 @@ and following the onscreen instructions.
 4. We then go into the ``pyOSOAA`` folder and install it by running::
   $ python setup.py install
 
+------------
+pyOSOAA test
+------------
+
+We now will test ``pyOSOAA``.
+
+1. We open python session::
+  $ python
+  
+2. From the python session we run
+  >>> import pyOSOAA
+  >>> pyOSOAA.test()
+  
+3. We should get::
+  OSOAA wrapper script by Francisco Nemiña
+  
+  Inspired by Py6S wrapper by Robin Wilson
+  
+  Using OSOAA located at /home/.../OSOAA_V1.5
+  
+  Running OSOAA using a set of test parameters
+  
+  The results are:
+  
+  Expected result: 0.128266
+  
+  Actual result: 0.128266
+  
+  #### Results agree PyOSOAA is working correctly
+  
