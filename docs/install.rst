@@ -16,7 +16,7 @@ To install ``OSOAA`` we first need to set up some previous software.
   $ sudo apt install gfortran ksh
 
 
-2. We then clone the ``OSOAA`` `repository<https://github.com/CNES/RadiativeTransferCode-OSOAA>`_::
+2. We then clone the ``OSOAA`` `repository <https://github.com/CNES/RadiativeTransferCode-OSOAA>`_::
   $ git clone https://github.com/CNES/RadiativeTransferCode-OSOAA.git
 
 
@@ -39,7 +39,7 @@ To install ``OSOAA`` we first need to set up some previous software.
 pyOSOAA installation
 --------------------
 
-1. We first download and install `miniconda<https://conda.io/en/latest/miniconda.html>`_  with python 3.7 by doing::
+1. We first download and install `miniconda <https://conda.io/en/latest/miniconda.html>`_  with python 3.7 by doing::
   $ wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
   
   $ bash Miniconda3-latest-Linux-x86_64.sh
@@ -51,7 +51,7 @@ and following the onscreen instructions.
   $ conda install numpy scipy matplotlib ipython
 
 
-3. Once python is installed and configured we clone or `download<https://github.com/fnemina/pyOSOAA/releases/latest>`_ the lastest ``pyOSOAA`` version::
+3. Once python is installed and configured we clone or `download <https://github.com/fnemina/pyOSOAA/releases/latest>`_ the lastest ``pyOSOAA`` version::
   $ git clone https://github.com/fnemina/pyOSOAA.git
 
 
