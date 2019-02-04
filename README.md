@@ -17,6 +17,7 @@ The `pyOSOAA` interface aims to incorporate the creation of run scripts and pars
 
 This code was inspired by [py6S](https://github.com/robintw/Py6S) by Robin Wilson.
 
+You can find the full `pyOSOAA` manual [here](https://pyosoaa.readthedocs.io/en/latest/).
 
 ## Installation
 
