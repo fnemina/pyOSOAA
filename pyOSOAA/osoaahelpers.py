@@ -4,7 +4,7 @@ import numpy as np
 from scipy.interpolate import interp1d
 
 
-def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I"):
+def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", tau=False):
     """ This method run the simulation for a given pyOSOAA object for a set of
         wavelengths and angles and returns the output from the file vsVZA
 
@@ -28,6 +28,7 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I"):
                                 (PI * Lpol(z) / Esun)
                     reflpol     Polarized reflectance at output level Z
                                 (PI * Lpol(z) / Ed(z))
+                    tau         True to compute optical thickness
         """
 
     if output not in ["I", "refl", "polrate", "lpol", "reflpol"]:
@@ -47,5 +48,8 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I"):
         # We interpolte the values and add it to a numpy array
         f = interp1d(results['vza'], results[output])
         values = np.append(values, f(angle[idx[0]]))
+
+    if tau is True:
+        return values, s.outputs.profileatm.tau[-1]
 
     return values
