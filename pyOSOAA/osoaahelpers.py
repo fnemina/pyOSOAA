@@ -35,6 +35,7 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", tau=False):
         raise(ValueError("Wrong output variable."))
 
     values = np.array([])
+    tauv = np.array([])
 
     if type(angle) is int or type(angle) is float:
         angle = np.zeros(np.size(wavelengths))+angle
@@ -48,9 +49,10 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", tau=False):
         # We interpolte the values and add it to a numpy array
         f = interp1d(results['vza'], results[output])
         values = np.append(values, f(angle[idx[0]]))
+        tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
 
     if tau is True:
-        return values, s.outputs.profileatm.tau[-1]
+        return values, tauv
 
     return values
 
