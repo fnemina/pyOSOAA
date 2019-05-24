@@ -593,6 +593,23 @@ class TestOSOAAClasses(unittest.TestCase):
 
 
 class TestOSOAAHelpers(unittest.TestCase):
+
+    def testConfigureSurfaceBlack(self):
+        s = pyOSOAA.OSOAA()
+        wl = [0.44, 0.55, 0.66]
+        view = 0
+        expected = [0.0, 0.0, 0.0]
+        s.view.level = 4
+        s = pyOSOAA.osoaahelpers.ConfigureSurface(s, "black")
+        result = pyOSOAA.osoaahelpers.RunWavelengths(s, wl, view)
+        self.assertListEqual(list(result), expected)
+
+    def testConfigureSurfaceBlackErrorCatch(self):
+        s = pyOSOAA.OSOAA()
+        with self.assertRaises(Exception) as context:
+            pyOSOAA.osoaahelpers.ConfigureSurface(s, "wrong")
+        self.assertTrue("Wrong surface type." in str(context.exception))
+
     def testRunWavelenghtsSameAngle(self):
         s = pyOSOAA.OSOAA()
         wl = [0.44, 0.55, 0.66]

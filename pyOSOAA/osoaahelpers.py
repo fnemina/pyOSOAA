@@ -3,6 +3,34 @@
 import numpy as np
 from scipy.interpolate import interp1d
 
+def ConfigureSurface(s, surface_type="black"):
+    """ This function defines custom ocean surfaces to use with the OSOAA. The
+        The functions returns a reconfigured pyOSOAA object.
+        Parameters
+        ----------
+        s               The pyOSOAA object for which we want to set the surface
+        surface_type    The surface type
+                        black   A black ocean where water leaving radiance is 
+                                zero
+                    
+        """
+
+    if surface_type not in ["black"]:
+        raise(ValueError("Wrong surface type."))
+
+    if surface_type is "black":
+        # Sea bottom configuration
+        s.sea.depth = 0.05
+        s.sea.bottype = 1
+        s.sea.botalb = 0
+
+        # Sea particles configuration
+        s.phyto.chl = 0
+        s.sed.csed = 0
+        s.det.abs440 = 1e5
+        s.ys.abs440 = 1e5
+
+        return s
 
 def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", tau=False):
     """ This method run the simulation for a given pyOSOAA object for a set of

@@ -37,7 +37,7 @@ setup(
     name                  = "pyOSOAA",
     packages              = ['pyOSOAA'],
     install_requires      = REQS,
-    version               = "1.0",
+    version               = "1.1",
     author                = "Francisco Nemiña",
     author_email          = "fnemina@conae.gov.ar",
     description           = SHORT_DESCRIPTION,
@@ -52,7 +52,6 @@ setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 2"
+        "Programming Language :: Python :: 3"
     ],
 )
