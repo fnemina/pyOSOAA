@@ -3,6 +3,7 @@
 import numpy as np
 from scipy.interpolate import interp1d
 
+
 def ConfigureOcean(s, ocean_type="black"):
     """ This function defines custom ocean to use with the OSOAA. The
         The functions returns a reconfigured pyOSOAA object.
@@ -10,9 +11,8 @@ def ConfigureOcean(s, ocean_type="black"):
         ----------
         s               The pyOSOAA object for which we want to set the ocean
         ocean_type      The ocean type
-                        black   A black ocean where water leaving radiance is 
+                        black   A black ocean where water leaving radiance is
                                 zero
-                    
         """
 
     if ocean_type not in ["black"]:
