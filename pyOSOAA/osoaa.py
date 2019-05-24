@@ -1266,9 +1266,8 @@ class OSOAA(object):
         #   --------------------------------------
         if self.log.sea is not None:
             sc = sc+"\n"+"-SEA.Log {} \\".format(self.log.sea)
-        if self.sea.wind > 0:
-            sc = sc+"\n"+"-SEA.Dir {} \\".format(self.dirmie.sea)
-            sc = sc+"\n"+"-SEA.Ind {} \\".format(self.sea.ind)
+        sc = sc+"\n"+"-SEA.Dir {} \\".format(self.dirmie.sea)
+        sc = sc+"\n"+"-SEA.Ind {} \\".format(self.sea.ind)
         sc = sc+"\n"+"-SEA.Wind {} ".format(self.sea.wind)
         # Check if directory exists
 
