@@ -32,6 +32,7 @@ def ConfigureOcean(s, ocean_type="black"):
 
         return s
 
+
 def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I"):
     """ This method run the simulation for a given pyOSOAA object for a set of
         wavelengths and angles and returns the output from the file vsVZA
