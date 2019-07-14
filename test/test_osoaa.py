@@ -579,7 +579,7 @@ class TestOSOAAClasses(unittest.TestCase):
                                                     "det", "ap",
                                                     "aer", "hyd",
                                                     "ang", "sos",
-                                                    "view"])
+                                                    "view", "logfile"])
 
         s.run()
         self.assertTrue(os.path.exists(s.resroot))

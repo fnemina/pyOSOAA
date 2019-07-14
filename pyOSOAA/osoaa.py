@@ -973,7 +973,7 @@ class OSOAA(object):
     """ This class creates the OSOAA objecto which configures and runs the
         simulation"""
 
-    def __init__(self, wa=0.440, resroot=None):
+    def __init__(self, wa=0.440, resroot=None, logfile=None):
         """ This method initiates the OSOAA class
             wa          Wavelength of radiance calculation (microns).
             resroot     Working folder for the OSOAA computations (complete
@@ -1004,6 +1004,7 @@ class OSOAA(object):
         self.ang = ANG()
         self.sos = SOS()
         self.view = VIEW()
+        self.logfile = logfile
 
     def run(self, root=None):
         """ Run OSOAA. If no root directory is given for OSOAA the one
@@ -1288,7 +1289,11 @@ class OSOAA(object):
             sc = sc+"\n"+"-SEA.Log {} \\".format(self.log.sea)
         sc = sc+"\n"+"-SEA.Dir {} \\".format(self.dirmie.sea)
         sc = sc+"\n"+"-SEA.Ind {} \\".format(self.sea.ind)
-        sc = sc+"\n"+"-SEA.Wind {} ".format(self.sea.wind)
+        if self.logfile is None:
+            sc = sc+"\n"+"-SEA.Wind {} ".format(self.sea.wind)
+        else:
+            sc = sc+"\n"+"-SEA.Wind {} > {}".format(self.sea.wind, self.logfile)
+
         # Check if directory exists
 
         if not os.path.exists(self.resroot):
