@@ -33,7 +33,7 @@ def ConfigureOcean(s, ocean_type="black"):
         return s
 
 
-def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", tau=False):
+def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False):
     """ This method run the simulation for a given pyOSOAA object for a set of
         wavelengths and angles and returns the output from the file vsVZA
 
@@ -57,7 +57,9 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", tau=False):
                                 (PI * Lpol(z) / Esun)
                     reflpol     Polarized reflectance at output level Z
                                 (PI * Lpol(z) / Ed(z))
-        tau         True to compute optical thickness
+        taur        True to compute Rayleigh optical thickness. 
+                    False to not return the array.
+                    Numpy array of optical thicknesses otherwise.
         """
 
     if output not in ["I", "refl", "polrate", "lpol", "reflpol"]:
@@ -69,21 +71,45 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", tau=False):
     if type(angle) is int or type(angle) is float:
         angle = np.zeros(np.size(wavelengths))+angle
 
-    for idx, wl in np.ndenumerate(wavelengths):
-        # We set the wavelength and run the simulation
-        s.wa = wl
-        s.run()
-        # Convert the output to a directory
-        results = vars(s.outputs.vsvza)
-        # We interpolte the values and add it to a numpy array
-        f = interp1d(results['vza'], results[output])
-        values = np.append(values, f(angle[idx[0]]))
-        tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
+    if type(taur) is np.ndarray:
+        for idx, wl in np.ndenumerate(wavelengths):
+            # We set the wavelength and run the simulation
+            s.wa = wl
+            s.ap.SetMot(taur[idx])
+            s.run()
+            # Convert the output to a directory
+            results = vars(s.outputs.vsvza)
+            # We interpolte the values and add it to a numpy array
+            f = interp1d(results['vza'], results[output])
+            values = np.append(values, f(angle[idx[0]]))
+            tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
+    elif taur is True:
+        for idx, wl in np.ndenumerate(wavelengths):
+            # We set the wavelength and run the simulation
+            s.wa = wl
+            s.run()
+            # Convert the output to a directory
+            results = vars(s.outputs.vsvza)
+            # We interpolte the values and add it to a numpy array
+            f = interp1d(results['vza'], results[output])
+            values = np.append(values, f(angle[idx[0]]))
+            tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
+    elif taur is False:
+        for idx, wl in np.ndenumerate(wavelengths):
+            # We set the wavelength and run the simulation
+            s.wa = wl
+            s.run()
+            # Convert the output to a directory
+            results = vars(s.outputs.vsvza)
+            # We interpolte the values and add it to a numpy array
+            f = interp1d(results['vza'], results[output])
+            values = np.append(values, f(angle[idx[0]]))
+            tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
+        return values
+    else:
+        raise(ValueError("Wrong rayleigh optical thickness."))
 
-    if tau:
-        return values, tauv
-
-    return values
+    return values, tauv
 
 
 def RunAngles(s, wavelength=0.550, thetav=0, thetas=40, phi=90,
