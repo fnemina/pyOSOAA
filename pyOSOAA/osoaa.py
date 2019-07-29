@@ -456,7 +456,8 @@ class SED(object):
         self.sm = None
         self.tm = None
 
-    def SetPrimaryMode(self, mrwa, miwa, slope, rmin, rmax, rate):
+    def SetPrimaryMode(self, mrwa=1.2, miwa=0, slope=-4, 
+                       rmin=None, rmax=None, rate=1):
         """ Sets the primary mode using Junge's law
                 mrwa        Real part of the refractive index for mineral-like
                             particles at the simulation wavelength: main mode
@@ -1255,8 +1256,10 @@ class OSOAA(object):
             #     Junge main mode :
             if self.sed.jd is not None:
                 sc = sc+"\n"+"-SED.JD.slope {} \\".format(self.sed.jd.slope)
-                sc = sc+"\n"+"-SED.JD.rmin {} \\".format(self.sed.jd.rmin)
-                sc = sc+"\n"+"-SED.JD.rmax {} \\".format(self.sed.jd.rmax)
+                if self.sed.jd.rmin is not None:
+                    sc = sc+"\n"+"-SED.JD.rmin {} \\".format(self.sed.jd.rmin)
+                if self.sed.jd.rmax is not None:
+                    sc = sc+"\n"+"-SED.JD.rmax {} \\".format(self.sed.jd.rmax)
                 sc = sc+"\n"+"-SED.JD.MRwa {} \\".format(self.sed.jd.mrwa)
                 sc = sc+"\n"+"-SED.JD.MIwa {} \\".format(self.sed.jd.miwa)
                 sc = sc+"\n"+"-SED.JD.rate {} \\".format(self.sed.jd.rate)
