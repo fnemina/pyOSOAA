@@ -1312,6 +1312,9 @@ class OSOAA(object):
         with open(self.resroot+"/script.kzh", 'w') as file:
             file.write(sc)
 
+        # Change directory
+        os.chdir(self.resroot)
+
         # Run script with ksh
         os.system("ksh "+self.resroot+"/script.kzh")
 
