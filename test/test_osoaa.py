@@ -343,9 +343,6 @@ class TestOSOAAClasses(unittest.TestCase):
         self.assertEqual(phyto.gp.deep, 1)
         self.assertEqual(phyto.gp.width, 2)
 
-        phyto.SetProfilType(phyto.UserDefined, userfile="test/emptyfile.txt")
-        self.assertEqual(phyto.usefile, "test/emptyfile.txt")
-
         phyto.SetProfilType(phyto.UserDefined, userfile="fail")
         self.assertRaises(FileNotFoundError)
 
