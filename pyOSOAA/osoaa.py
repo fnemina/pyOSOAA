@@ -1313,6 +1313,7 @@ class OSOAA(object):
             file.write(sc)
 
         # Change directory
+        old_dir = os.getcwd()
         os.chdir(self.resroot)
 
         # Run script with ksh
@@ -1321,6 +1322,8 @@ class OSOAA(object):
         # read OUTPUTS
         self.outputs = OUTPUTS(self.resroot, self.results)
 
+        # Return to current dir
+        os.chdir(old_dir)
 
 def test():
     s = OSOAA()
