@@ -68,7 +68,7 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False):
     values = np.array([])
     tauv = np.array([])
 
-    if type(angle) is int or type(angle) is float or type(angle) is np.float64:
+    if type(angle) is int or type(angle) is float or type(angle) is np.float64 or type(angle) is np.int64:
         angle = np.zeros(np.size(wavelengths))+angle
 
     if type(taur) is np.ndarray:
