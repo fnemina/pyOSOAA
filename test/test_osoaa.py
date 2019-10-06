@@ -568,15 +568,16 @@ class TestOSOAAClasses(unittest.TestCase):
         s = pyOSOAA.OSOAA()
         self.assertIsNotNone(s.resroot)
         self.assertIsNotNone(s.root)
-        self.assertListEqual(list(vars(s).keys()), ["wa", "root",
-                                                    "resroot", "sea",
+        self.assertListEqual(list(vars(s).keys()), ["wa", "root", 
+                                                    "resroot", "cleanup", "sea",
                                                     "log", "results",
                                                     "dirmie", "phyto",
                                                     "sed", "ys",
                                                     "det", "ap",
                                                     "aer", "hyd",
                                                     "ang", "sos",
-                                                    "view", "logfile"])
+                                                    "view", "logfile"
+                                                    ])
 
         s.run()
         self.assertTrue(os.path.exists(s.resroot))
