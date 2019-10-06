@@ -2,6 +2,7 @@
 
 import os
 import random
+import shutil
 import string
 from io import open
 from .outputs import OUTPUTS
@@ -322,7 +323,7 @@ class PHYTO(object):
         self.sm = self.LND(mrwa, miwa, sdradius, sdvar, rate)
 
     def SetTertiaryMode(self, mrwa, miwa, sdradius, sdvar, rate):
-        """ Sets the secondary mode using lognormal distribution
+        """ Sets the tertiary mode using lognormal distribution
                 mrwa        Real part of the refractive index for phytoplankton
                             particles at the simulation wavelength (LND
                             distribution)
@@ -705,7 +706,7 @@ class AEROSOLMODELS(object):
                 cmiwa       Imaginary part of the aerosol refractive index for
                             the  wavelength of radiation calculationfor the
                             coarse mode
-                csdradius   Modal radius (um) of the Log-Noprmal size
+                csdradius   Modal radius (um) of the Log-Normal size
                             distribution for the coarse mode
                 csdvar      Standard deviation of the Log-Normal size
                             distribution for the coarse mode
@@ -1295,7 +1296,7 @@ class OSOAA(object):
         if self.logfile is None:
             sc = sc+"\n"+"-SEA.Wind {} ".format(self.sea.wind)
         else:
-            sc = sc+"\n"+"-SEA.Wind {} >> {}".format(self.sea.wind, self.logfile)
+            sc = sc+"\n"+"-SEA.Wind {} > {}".format(self.sea.wind, self.logfile)
 
         # Check if directory exists
 
@@ -1321,6 +1322,9 @@ class OSOAA(object):
 
         # read OUTPUTS
         self.outputs = OUTPUTS(self.resroot, self.results)
+	
+        # delete result file
+        shutil.rmtree(self.resroot)
 
         # Return to current dir
         os.chdir(old_dir)
