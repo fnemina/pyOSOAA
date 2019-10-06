@@ -1296,7 +1296,7 @@ class OSOAA(object):
         if self.logfile is None:
             sc = sc+"\n"+"-SEA.Wind {} ".format(self.sea.wind)
         else:
-            sc = sc+"\n"+"-SEA.Wind {} > {}".format(self.sea.wind, self.logfile)
+            sc = sc+"\n"+"-SEA.Wind {} >> {}".format(self.sea.wind, self.logfile)
 
         # Check if directory exists
 
