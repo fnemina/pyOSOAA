@@ -975,11 +975,14 @@ class OSOAA(object):
     """ This class creates the OSOAA objecto which configures and runs the
         simulation"""
 
-    def __init__(self, wa=0.440, resroot=None, logfile=None):
+    def __init__(self, wa=0.440, resroot=None, logfile=None, cleanup=False):
         """ This method initiates the OSOAA class
             wa          Wavelength of radiance calculation (microns).
             resroot     Working folder for the OSOAA computations (complete
                         path).
+            logfile     Logfile name to output the results.
+            cleanup     True to delete the directories with the results. 
+                        False by default.
         """
 
         self.wa = wa
@@ -991,6 +994,8 @@ class OSOAA(object):
             self.resroot = self.root+"/results/"+rnd
         else:
             self.resroot = resroot
+
+        self.cleanup = cleanup        
 
         self.sea = SEA()
         self.log = LOG()
@@ -1323,8 +1328,10 @@ class OSOAA(object):
         # read OUTPUTS
         self.outputs = OUTPUTS(self.resroot, self.results)
 	
+
         # delete result file
-        shutil.rmtree(self.resroot)
+        if self.cleanup is True:
+            shutil.rmtree(self.resroot)
 
         # Return to current dir
         os.chdir(old_dir)
