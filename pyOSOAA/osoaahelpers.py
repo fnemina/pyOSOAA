@@ -33,7 +33,7 @@ def ConfigureOcean(s, ocean_type="black"):
         return s
 
 
-def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False):
+def RunWavelengths(s, wavelengths=[0.550], view=0, output="I", taur=False, sun=None, phi=None):
     """ This method run the simulation for a given pyOSOAA object for a set of
         wavelengths and angles and returns the output from the file vsVZA
 
@@ -42,7 +42,7 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False):
         s           The pyOSOAA object for which we want to run the simulation.
         wavelengths An interable with the wavelengths in micrometers for which
                     to run the simulations
-        angles      The view angle in degrees for which to run the simulation.
+        view        The view angle in degrees for which to run the simulation.
         output      The name of the output we want to compute as an string
                     I           Stokes parameter at output level Z (in sr-1)
                                 normalised to the extraterrestrial solar
@@ -60,6 +60,8 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False):
         taur        True to compute Rayleigh optical thickness. 
                     False to not return the array.
                     Numpy array of optical thicknesses otherwise.
+        sun         The sun angle in degrees
+        phi         The relative azymuth angle in degrees
         """
 
     if output not in ["I", "refl", "polrate", "lpol", "reflpol"]:
@@ -68,46 +70,101 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False):
     values = np.array([])
     tauv = np.array([])
 
-    if type(angle) is int or type(angle) is float or type(angle) is np.float64 or type(angle) is np.int64:
-        angle = np.zeros(np.size(wavelengths))+angle
+    if type(view) is int or type(view) is float or type(view) is np.float64 or type(view) is np.int64:
+        view = np.zeros(np.size(wavelengths))+view
 
-    if type(taur) is np.ndarray:
-        for idx, wl in np.ndenumerate(wavelengths):
-            # We set the wavelength and run the simulation
-            s.wa = wl
-            s.ap.SetMot(taur[idx])
-            s.run()
-            # Convert the output to a directory
-            results = vars(s.outputs.vsvza)
-            # We interpolte the values and add it to a numpy array
-            f = interp1d(results['vza'], results[output])
-            values = np.append(values, f(angle[idx[0]]))
-            tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
-    elif taur is True:
-        for idx, wl in np.ndenumerate(wavelengths):
-            # We set the wavelength and run the simulation
-            s.wa = wl
-            s.run()
-            # Convert the output to a directory
-            results = vars(s.outputs.vsvza)
-            # We interpolte the values and add it to a numpy array
-            f = interp1d(results['vza'], results[output])
-            values = np.append(values, f(angle[idx[0]]))
-            tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
-    elif taur is False:
-        for idx, wl in np.ndenumerate(wavelengths):
-            # We set the wavelength and run the simulation
-            s.wa = wl
-            s.run()
-            # Convert the output to a directory
-            results = vars(s.outputs.vsvza)
-            # We interpolte the values and add it to a numpy array
-            f = interp1d(results['vza'], results[output])
-            values = np.append(values, f(angle[idx[0]]))
-            tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
-        return values
+    if (sun is None) and (phi is None):
+        if type(taur) is np.ndarray:
+            for idx, wl in np.ndenumerate(wavelengths):
+                # We set the wavelength and run the simulation
+                s.wa = wl
+                s.ap.SetMot(taur[idx])
+                s.run()
+                # Convert the output to a directory
+                results = vars(s.outputs.vsvza)
+                # We interpolte the values and add it to a numpy array
+                f = interp1d(results['vza'], results[output])
+                values = np.append(values, f(view[idx[0]]))
+                tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
+        elif taur is True:
+            for idx, wl in np.ndenumerate(wavelengths):
+                # We set the wavelength and run the simulation
+                s.wa = wl
+                s.run()
+                # Convert the output to a directory
+                results = vars(s.outputs.vsvza)
+                # We interpolte the values and add it to a numpy array
+                f = interp1d(results['vza'], results[output])
+                values = np.append(values, f(view[idx[0]]))
+                tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
+        elif taur is False:
+            for idx, wl in np.ndenumerate(wavelengths):
+                # We set the wavelength and run the simulation
+                s.wa = wl
+                s.run()
+                # Convert the output to a directory
+                results = vars(s.outputs.vsvza)
+                # We interpolte the values and add it to a numpy array
+                f = interp1d(results['vza'], results[output])
+                values = np.append(values, f(view[idx[0]]))
+                tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
+            return values
+        else:
+            raise(ValueError("Wrong rayleigh optical thickness."))
+
+    elif (sun is not None) and (phi is not None):
+        if type(sun) is int or type(sun) is float or type(sun) is np.float64 or type(sun) is np.int64:
+            sun = np.zeros(np.size(wavelengths))+sun
+        
+        if type(phi) is int or type(phi) is float or type(phi) is np.float64 or type(phi) is np.int64:
+            phi = np.zeros(np.size(wavelengths))+phi
+
+        if type(taur) is np.ndarray:
+            for idx, wl in np.ndenumerate(wavelengths):
+                # We set the wavelength and run the simulation
+                s.wa = wl
+                s.ap.SetMot(taur[idx])
+                s.ang.thetas = sun[idx[0]]
+                s.view.phi = phi[idx[0]]
+                s.run()
+                # Convert the output to a directory
+                results = vars(s.outputs.vsvza)
+                # We interpolte the values and add it to a numpy array
+                f = interp1d(results['vza'], results[output])
+                values = np.append(values, f(view[idx[0]]))
+                tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
+        elif taur is True:
+            for idx, wl in np.ndenumerate(wavelengths):
+                # We set the wavelength and run the simulation
+                s.wa = wl
+                s.ang.thetas = sun[idx[0]]
+                s.view.phi = phi[idx[0]]
+                s.run()
+                # Convert the output to a directory
+                results = vars(s.outputs.vsvza)
+                # We interpolte the values and add it to a numpy array
+                f = interp1d(results['vza'], results[output])
+                values = np.append(values, f(view[idx[0]]))
+                tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
+        elif taur is False:
+            for idx, wl in np.ndenumerate(wavelengths):
+                # We set the wavelength and run the simulation
+                s.wa = wl
+                s.ang.thetas = sun[idx[0]]
+                s.view.phi = phi[idx[0]]
+                s.run()
+                # Convert the output to a directory
+                results = vars(s.outputs.vsvza)
+                # We interpolte the values and add it to a numpy array
+                f = interp1d(results['vza'], results[output])
+                values = np.append(values, f(view[idx[0]]))
+                tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
+            return values
+        else:
+            raise(ValueError("Wrong rayleigh optical thickness."))
     else:
-        raise(ValueError("Wrong rayleigh optical thickness."))
+        raise(ValueError("Either both or neither the sun angle and relative azymuth angle must be specified."))
+
 
     return values, tauv
 
