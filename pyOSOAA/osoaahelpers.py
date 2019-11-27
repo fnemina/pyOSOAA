@@ -84,7 +84,7 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
                 results = vars(s.outputs.vsvza)
                 # We interpolte the values and add it to a numpy array
                 f = interp1d(results['vza'], results[output])
-                values = np.append(values, f(angle[idx[0]]))
+                values = np.append(values, f(angle[idx))
                 tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
         elif taur is True:
             for idx, wl in np.ndenumerate(wavelengths):
@@ -95,7 +95,7 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
                 results = vars(s.outputs.vsvza)
                 # We interpolte the values and add it to a numpy array
                 f = interp1d(results['vza'], results[output])
-                values = np.append(values, f(angle[idx[0]]))
+                values = np.append(values, f(angle[idx]))
                 tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
         elif taur is False:
             for idx, wl in np.ndenumerate(wavelengths):
@@ -106,7 +106,7 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
                 results = vars(s.outputs.vsvza)
                 # We interpolte the values and add it to a numpy array
                 f = interp1d(results['vza'], results[output])
-                values = np.append(values, f(angle[idx[0]]))
+                values = np.append(values, f(angle[idx]))
                 tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
             return values
         else:
@@ -124,40 +124,40 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
                 # We set the wavelength and run the simulation
                 s.wa = wl
                 s.ap.SetMot(taur[idx])
-                s.ang.thetas = sun[idx[0]]
-                s.view.phi = phi[idx[0]]
+                s.ang.thetas = sun[idx]
+                s.view.phi = phi[idx]
                 s.run()
                 # Convert the output to a directory
                 results = vars(s.outputs.vsvza)
                 # We interpolte the values and add it to a numpy array
                 f = interp1d(results['vza'], results[output])
-                values = np.append(values, f(angle[idx[0]]))
+                values = np.append(values, f(angle[idx]))
                 tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
         elif taur is True:
             for idx, wl in np.ndenumerate(wavelengths):
                 # We set the wavelength and run the simulation
                 s.wa = wl
-                s.ang.thetas = sun[idx[0]]
-                s.view.phi = phi[idx[0]]
+                s.ang.thetas = sun[idx]
+                s.view.phi = phi[idx]
                 s.run()
                 # Convert the output to a directory
                 results = vars(s.outputs.vsvza)
                 # We interpolte the values and add it to a numpy array
                 f = interp1d(results['vza'], results[output])
-                values = np.append(values, f(angle[idx[0]]))
+                values = np.append(values, f(angle[idx]))
                 tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
         elif taur is False:
             for idx, wl in np.ndenumerate(wavelengths):
                 # We set the wavelength and run the simulation
                 s.wa = wl
-                s.ang.thetas = sun[idx[0]]
-                s.view.phi = phi[idx[0]]
+                s.ang.thetas = sun[idx]
+                s.view.phi = phi[idx]
                 s.run()
                 # Convert the output to a directory
                 results = vars(s.outputs.vsvza)
                 # We interpolte the values and add it to a numpy array
                 f = interp1d(results['vza'], results[output])
-                values = np.append(values, f(angle[idx[0]]))
+                values = np.append(values, f(angle[idx]))
                 tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
             return values
         else:
