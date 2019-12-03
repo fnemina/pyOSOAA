@@ -78,13 +78,13 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
             for idx, wl in np.ndenumerate(wavelengths):
                 # We set the wavelength and run the simulation
                 s.wa = wl
-                s.ap.SetMot(taur[idx])
+                s.ap.SetMot(taur[idx[0]])
                 s.run()
                 # Convert the output to a directory
                 results = vars(s.outputs.vsvza)
                 # We interpolte the values and add it to a numpy array
                 f = interp1d(results['vza'], results[output])
-                values = np.append(values, f(angle[idx]))
+                values = np.append(values, f(angle[idx[0]]))
                 tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
         elif taur is True:
             for idx, wl in np.ndenumerate(wavelengths):
@@ -95,7 +95,7 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
                 results = vars(s.outputs.vsvza)
                 # We interpolte the values and add it to a numpy array
                 f = interp1d(results['vza'], results[output])
-                values = np.append(values, f(angle[idx]))
+                values = np.append(values, f(angle[idx[0]]))
                 tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
         elif taur is False:
             for idx, wl in np.ndenumerate(wavelengths):
@@ -106,7 +106,7 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
                 results = vars(s.outputs.vsvza)
                 # We interpolte the values and add it to a numpy array
                 f = interp1d(results['vza'], results[output])
-                values = np.append(values, f(angle[idx]))
+                values = np.append(values, f(angle[idx[0]]))
                 tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
             return values
         else:
