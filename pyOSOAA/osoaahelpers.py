@@ -33,7 +33,7 @@ def ConfigureOcean(s, ocean_type="black"):
         return s
 
 
-def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=None, phi=None):
+def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=None, phi=None, rho_alb=False):
     """ This method run the simulation for a given pyOSOAA object for a set of
         wavelengths and angles and returns the output from the file vsVZA
 
@@ -62,6 +62,7 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
                     Numpy array of optical thicknesses otherwise.
         sun         The sun angle in degrees
         phi         The relative azymuth angle in degrees
+        rho_alb     Surface albedo
         """
 
     if output not in ["I", "refl", "polrate", "lpol", "reflpol"]:
@@ -77,6 +78,8 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
         if type(taur) is np.ndarray:
             for idx, wl in np.ndenumerate(wavelengths):
                 # We set the wavelength and run the simulation
+                if rho_alb is not False:
+                    s.sea.surfalb = rho_alb[idx]
                 s.wa = wl
                 s.ap.SetMot(taur[idx[0]])
                 s.run()
@@ -89,6 +92,8 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
         elif taur is True:
             for idx, wl in np.ndenumerate(wavelengths):
                 # We set the wavelength and run the simulation
+                if rho_alb is not False:
+                    s.sea.surfalb = rho_alb[idx]
                 s.wa = wl
                 s.run()
                 # Convert the output to a directory
@@ -100,6 +105,8 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
         elif taur is False:
             for idx, wl in np.ndenumerate(wavelengths):
                 # We set the wavelength and run the simulation
+                if rho_alb is not False:
+                    s.sea.surfalb = rho_alb[idx]
                 s.wa = wl
                 s.run()
                 # Convert the output to a directory
@@ -122,6 +129,8 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
         if type(taur) is np.ndarray:
             for idx, wl in np.ndenumerate(wavelengths):
                 # We set the wavelength and run the simulation
+                if rho_alb is not False:
+                    s.sea.surfalb = rho_alb[idx]
                 s.wa = wl
                 s.ap.SetMot(taur[idx])
                 s.ang.thetas = sun[idx]
@@ -136,6 +145,8 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
         elif taur is True:
             for idx, wl in np.ndenumerate(wavelengths):
                 # We set the wavelength and run the simulation
+                if rho_alb is not False:
+                    s.sea.surfalb = rho_alb[idx]
                 s.wa = wl
                 s.ang.thetas = sun[idx]
                 s.view.phi = phi[idx]
@@ -149,6 +160,8 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
         elif taur is False:
             for idx, wl in np.ndenumerate(wavelengths):
                 # We set the wavelength and run the simulation
+                if rho_alb is not False:
+                    s.sea.surfalb = rho_alb[idx]
                 s.wa = wl
                 s.ang.thetas = sun[idx]
                 s.view.phi = phi[idx]
