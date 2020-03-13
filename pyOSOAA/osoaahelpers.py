@@ -86,8 +86,9 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
                 # Convert the output to a directory
                 results = vars(s.outputs.vsvza)
                 # We interpolte the values and add it to a numpy array
-                f = interp1d(results['vza'], results[output])
-                values = np.append(values, f(angle[idx[0]]))
+                #f = interp1d(results['vza'], results[output])
+                #values = np.append(values, f(angle[idx[0]]))
+                values = np.append(values, np.interp(angle[idx], results['vza'], results[output]))
                 tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
         elif taur is True:
             for idx, wl in np.ndenumerate(wavelengths):
@@ -99,8 +100,9 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
                 # Convert the output to a directory
                 results = vars(s.outputs.vsvza)
                 # We interpolte the values and add it to a numpy array
-                f = interp1d(results['vza'], results[output])
-                values = np.append(values, f(angle[idx[0]]))
+                #f = interp1d(results['vza'], results[output])
+                #values = np.append(values, f(angle[idx[0]]))
+                values = np.append(values, np.interp(angle[idx], results['vza'], results[output]))
                 tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
         elif taur is False:
             for idx, wl in np.ndenumerate(wavelengths):
@@ -112,8 +114,9 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
                 # Convert the output to a directory
                 results = vars(s.outputs.vsvza)
                 # We interpolte the values and add it to a numpy array
-                f = interp1d(results['vza'], results[output])
-                values = np.append(values, f(angle[idx[0]]))
+                #f = interp1d(results['vza'], results[output])
+                #values = np.append(values, f(angle[idx[0]]))
+                values = np.append(values, np.interp(angle[idx], results['vza'], results[output]))
                 tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
             return values
         else:
@@ -139,8 +142,9 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
                 # Convert the output to a directory
                 results = vars(s.outputs.vsvza)
                 # We interpolte the values and add it to a numpy array
-                f = interp1d(results['vza'], results[output])
-                values = np.append(values, f(angle[idx]))
+                #f = interp1d(results['vza'], results[output])
+                #values = np.append(values, f(angle[idx]))
+                values = np.append(values, np.interp(angle[idx], results['vza'], results[output]))
                 tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
         elif taur is True:
             for idx, wl in np.ndenumerate(wavelengths):
@@ -154,8 +158,9 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
                 # Convert the output to a directory
                 results = vars(s.outputs.vsvza)
                 # We interpolte the values and add it to a numpy array
-                f = interp1d(results['vza'], results[output])
-                values = np.append(values, f(angle[idx]))
+                #f = interp1d(results['vza'], results[output])
+                #values = np.append(values, f(angle[idx]))
+                values = np.append(values, np.interp(angle[idx], results['vza'], results[output]))
                 tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
         elif taur is False:
             for idx, wl in np.ndenumerate(wavelengths):
@@ -169,8 +174,9 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
                 # Convert the output to a directory
                 results = vars(s.outputs.vsvza)
                 # We interpolte the values and add it to a numpy array
-                f = interp1d(results['vza'], results[output])
-                values = np.append(values, f(angle[idx]))
+                #f = interp1d(results['vza'], results[output])
+                #values = np.append(values, f(angle[idx]))
+                values = np.append(values, np.interp(angle[idx], results['vza'], results[output]))
                 tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
             return values
         else:
