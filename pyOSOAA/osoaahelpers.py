@@ -196,7 +196,8 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
             raise(ValueError("Wrong rayleigh optical thickness."))
     else:
         raise(ValueError("Either both or neither the sun angle and relative azymuth angle must be specified."))
-
+    if getTau:
+        return values, tau
     return values, tauv
 
 
