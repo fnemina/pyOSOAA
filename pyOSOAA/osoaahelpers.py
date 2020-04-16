@@ -33,7 +33,7 @@ def ConfigureOcean(s, ocean_type="black"):
         return s
 
 
-def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=None, phi=None, rho_alb=False):
+def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=None, phi=None, rho_alb=False, getTau=False):
     """ This method run the simulation for a given pyOSOAA object for a set of
         wavelengths and angles and returns the output from the file vsVZA
 
@@ -63,6 +63,7 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
         sun         The sun angle in degrees
         phi         The relative azymuth angle in degrees
         rho_alb     Surface albedo
+        getTau      Returns a dictionary with the optical thickness for each band
         """
 
     if output not in ["I", "refl", "polrate", "lpol", "reflpol"]:
@@ -70,6 +71,8 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
 
     values = np.array([])
     tauv = np.array([])
+
+    tau = {}
 
     if type(angle) is int or type(angle) is float or type(angle) is np.float64 or type(angle) is np.int64:
         angle = np.zeros(np.size(wavelengths))+angle
@@ -90,6 +93,7 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
                 #values = np.append(values, f(angle[idx[0]]))
                 values = np.append(values, np.interp(angle[idx], results['vza'], results[output]))
                 tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
+                tau[wl] = s.outputs.profileatm 
         elif taur is True:
             for idx, wl in np.ndenumerate(wavelengths):
                 # We set the wavelength and run the simulation
@@ -104,6 +108,7 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
                 #values = np.append(values, f(angle[idx[0]]))
                 values = np.append(values, np.interp(angle[idx], results['vza'], results[output]))
                 tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
+                tau[wl] = s.outputs.profileatm
         elif taur is False:
             for idx, wl in np.ndenumerate(wavelengths):
                 # We set the wavelength and run the simulation
@@ -118,6 +123,9 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
                 #values = np.append(values, f(angle[idx[0]]))
                 values = np.append(values, np.interp(angle[idx], results['vza'], results[output]))
                 tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
+                tau[wl] = s.outputs.profileatm
+            if getTau:
+                return values, tau
             return values
         else:
             raise(ValueError("Wrong rayleigh optical thickness."))
@@ -146,6 +154,7 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
                 #values = np.append(values, f(angle[idx]))
                 values = np.append(values, np.interp(angle[idx], results['vza'], results[output]))
                 tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
+                tau[wl] = s.outputs.profileatm
         elif taur is True:
             for idx, wl in np.ndenumerate(wavelengths):
                 # We set the wavelength and run the simulation
@@ -162,6 +171,7 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
                 #values = np.append(values, f(angle[idx]))
                 values = np.append(values, np.interp(angle[idx], results['vza'], results[output]))
                 tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
+                tau[wl] = s.outputs.profileatm
         elif taur is False:
             for idx, wl in np.ndenumerate(wavelengths):
                 # We set the wavelength and run the simulation
@@ -178,12 +188,14 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
                 #values = np.append(values, f(angle[idx]))
                 values = np.append(values, np.interp(angle[idx], results['vza'], results[output]))
                 tauv = np.append(tauv, s.outputs.profileatm.tau[-1])
+                tau[wl] = s.outputs.profileatm
+            if getTau:
+                return values, tau
             return values
         else:
             raise(ValueError("Wrong rayleigh optical thickness."))
     else:
         raise(ValueError("Either both or neither the sun angle and relative azymuth angle must be specified."))
-
 
     return values, tauv
 
