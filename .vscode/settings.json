@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "/home/fnemina/bin/anaconda3/bin/python",
+    "python.pythonPath": "/home/fnemina/bin/miniconda3/bin/python",
     "python.testing.unittestArgs": [
         "-v",
         "-s",
