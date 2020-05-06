@@ -428,15 +428,15 @@ class OUTPUTS(object):
             """
         self.vsvza = VSVZA(resroot, filenames.vsvza)
 
-        if os.path.exists(resroot+"Standard_outputs"+filenames.vsz):
+        if os.path.exists(resroot+"/Standard_outputs/"+filenames.vsz):
             if filenames.vsz is not None:
                 self.vsz = VSZ(resroot, filenames.vsz)
-
-        if os.path.exists(resroot+"Advanced_outputs"+filenames.advup):
+                
+        if os.path.exists(resroot+"/Advanced_outputs/"+filenames.advup):
             if filenames.advup is not None:
                 self.advup = ADVUPDOWN(resroot, filenames.advup)
 
-        if os.path.exists(resroot+"Advanced_outputs"+filenames.advdown):
+        if os.path.exists(resroot+"/Advanced_outputs/"+filenames.advdown):
             if filenames.advdown is not None:
                 self.advdown = ADVUPDOWN(resroot, filenames.advdown)
 
