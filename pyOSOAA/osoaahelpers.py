@@ -82,7 +82,7 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
             for idx, wl in np.ndenumerate(wavelengths):
                 # We set the wavelength and run the simulation
                 if rho_alb is not False:
-                    s.sea.surfalb = rho_alb[idx]
+                    s.sea.surfalb = np.round(rho_alb[idx],8)
                 s.wa = wl
                 s.ap.SetMot(taur[idx[0]])
                 s.run()
@@ -98,7 +98,7 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
             for idx, wl in np.ndenumerate(wavelengths):
                 # We set the wavelength and run the simulation
                 if rho_alb is not False:
-                    s.sea.surfalb = rho_alb[idx]
+                    s.sea.surfalb = np.round(rho_alb[idx],8)
                 s.wa = wl
                 s.run()
                 # Convert the output to a directory
@@ -113,7 +113,7 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
             for idx, wl in np.ndenumerate(wavelengths):
                 # We set the wavelength and run the simulation
                 if rho_alb is not False:
-                    s.sea.surfalb = rho_alb[idx]
+                    s.sea.surfalb = np.round(rho_alb[idx],8)
                 s.wa = wl
                 s.run()
                 # Convert the output to a directory
@@ -141,7 +141,7 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
             for idx, wl in np.ndenumerate(wavelengths):
                 # We set the wavelength and run the simulation
                 if rho_alb is not False:
-                    s.sea.surfalb = rho_alb[idx]
+                    s.sea.surfalb = np.round(rho_alb[idx],8)
                 s.wa = wl
                 s.ap.SetMot(taur[idx])
                 s.ang.thetas = sun[idx]
@@ -159,7 +159,7 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
             for idx, wl in np.ndenumerate(wavelengths):
                 # We set the wavelength and run the simulation
                 if rho_alb is not False:
-                    s.sea.surfalb = rho_alb[idx]
+                    s.sea.surfalb = np.round(rho_alb[idx],8)
                 s.wa = wl
                 s.ang.thetas = sun[idx]
                 s.view.phi = phi[idx]
@@ -176,7 +176,7 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
             for idx, wl in np.ndenumerate(wavelengths):
                 # We set the wavelength and run the simulation
                 if rho_alb is not False:
-                    s.sea.surfalb = rho_alb[idx]
+                    s.sea.surfalb = np.round(rho_alb[idx],8)
                 s.wa = wl
                 s.ang.thetas = sun[idx]
                 s.view.phi = phi[idx]
