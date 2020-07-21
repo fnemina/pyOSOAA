@@ -1017,9 +1017,12 @@ class OSOAA(object):
         self.view = VIEW()
         self.logfile = logfile
 
-    def run(self, root=None):
+    def run(self, root=None, forcerun=False):
         """ Run OSOAA. If no root directory is given for OSOAA the one
             configured by the system is used.
+
+            If forcerun is set to true the simulation will be run even
+            if it exists.
             """
 
         if root is not None:
@@ -1316,12 +1319,12 @@ class OSOAA(object):
             sc = sc+"\n"+"-OSOAA.ResRoot {} >> {}".format(self.sea.wind, self.logfile)
 
         # Variable to check if we have to perform the excution
-        run = False
+        
         # Check if directory exists
         # If we asked for not calculated variables, we compute them
         if not os.path.exists(self.resroot):
             os.makedirs(self.resroot)
-            run = True            
+            forcerun = True            
         if not os.path.exists(self.dirmie.aer):
             os.makedirs(self.dirmie.aer)
         if not os.path.exists(self.dirmie.hyd):
@@ -1338,7 +1341,7 @@ class OSOAA(object):
         os.chdir(self.resroot)
 
         # Run script with ksh
-        if run:
+        if forcerun:
             os.system("ksh "+self.resroot+"/script.kzh")
 
         # read OUTPUTS
