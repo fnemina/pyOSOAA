@@ -6,7 +6,7 @@ import shutil
 import string
 from io import open
 from .outputs import OUTPUTS
-
+import hashlib
 
 class SEA(object):
     """ This is the SEA class which defines the interfaces at the bottom of the
@@ -987,13 +987,17 @@ class OSOAA(object):
 
         self.wa = wa
         self.root = os.getenv("OSOAA_ROOT")
+        
         if resroot is None:
-            rnd = ''.join(random.choice(string.ascii_uppercase +
-                                        string.ascii_lowercase +
-                                        string.digits) for _ in range(16))
-            self.resroot = self.root+"/results/"+rnd
+            #rnd = ''.join(random.choice(string.ascii_uppercase +
+            #                            string.ascii_lowercase +
+            #                            string.digits) for _ in range(16))
+            #self.resroot = self.root+"/results/"+rnd
+            self.resroot = None
+            self.customresroot = False
         else:
             self.resroot = resroot
+            self.customresroot = True
 
         self.cleanup = cleanup        
 
@@ -1022,9 +1026,6 @@ class OSOAA(object):
             self.root = root
 
         sc = "{}/exe/OSOAA_MAIN.exe \\".format(self.root)
-        #   Definition of the working folder :
-        #   ----------------------------------
-        sc = sc+"\n"+"-OSOAA.ResRoot {} \\".format(self.resroot)
         #
         #   Angles calculation parameters :
         #   --------------------------------
@@ -1298,15 +1299,29 @@ class OSOAA(object):
             sc = sc+"\n"+"-SEA.Log {} \\".format(self.log.sea)
         sc = sc+"\n"+"-SEA.Dir {} \\".format(self.dirmie.sea)
         sc = sc+"\n"+"-SEA.Ind {} \\".format(self.sea.ind)
+        
+        sc = sc+"\n"+"-SEA.Wind {} \\".format(self.sea.wind)
+
+        
+        #   Definition of the working folder :
+        #   ----------------------------------
+        # We hash the config file to use as folder name
+        if self.customresroot is False:
+            hashed = hashlib.md5(sc.encode()).hexdigest()
+            self.resroot = self.root+"/results/"+hashed
+
         if self.logfile is None:
-            sc = sc+"\n"+"-SEA.Wind {} ".format(self.sea.wind)
+            sc = sc+"\n"+"-OSOAA.ResRoot {}".format(self.resroot)
         else:
-            sc = sc+"\n"+"-SEA.Wind {} >> {}".format(self.sea.wind, self.logfile)
+            sc = sc+"\n"+"-OSOAA.ResRoot {} >> {}".format(self.sea.wind, self.logfile)
 
+        # Variable to check if we have to perform the excution
+        run = False
         # Check if directory exists
-
+        # If we asked for not calculated variables, we compute them
         if not os.path.exists(self.resroot):
             os.makedirs(self.resroot)
+            run = True            
         if not os.path.exists(self.dirmie.aer):
             os.makedirs(self.dirmie.aer)
         if not os.path.exists(self.dirmie.hyd):
@@ -1323,7 +1338,8 @@ class OSOAA(object):
         os.chdir(self.resroot)
 
         # Run script with ksh
-        os.system("ksh "+self.resroot+"/script.kzh")
+        if run:
+            os.system("ksh "+self.resroot+"/script.kzh")
 
         # read OUTPUTS
         self.outputs = OUTPUTS(self.resroot, self.results)

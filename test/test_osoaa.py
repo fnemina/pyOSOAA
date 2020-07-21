@@ -562,14 +562,14 @@ class TestOSOAAClasses(unittest.TestCase):
         self.assertEqual(view.vza, 0)
 
     def testOSOAA(self):
-        s = pyOSOAA.OSOAA(resroot="test")
-        self.assertEqual(s.resroot, "test")
+        s = pyOSOAA.OSOAA(resroot="/tmp/test")
+        self.assertEqual(s.resroot, "/tmp/test")
         self.assertEqual(s.wa, 0.440)
-        s = pyOSOAA.OSOAA()
         self.assertIsNotNone(s.resroot)
         self.assertIsNotNone(s.root)
         self.assertListEqual(list(vars(s).keys()), ["wa", "root", 
-                                                    "resroot", "cleanup", "sea",
+                                                    "resroot", "customresroot",
+                                                    "cleanup", "sea",
                                                     "log", "results",
                                                     "dirmie", "phyto",
                                                     "sed", "ys",
