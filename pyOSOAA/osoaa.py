@@ -1316,7 +1316,7 @@ class OSOAA(object):
         if self.logfile is None:
             sc = sc+"\n"+"-OSOAA.ResRoot {}".format(self.resroot)
         else:
-            sc = sc+"\n"+"-OSOAA.ResRoot {} >> {}".format(self.sea.wind, self.logfile)
+            sc = sc+"\n"+"-OSOAA.ResRoot {} >> {}".format(self.resroot, self.logfile)
 
         # Variable to check if we have to perform the excution
         
