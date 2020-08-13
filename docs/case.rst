@@ -93,11 +93,11 @@ We will compute the reflectance both above (view level 3) and below (view level 
 
   # Configure view level below the surface
   s.view.level = 3
-  rhowg = RunWavelengths(s, wavelengths, view)/np.cos(np.pi*view/180.0)
+  rhowg = RunWavelengths(s, wavelengths, view)/np.cos(np.pi*s.ang.thetas/180.0)
 
   # Configure view level below the surface
   s.view.level = 4
-  rhowl = RunWavelengths(s, wavelengths, view)/np.cos(np.pi*view/180.0)
+  rhowl = RunWavelengths(s, wavelengths, view)/np.cos(np.pi*s.ang.thetas/180.0)
 
 We see that the reflectance below the sea surface, equal to the water leaving radiance, is negligible next to the reflectance just above the surface, that includes the glint component
 
@@ -128,7 +128,7 @@ water leaving radiance for a very low aerosol and molecular optical thickness ju
 
   # View level
   s.view.level = 4
-  rhog = RunWavelengths(s, wavelengths, view)/np.cos(np.pi*view/180.0)
+  rhog = RunWavelengths(s, wavelengths, view)/np.cos(np.pi*s.ang.thetas/180.0)
 
   plt.figure(figsize=(7.5,5))
   plt.plot(wavelengths*1e3,rhog,'o-',label="Glint reflectance")
@@ -155,7 +155,7 @@ standard pressure and the level at the top of the atmosphere
 
   # Set view level at TOA
   s.view.level = 1
-  rhor = RunWavelengths(s, wavelengths, view)/np.cos(np.pi*view/180.0)
+  rhor = RunWavelengths(s, wavelengths, view)/np.cos(np.pi*s.ang.thetas/180.0)
 
   plt.figure(figsize=(7.5,5))
   plt.plot(wavelengths*1e3,rhor,'o-',label="Molecular reflectance")
@@ -202,7 +202,7 @@ thickness to a nonzero value and the molecular optical thickness to zero.
   for key in AerosolModels.keys():
     model = AerosolModels[key]
     s.aer.SetModel(model=2, sfmodel=model[0], rh=model[1])
-    results[key] = RunWavelengths(s, wavelengths, view)/np.cos(np.pi*view/180.0)
+    results[key] = RunWavelengths(s, wavelengths, view)/np.cos(np.pi*s.ang.thetas/180.0)
 
   plt.figure(figsize=(7.5,5))
   plt.plot([],[],'ok',label="Maritime aerosol")
@@ -277,7 +277,7 @@ performing the simulation. We will do this for the maritime model with
 
   # Set view level at TOA
   s.view.level = 1
-  rhot = RunWavelengths(s, wavelengths, view)/np.cos(np.pi*view/180.0)
+  rhot = RunWavelengths(s, wavelengths, view)/np.cos(np.pi*s.ang.thetas/180.0)
 
 We also compute the transmittances for the molecular and aerosol model.
 We use :math:`\tau_a = 0.1` for all bands as the aerosol optical thickness.
