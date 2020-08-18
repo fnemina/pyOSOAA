@@ -18,7 +18,7 @@ def ConfigureOcean(s, ocean_type="black"):
     if ocean_type not in ["black"]:
         raise(ValueError("Wrong ocean type."))
 
-    if ocean_type is "black":
+    if ocean_type == "black":
         # Sea bottom configuration
         s.sea.depth = 0.05
         s.sea.bottype = 1

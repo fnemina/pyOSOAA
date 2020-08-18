@@ -650,10 +650,10 @@ class AEROSOLMODELS(object):
             self.miwa = None
             self.mrwaref = None
             self.miwaref = None
-            if sdtype is 1:
+            if sdtype == 1:
                 self.sdradius = None
                 self.sdvar = None
-            elif sdtype is 2:
+            elif sdtype == 2:
                 self.slope = None
                 self.rmin = None
                 self.rmax = None
@@ -680,7 +680,7 @@ class AEROSOLMODELS(object):
 
             self.model = wmotype
 
-            if wmotype is 4:
+            if wmotype == 4:
                 self.dl = dl
                 self.ws = ws
                 self.oc = oc
@@ -736,10 +736,10 @@ class AEROSOLMODELS(object):
                 """
 
             self.vcdef = vcdef
-            if vcdef is 1:
+            if vcdef == 1:
                 self.coarsevc = None
                 self.finevc = None
-            elif vcdef is 2:
+            elif vcdef == 2:
                 self.raot = None
 
             self.cmrwa = None
@@ -849,31 +849,31 @@ class AER(object):
                         simulation wavelength must be equal
         """
         self.model = model
-        if model is 0:
+        if model == 0:
             self.mm = AEROSOLMODELS.MM(sdtype)
             self.wmo = None
             self.sf = None
             self.lnd = None
             self.external = None
-        elif model is 1:
+        elif model == 1:
             self.mm = None
             self.wmo = AEROSOLMODELS.WMO(wmotype, dl, ws, oc, so)
             self.sf = None
             self.lnd = None
             self.external = None
-        elif model is 2:
+        elif model == 2:
             self.mm = None
             self.wmo = None
             self.sf = AEROSOLMODELS.SF(sfmodel, rh)
             self.lnd = None
             self.external = None
-        elif model is 3:
+        elif model == 3:
             self.mm = None
             self.wmo = None
             self.sf = None
             self.lnb = AEROSOLMODELS.LNB(vcdef)
             self.external = None
-        elif model is 4:
+        elif model == 4:
             self.mm = None
             self.sf = None
             self.wmo = None
@@ -1058,12 +1058,12 @@ class OSOAA(object):
         #
         sc = sc+"\n"+"-SEA.SurfAlb {} \\".format(self.sea.surfalb)
         sc = sc+"\n"+"-SEA.BotType {} \\".format(self.sea.bottype)
-        if self.sea.bottype is 1:
+        if self.sea.bottype == 1:
             sc = sc+"\n"+"-SEA.BotAlb {} \\".format(self.sea.botalb)
         #
         sc = sc+"\n"+"-OSOAA.View.Phi {} \\".format(self.view.phi)
         sc = sc+"\n"+"-OSOAA.View.Level {} \\".format(self.view.level)
-        if self.view.level is 5:
+        if self.view.level == 5:
             sc = sc+"\n"+"-OSOAA.View.Z {} \\".format(self.view.z)
             sc = sc+"\n"+"-OSOAA.ResFile.Adv.Up {} \\".format(
                 self.results.advup)
@@ -1141,7 +1141,7 @@ class OSOAA(object):
         if self.aer.aotref > 0.0:
             sc = sc+"\n"+"-AER.Model {} \\".format(self.aer.model)
         #     Aerosols parameters for mono-modal models :
-        if self.aer.model is 0:
+        if self.aer.model == 0:
             sc = sc+"\n"+"-AER.MMD.MRwa {} \\".format(self.aer.mm.mrwa)
             sc = sc+"\n"+"-AER.MMD.MIwa {} \\".format(self.aer.mm.miwa)
             if self.wa is not self.aer.waref:
@@ -1150,38 +1150,38 @@ class OSOAA(object):
                 sc = sc+"\n" + \
                     "-AER.MMD.MIwaref {} \\".format(self.aer.mm.miwaref)
             sc = sc+"\n"+"-AER.MMD.SDtype {} \\".format(self.aer.mm.sdtype)
-            if self.aer.mm.sdtype is 1:
+            if self.aer.mm.sdtype == 1:
                 sc = sc+"\n" + \
                     "-AER.MMD.LNDradius {} \\".format(self.aer.mm.sdradius)
                 sc = sc+"\n" + \
                     "-AER.MMD.LNDvar {} \\".format(self.aer.mm.sdvar)
-            elif self.aer.mm.sdtype is 2:
+            elif self.aer.mm.sdtype == 2:
                 sc = sc+"\n" + \
                     "-AER.MMD.JD.slope {} \\".format(self.aer.mm.slope)
                 sc = sc+"\n" + \
                     "-AER.MMD.JD.rmin {} \\".format(self.aer.mm.rmin)
                 sc = sc+"\n"+"-AER.MMD.JD.rmax {} \\".format(self.aer.mm.rmax)
         #     Aerosols parameters for WMO models :
-        elif self.aer.model is 1:
+        elif self.aer.model == 1:
             sc = sc+"\n"+"-AER.WMO.Model {} \\".format(self.aer.wmo.model)
-            if self.aer.wmo.model is 4:
+            if self.aer.wmo.model == 4:
                 sc = sc+"\n"+"-AER.WMO.DL {} \\".format(self.aer.wmo.dl)
                 sc = sc+"\n"+"-AER.WMO.WS {} \\".format(self.aer.wmo.ws)
                 sc = sc+"\n"+"-AER.WMO.OC {} \\".format(self.aer.wmo.oc)
                 sc = sc+"\n"+"-AER.WMO.SO {} \\".format(self.aer.wmo.so)
         #     Aerosols parameters for Shettle&Fenn models :
-        elif self.aer.model is 2:
+        elif self.aer.model == 2:
             sc = sc+"\n"+"-AER.SF.Model {} \\".format(self.aer.sf.model)
             sc = sc+"\n"+"-AER.SF.RH {} \\".format(self.aer.sf.rh)
         #     Aerosols parameters for LND bi-modal models :
-        elif self.aer.model is 3:
+        elif self.aer.model == 3:
             sc = sc+"\n"+"-AER.BMD.VCdef {} \\".format(self.aer.lnb.vcdef)
-            if self.aer.lnb.vcdef is 1:
+            if self.aer.lnb.vcdef == 1:
                 sc = sc+"\n" + \
                     "-AER.BMD.CoarseVC {} \\".format(self.aer.lnb.coarsevc)
                 sc = sc+"\n" + \
                     "-AER.BMD.FineVC {} \\".format(self.aer.lnb.finevc)
-            elif self.aer.lnb.vcdef is 2:
+            elif self.aer.lnb.vcdef == 2:
                 sc = sc+"\n"+"-AER.BMD.RAOT {} \\".format(self.aer.lnb.raot)
             sc = sc+"\n" + \
                 "-AER.BMD.CM.MRwa {} \\".format(self.aer.lnb.cmrwa)
@@ -1209,7 +1209,7 @@ class OSOAA(object):
                 "-AER.BMD.FM.SDvar {} \\".format(self.aer.lnb.fsdvar)
         #    Aerosols parameters for external data (phase functions, scattering
         #    and extinction coefficients) :
-        elif self.aer.model is 4:
+        elif self.aer.model == 4:
             sc = sc+"\n"+"-AER.ExtData {} \\".format(self.aer.extdata)
         #
         #   Hydrosols parameters :
@@ -1227,7 +1227,7 @@ class OSOAA(object):
         if self.phyto.chl > 0 or self.sed.csed > 0:
             sc = sc+"\n"+"-HYD.Model {} \\".format(self.hyd.model)
         #     Phytoplankton model :
-        if self.hyd.model is 1:
+        if self.hyd.model == 1:
             #     Junge main mode :
             if self.phyto.jd is not None:
                 sc = sc+"\n"+"-PHYTO.JD.slope {} \\".format(
@@ -1293,7 +1293,7 @@ class OSOAA(object):
                 sc = sc+"\n"+"-SED.LND.TM.rate {} \\".format(self.sed.tm.rate)
         #     Hydrosols parameters for external data (phase functions,
         #     scattering and extinction coefficients) :
-        if self.hyd.model is 2:
+        if self.hyd.model == 2:
             sc = sc+"\n"+"-HYD.ExtData {} \\".format(self.hyd.extdata)
         #
         #   Sea / atmosphere interface parameters :
