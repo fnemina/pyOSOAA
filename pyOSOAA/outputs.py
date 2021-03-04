@@ -249,6 +249,67 @@ class ADVUPDOWN(object):
                                                              skip_header=skipheader+1, unpack=True,
                                                              encoding="iso-8859-15")
 
+class ADVPHI(object):
+    """ This file provides the upwelling radiance field (i.e., the Stokes
+        paramaters I,Q,U where I is the radiance) versus the viewing zenith
+        angle and the relative azimuth angle (-OSOAA.View.Phi) for the given 
+        altitude or depth (-OSOAA.View.Z associated to -OSOAA.View.Level equals 5).
+        This ascii file is composed of a header which describes in detail
+        the structure of the file and columns data.
+        """
+
+    def __init__(self, resroot, filename):
+        """ Filename defined by -OSOAA.ResFile.Adv.Phi
+            This file provides the upwelling radiance field (i.e., the
+            Stokes paramaters I,Q,U where I is the radiance) versus the
+            viewing zenith angle and the relative azimuth angle from 0 to 360
+            with a step give by (-OSOAA.View.Phi) and for the given altitude or depth
+            (-OSOAA.View.Z associated to -OSOAA.View.Level equals 5).
+            This ascii file is composed of a header which describes in
+            detail the structure of the file and columns data.
+
+            WARNING: This only works with a modified version of the OSOAA code from
+
+                https://github.com/fnemina/RadiativeTransferCode-OSOAA
+
+            resroot     OSOAA results root directory
+            filename    Filename to look for the results.
+            fulltext    Full file text.
+            vza         Viewing Zenith Angle (deg)
+            phi         Relative Zenith Angle (deg)
+            scaang      Scattering angle (deg)
+            I           Stokes parameter at output level Z (in sr-1)
+                        normalised to the extraterrestrial solar irradiance
+                        (PI * L(z) / Esun)
+            Q           Stokes parameter at output level Z (in sr-1)
+                        normalised to the extraterrestrial solar irradiance
+                        (PI * L(z) / Esun)
+            U           Stokes parameter at output level Z (in sr-1)
+                        normalised to the extraterrestrial solar irradiance
+                        (PI * L(z) / Esun)
+            refl        Reflectance at output level Z (PI * L(z) / Ed(z))
+            polrate     Degree of polarization (%)
+            lpol        Polarized intensity at output level Z (in sr-1)
+                        normalised to the extraterrestrial solar irradiance
+                        (PI * Lpol(z) / Esun)
+            reflpol     Polarized reflectance at output level Z
+                        (PI * Lpol(z) / Ed(z))
+            """
+
+        # We open the file with the corresponding encoding and convert it
+        # to a text string.
+
+        with open(resroot+"/Advanced_outputs/"+filename,
+                  encoding="iso-8859-15") as file:
+            self.fulltext = file.readlines()
+
+        # Get header length to skip it
+        skipheader = [idx for idx, text in enumerate(self.fulltext)
+                      if "VZA    PHI" in text][0]
+        self.vza, self.phi, self.scaang, self.I, self.Q, self.U, self.refl, self.polrate, self.lpol,\
+        self.reflpol = np.genfromtxt(resroot+"/Advanced_outputs/"+filename,
+                                     skip_header=skipheader+1, unpack=True,
+                                     encoding="iso-8859-15")
 
 class PROFILE_SEA(object):
     """ This file contains the sea optical thickness vertical profile
@@ -428,17 +489,21 @@ class OUTPUTS(object):
             """
         self.vsvza = VSVZA(resroot, filenames.vsvza)
 
-        if os.path.exists(resroot+"/Standard_outputs/"+filenames.vsz):
-            if filenames.vsz is not None:
+        if filenames.vsz is not None:
+            if os.path.exists(resroot+"/Standard_outputs/"+filenames.vsz):
                 self.vsz = VSZ(resroot, filenames.vsz)
                 
-        if os.path.exists(resroot+"/Advanced_outputs/"+filenames.advup):
-            if filenames.advup is not None:
+        if filenames.advup is not None:
+            if os.path.exists(resroot+"/Advanced_outputs/"+filenames.advup):
                 self.advup = ADVUPDOWN(resroot, filenames.advup)
 
-        if os.path.exists(resroot+"/Advanced_outputs/"+filenames.advdown):
-            if filenames.advdown is not None:
+        if filenames.advdown is not None:
+            if os.path.exists(resroot+"/Advanced_outputs/"+filenames.advdown):
                 self.advdown = ADVUPDOWN(resroot, filenames.advdown)
+
+        if filenames.advphi is not None:
+            if os.path.exists(resroot+"/Advanced_outputs/"+filenames.advphi):
+                self.advphi = ADVPHI(resroot, filenames.advphi)
 
         if filenames.profilesea is None:
             self.profilesea = PROFILE_SEA(resroot)

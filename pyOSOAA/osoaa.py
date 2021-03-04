@@ -149,6 +149,15 @@ class RESULTS(object):
                     working folder) : ==> Advanced output upward radiance field
                     versus the depth (or altitude) AND versus the viewing
                     zenith angle (for the given relative azimuth angle).
+        advphi      Filename of the ascii file resulting from SOS computations
+                    (defined without directory tree ==> this file will be
+                    located in the sub-directory Advanced_outputs of the
+                    working folder) : ==> Advanced output upward radiance field
+                    versus the depth (or altitude) AND versus the viewing
+                    zenith angle AND versus the relative azimuth angle).
+                    This parameter only works with a custom OSOAA version from
+                    https://github.com/fnemina/RadiativeTransferCode-OSOAA
+                    in the branch advphi.
         vsz         Filename of the ascii file resulting from SOS computations
                     (defined without directory tree ==> this file will be
                     located in the sub-directory Standard_outputs of the
@@ -165,8 +174,9 @@ class RESULTS(object):
     angmie = None
     sosbin = None
     vsvza = None
-    advup = "resfile_advup.txt"
-    advdown = "resfile_advdown.txt"
+    advup = None
+    advdown = None
+    advphi = None
     vsz = "resfile_vsz.txt"
 
 
@@ -1063,12 +1073,14 @@ class OSOAA(object):
         #
         sc = sc+"\n"+"-OSOAA.View.Phi {} \\".format(self.view.phi)
         sc = sc+"\n"+"-OSOAA.View.Level {} \\".format(self.view.level)
+        if self.results.advup is not None:
+            sc = sc+"\n"+"-OSOAA.ResFile.Adv.Up {} \\".format(self.results.advup)
+        if self.results.advdown is not None:
+            sc = sc+"\n"+"-OSOAA.ResFile.Adv.Down {} \\".format(self.results.advdown)
+        if self.results.advphi is not None:
+            sc = sc+"\n"+"-OSOAA.ResFile.Adv.Phi {} \\".format(self.results.advphi)
         if self.view.level == 5:
             sc = sc+"\n"+"-OSOAA.View.Z {} \\".format(self.view.z)
-            sc = sc+"\n"+"-OSOAA.ResFile.Adv.Up {} \\".format(
-                self.results.advup)
-            sc = sc+"\n"+"-OSOAA.ResFile.Adv.Down {} \\".format(
-                self.results.advdown)
             sc = sc+"\n"+"-OSOAA.View.VZA {} \\".format(self.view.vza)
             sc = sc+"\n"+"-OSOAA.ResFile.vsZ  {} \\".format(self.results.vsz)
         if self.results.vsvza is not None:
