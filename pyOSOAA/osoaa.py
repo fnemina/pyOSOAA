@@ -7,6 +7,8 @@ import string
 from io import open
 from .outputs import OUTPUTS
 import hashlib
+import platform
+
 
 class SEA(object):
     """ This is the SEA class which defines the interfaces at the bottom of the
@@ -184,8 +186,8 @@ class DIRMIE(object):
     """ Directory for hydrosol MIE files storage
     """
 
-    def __init__(self, osoaaroot, hid="/DATABASE/MIE_HYD",
-                 aer="/DATABASE/MIE_AER", sea="/DATABASE/SURF_MATR"):
+    def __init__(self, osoaaroot, hid=os.path.join('DATABASE', 'MIE_HYD'),
+                 aer=os.path.join('DATABASE', 'MIE_AER'), sea=os.path.join('DATABASE', 'SURF_MATR')):
         """Directory for hydrosol MIE files storage (complete path)
             aer         Storage directory for MIE files producted by
                         OSOAA_AEROSOLS computations (complete path).
@@ -193,9 +195,9 @@ class DIRMIE(object):
                         HYDROSOLS_AEROSOLS computations (complete path).
             SEA         Directory for SURFACE files storage (complete path).
             """
-        self.hyd = osoaaroot+hid
-        self.aer = osoaaroot+aer
-        self.sea = osoaaroot+sea
+        self.hyd = os.path.join(osoaaroot, hid)
+        self.aer = os.path.join(osoaaroot, aer)
+        self.sea = os.path.join(osoaaroot, sea)
 
 
 class GP(object):
@@ -467,7 +469,7 @@ class SED(object):
         self.sm = None
         self.tm = None
 
-    def SetPrimaryMode(self, mrwa=1.2, miwa=0, slope=-4, 
+    def SetPrimaryMode(self, mrwa=1.2, miwa=0, slope=-4,
                        rmin=None, rmax=None, rate=1):
         """ Sets the primary mode using Junge's law
                 mrwa        Real part of the refractive index for mineral-like
@@ -994,12 +996,13 @@ class OSOAA(object):
             cleanup     True to delete the directories with the results. 
                         False by default.
         """
+        # Determine the type of operating system
+        self.os = platform.system()
 
         self.wa = wa
         self.root = os.getenv("OSOAA_ROOT")
-        
         if resroot is None:
-            #rnd = ''.join(random.choice(string.ascii_uppercase +
+            # rnd = ''.join(random.choice(string.ascii_uppercase +
             #                            string.ascii_lowercase +
             #                            string.digits) for _ in range(16))
             #self.resroot = self.root+"/results/"+rnd
@@ -1009,7 +1012,7 @@ class OSOAA(object):
             self.resroot = resroot
             self.customresroot = True
 
-        self.cleanup = cleanup        
+        self.cleanup = cleanup
 
         self.sea = SEA()
         self.log = LOG()
@@ -1037,12 +1040,11 @@ class OSOAA(object):
 
         if root is not None:
             self.root = root
-
-        sc = "{}/exe/OSOAA_MAIN.exe \\".format(self.root)
+        sc = os.path.join(self.root, 'exe', 'OSOAA_MAIN.exe')
         #
         #   Angles calculation parameters :
         #   --------------------------------
-        sc = sc+"\n"+"-ANG.Thetas {} \\".format(self.ang.thetas)
+        sc = sc+" \\\n"+"-ANG.Thetas {} \\".format(self.ang.thetas)
         if self.ang.rad.nbgauss is not None:
             sc = sc+"\n"+"-ANG.Rad.NbGauss {} \\".format(self.ang.rad.nbgauss)
         if self.ang.rad.userangfile is not None:
@@ -1074,11 +1076,14 @@ class OSOAA(object):
         sc = sc+"\n"+"-OSOAA.View.Phi {} \\".format(self.view.phi)
         sc = sc+"\n"+"-OSOAA.View.Level {} \\".format(self.view.level)
         if self.results.advup is not None:
-            sc = sc+"\n"+"-OSOAA.ResFile.Adv.Up {} \\".format(self.results.advup)
+            sc = sc+"\n" + \
+                "-OSOAA.ResFile.Adv.Up {} \\".format(self.results.advup)
         if self.results.advdown is not None:
-            sc = sc+"\n"+"-OSOAA.ResFile.Adv.Down {} \\".format(self.results.advdown)
+            sc = sc+"\n" + \
+                "-OSOAA.ResFile.Adv.Down {} \\".format(self.results.advdown)
         if self.results.advphi is not None:
-            sc = sc+"\n"+"-OSOAA.ResFile.Adv.Phi {} \\".format(self.results.advphi)
+            sc = sc+"\n" + \
+                "-OSOAA.ResFile.Adv.Phi {} \\".format(self.results.advphi)
         if self.view.level == 5:
             sc = sc+"\n"+"-OSOAA.View.Z {} \\".format(self.view.z)
             sc = sc+"\n"+"-OSOAA.View.VZA {} \\".format(self.view.vza)
@@ -1314,29 +1319,29 @@ class OSOAA(object):
             sc = sc+"\n"+"-SEA.Log {} \\".format(self.log.sea)
         sc = sc+"\n"+"-SEA.Dir {} \\".format(self.dirmie.sea)
         sc = sc+"\n"+"-SEA.Ind {} \\".format(self.sea.ind)
-        
+
         sc = sc+"\n"+"-SEA.Wind {} \\".format(self.sea.wind)
 
-        
         #   Definition of the working folder :
         #   ----------------------------------
         # We hash the config file to use as folder name
         if self.customresroot is False:
             hashed = hashlib.md5(sc.encode()).hexdigest()
-            self.resroot = self.root+"/results/"+hashed
+            self.resroot = os.path.join(self.root, 'results', hashed)
 
         if self.logfile is None:
             sc = sc+"\n"+"-OSOAA.ResRoot {}".format(self.resroot)
         else:
-            sc = sc+"\n"+"-OSOAA.ResRoot {} >> {}".format(self.resroot, self.logfile)
+            sc = sc+"\n" + \
+                "-OSOAA.ResRoot {} >> {}".format(self.resroot, self.logfile)
 
         # Variable to check if we have to perform the excution
-        
+
         # Check if directory exists
         # If we asked for not calculated variables, we compute them
         if not os.path.exists(self.resroot):
             os.makedirs(self.resroot)
-            forcerun = True            
+            forcerun = True
         if not os.path.exists(self.dirmie.aer):
             os.makedirs(self.dirmie.aer)
         if not os.path.exists(self.dirmie.hyd):
@@ -1344,21 +1349,30 @@ class OSOAA(object):
         if not os.path.exists(self.dirmie.sea):
             os.makedirs(self.dirmie.sea)
 
-        # We generate the script
-        with open(self.resroot+"/script.kzh", 'w') as file:
-            file.write(sc)
+        if self.os == 'Windows':
+            with open(self.resroot+"/script.bat", 'w') as file:
+                sc = sc.replace(' \\', ' ^')
+                file.write(sc)
+        else:
+            # We generate the script
+            with open(self.resroot+"/script.kzh", 'w') as file:
+                file.write(sc)
 
         # Change directory
         old_dir = os.getcwd()
         os.chdir(self.resroot)
 
-        # Run script with ksh
-        if forcerun:
-            os.system("ksh "+self.resroot+"/script.kzh")
+        if self.os == 'Windows':
+            # Run script with ksh
+            if forcerun:
+                os.system(self.resroot+"/script.bat")
+        else:
+            # Run script with ksh
+            if forcerun:
+                os.system("ksh "+self.resroot+"/script.kzh")
 
         # read OUTPUTS
         self.outputs = OUTPUTS(self.resroot, self.results)
-	
 
         # delete result file
         if self.cleanup is True:
@@ -1366,6 +1380,7 @@ class OSOAA(object):
 
         # Return to current dir
         os.chdir(old_dir)
+
 
 def test():
     s = OSOAA()

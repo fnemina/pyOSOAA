@@ -64,9 +64,11 @@ class VSVZA(object):
         # to a text string.
         if filename is None:
             filename = "LUM_vsVZA.txt"
-        with open(resroot+"/Standard_outputs/"+filename,
+
+        with open(os.path.join(resroot, 'Standard_outputs', filename),
                   encoding="iso-8859-15") as file:
             self.fulltext = file.readlines()
+
         # Read variables not tabulated
         self.vzaless = ExtractValue(self.fulltext,
                                     "for VZA < 0 (sign convention):")
@@ -77,9 +79,9 @@ class VSVZA(object):
         skipheader = [idx for idx, text in enumerate(self.fulltext)
                       if "VZA    SCA_ANG" in text][0]
         self.vza, self.scaang, self.I, self.refl, self.polrate, self.lpol,\
-        self.reflpol = np.genfromtxt(resroot+"/Standard_outputs/"+filename,
-                                     skip_header=skipheader+1, unpack=True,
-                                     encoding="iso-8859-15")
+            self.reflpol = np.genfromtxt(os.path.join(resroot, 'Standard_outputs', filename),
+                                         skip_header=skipheader+1, unpack=True,
+                                         encoding="iso-8859-15")
 
 
 class VSZ(object):
@@ -114,7 +116,7 @@ class VSZ(object):
                         (PI * Lpol(z) / Ed(z))
             """
 
-        with open(resroot+"/Standard_outputs/"+filename,
+        with open(os.path.join(resroot, 'Standard_outputs', filename),
                   encoding="iso-8859-15") as file:
             self.fulltext = file.readlines()
         # Read variables not tabulated
@@ -127,10 +129,10 @@ class VSZ(object):
         skipheader = [idx for idx, text in enumerate(self.fulltext)
                       if "       Z     SCA_ANG" in text][0]
         self.z, self.scaang, self.I, self.refl, self.polrate,\
-        self.lpol, self.reflpol = np.genfromtxt(resroot+"/Standard_outputs/"+filename,
-                                                skip_header=skipheader+1,
-                                                unpack=True,
-                                                encoding="iso-8859-15")
+            self.lpol, self.reflpol = np.genfromtxt(os.path.join(resroot, 'Standard_outputs', filename),
+                                                    skip_header=skipheader+1,
+                                                    unpack=True,
+                                                    encoding="iso-8859-15")
 
 
 class BIN(object):
@@ -158,7 +160,8 @@ class BIN(object):
                         is U(LEVEL;WAVE_NUMBER)
             """
         # We read the fortran binary file
-        with FortranFile(resroot+"/Advanced_outputs/"+filename, "r") as file:
+
+        with FortranFile(os.path.join(resroot, 'Advanced_outputs', filename), "r") as file:
             tmp = file.read_reals()
 
         # Reshape the array into 3 array for I, Q and U
@@ -232,7 +235,8 @@ class ADVUPDOWN(object):
 
         # We open the file with the corresponding encoding and convert it
         # to a text string.
-        with open(resroot+"/Advanced_outputs/"+filename,
+
+        with open(os.path.join(resroot, 'Advanced_outputs', filename),
                   encoding="iso-8859-15") as file:
             self.fulltext = file.readlines()
         # Read variables not tabulated
@@ -245,9 +249,10 @@ class ADVUPDOWN(object):
         skipheader = [idx for idx, text in enumerate(self.fulltext)
                       if "  LEVEL    Z         VZA" in text][0]
         self.level, self.z, self.vza, self.scaang, self.I, self.Q, self.U,\
-        self.polang, self.polrate, self.lpol = np.genfromtxt(resroot+"/Advanced_outputs/"+filename,
-                                                             skip_header=skipheader+1, unpack=True,
-                                                             encoding="iso-8859-15")
+            self.polang, self.polrate, self.lpol = np.genfromtxt(os.path.join(resroot, 'Advanced_outputs', filename),
+                                                                 skip_header=skipheader+1, unpack=True,
+                                                                 encoding="iso-8859-15")
+
 
 class ADVPHI(object):
     """ This file provides the upwelling radiance field (i.e., the Stokes
@@ -299,7 +304,7 @@ class ADVPHI(object):
         # We open the file with the corresponding encoding and convert it
         # to a text string.
 
-        with open(resroot+"/Advanced_outputs/"+filename,
+        with open(os.path.join(resroot, 'Advanced_outputs', filename),
                   encoding="iso-8859-15") as file:
             self.fulltext = file.readlines()
 
@@ -307,9 +312,10 @@ class ADVPHI(object):
         skipheader = [idx for idx, text in enumerate(self.fulltext)
                       if "VZA    PHI" in text][0]
         self.vza, self.phi, self.scaang, self.I, self.Q, self.U, self.refl, self.polrate, self.lpol,\
-        self.reflpol = np.genfromtxt(resroot+"/Advanced_outputs/"+filename,
-                                     skip_header=skipheader+1, unpack=True,
-                                     encoding="iso-8859-15")
+            self.reflpol = np.genfromtxt(os.path.join(resroot, 'Advanced_outputs', filename),
+                                         skip_header=skipheader+1, unpack=True,
+                                         encoding="iso-8859-15")
+
 
 class PROFILE_SEA(object):
     """ This file contains the sea optical thickness vertical profile
@@ -340,9 +346,9 @@ class PROFILE_SEA(object):
         # Get header length to skip it
         skipheader = 10
         self.level, self.z, self.tau, self.mixmol, self.mixphy,\
-        self.mixpc = np.genfromtxt(resroot+"/Advanced_outputs/"+filename,
-                                   skip_header=skipheader+1, unpack=True,
-                                   encoding="iso-8859-15")
+            self.mixpc = np.genfromtxt(os.path.join(resroot, 'Advanced_outputs', filename),
+                                       skip_header=skipheader+1, unpack=True,
+                                       encoding="iso-8859-15")
 
 
 class PROFILE_ATM(object):
@@ -370,9 +376,9 @@ class PROFILE_ATM(object):
         # Get header length to skip it
         skipheader = 9
         self.level, self.z, self.tau, self.mixaer,\
-        self.mixray = np.genfromtxt(resroot+"/Advanced_outputs/"+filename,
-                                   skip_header=skipheader+1, unpack=True,
-                                   encoding="iso-8859-15")
+            self.mixray = np.genfromtxt(os.path.join(resroot, 'Advanced_outputs', filename),
+                                        skip_header=skipheader+1, unpack=True,
+                                        encoding="iso-8859-15")
 
 
 class PM(object):
@@ -419,31 +425,32 @@ class PM(object):
             """
         # We open the file with the corresponding encoding and convert it
         # to a text string.
-        with open(resroot+"/Advanced_outputs/"+filename,
+
+        with open(os.path.join(resroot, 'Advanced_outputs', filename),
                   encoding="iso-8859-15") as file:
             self.fulltext = file.readlines()
         # Read variables not tabulated
         self.extcs = ExtractValue(self.fulltext,
-                                    "EXTINCTION CROSS SECTION (mic^2)     :")
+                                  "EXTINCTION CROSS SECTION (mic^2)     :")
         self.scacs = ExtractValue(self.fulltext,
-                                    "SCATTERING CROSS SECTION (mic^2)     :")
+                                  "SCATTERING CROSS SECTION (mic^2)     :")
         self.asymm = ExtractValue(self.fulltext,
-                                    "ASYMMETRY FACTOR (no truncation)     :")
+                                  "ASYMMETRY FACTOR (no truncation)     :")
         self.mpd = ExtractValue(self.fulltext,
-                                    "MEAN PARTICULES ALTITUDE/DEPTH (m)   :")
+                                "MEAN PARTICULES ALTITUDE/DEPTH (m)   :")
         self.vol = ExtractValue(self.fulltext,
-                                    "VOLUME OF A MEAN PARTICULE (mic^3)   :")
+                                "VOLUME OF A MEAN PARTICULE (mic^3)   :")
         self.rindex = ExtractValue(self.fulltext,
-                                    "MEAN REFRACTIVE INDEX (real part)    :")
+                                   "MEAN REFRACTIVE INDEX (real part)    :")
         self.trunca = ExtractValue(self.fulltext,
-                                    "TRUNCATION COEFFICIENT               :")
+                                   "TRUNCATION COEFFICIENT               :")
         self.singlesca = ExtractValue(self.fulltext,
-                                    "SINGLE SCATTERING ALBEDO (truncation): ")
+                                      "SINGLE SCATTERING ALBEDO (truncation): ")
 
         # Get header length to skip it
         skipheader = [idx for idx, text in enumerate(self.fulltext)
                       if "ALPHA(K)        BETA11(K)" in text][0]
-        self.alpha, self.beta, self.gamma, self.xi = np.genfromtxt(resroot+"/Advanced_outputs/"+filename,
+        self.alpha, self.beta, self.gamma, self.xi = np.genfromtxt(os.path.join(resroot, 'Advanced_outputs', filename),
                                                                    skip_header=skipheader+1, unpack=True,
                                                                    encoding="iso-8859-15")
 
@@ -473,9 +480,9 @@ class FLUX(object):
         # Get header length to skip it
         skipheader = 4
         self.level, self.z, self.Eddir, self.Eddif, self.Ed, self.Eudir,\
-        self.Eudif, self.Eu, self.ratio = np.genfromtxt(resroot+"/Advanced_outputs/"+filename,
-                                                        skip_header=skipheader+1, unpack=True,
-                                                        encoding="iso-8859-15")
+            self.Eudif, self.Eu, self.ratio = np.genfromtxt(os.path.join(resroot, 'Advanced_outputs', filename),
+                                                            skip_header=skipheader+1, unpack=True,
+                                                            encoding="iso-8859-15")
 
 
 class OUTPUTS(object):
@@ -490,19 +497,19 @@ class OUTPUTS(object):
         self.vsvza = VSVZA(resroot, filenames.vsvza)
 
         if filenames.vsz is not None:
-            if os.path.exists(resroot+"/Standard_outputs/"+filenames.vsz):
+            if os.path.exists(os.path.join(resroot, 'Standard_outputs', filenames.vsz)):
                 self.vsz = VSZ(resroot, filenames.vsz)
-                
+
         if filenames.advup is not None:
-            if os.path.exists(resroot+"/Advanced_outputs/"+filenames.advup):
+            if os.path.exists(os.path.join(resroot, 'Advanced_outputs', filenames.advup)):
                 self.advup = ADVUPDOWN(resroot, filenames.advup)
 
         if filenames.advdown is not None:
-            if os.path.exists(resroot+"/Advanced_outputs/"+filenames.advdown):
+            if os.path.exists(os.path.join(resroot, 'Advanced_outputs', filenames.advdown)):
                 self.advdown = ADVUPDOWN(resroot, filenames.advdown)
 
         if filenames.advphi is not None:
-            if os.path.exists(resroot+"/Advanced_outputs/"+filenames.advphi):
+            if os.path.exists(os.path.join(resroot, 'Advanced_outputs', filenames.advphi)):
                 self.advphi = ADVPHI(resroot, filenames.advphi)
 
         if filenames.profilesea is None:
