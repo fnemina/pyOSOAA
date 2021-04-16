@@ -237,8 +237,9 @@ class TestOSOAAClasses(unittest.TestCase):
         self.assertIsNone(pyOSOAA.RESULTS().angmie)
         self.assertIsNone(pyOSOAA.RESULTS().sosbin)
         self.assertIsNone(pyOSOAA.RESULTS().vsvza)
-        self.assertEqual(pyOSOAA.RESULTS().advup, "resfile_advup.txt")
-        self.assertEqual(pyOSOAA.RESULTS().advdown, "resfile_advdown.txt")
+        self.assertIsNone(pyOSOAA.RESULTS().advup)
+        self.assertIsNone(pyOSOAA.RESULTS().advdown)
+        self.assertIsNone(pyOSOAA.RESULTS().advphi)
         self.assertEqual(pyOSOAA.RESULTS().vsz, "resfile_vsz.txt")
         # We test different Values
         s = pyOSOAA.OSOAA()
@@ -281,9 +282,9 @@ class TestOSOAAClasses(unittest.TestCase):
                                        "test_advdown.txt"))
 
     def testDIRMIE(self):
-        self.assertEqual(pyOSOAA.DIRMIE("").hyd, "/DATABASE/MIE_HYD")
-        self.assertEqual(pyOSOAA.DIRMIE("").aer, "/DATABASE/MIE_AER")
-        self.assertEqual(pyOSOAA.DIRMIE("").sea, "/DATABASE/SURF_MATR")
+        self.assertEqual(pyOSOAA.DIRMIE("").hyd, "DATABASE/MIE_HYD")
+        self.assertEqual(pyOSOAA.DIRMIE("").aer, "DATABASE/MIE_AER")
+        self.assertEqual(pyOSOAA.DIRMIE("").sea, "DATABASE/SURF_MATR")
 
     def testGP(self):
         self.assertEqual(pyOSOAA.GP(1, 5, 2).chlbg, 1)
@@ -567,7 +568,7 @@ class TestOSOAAClasses(unittest.TestCase):
         self.assertEqual(s.wa, 0.440)
         self.assertIsNotNone(s.resroot)
         self.assertIsNotNone(s.root)
-        self.assertListEqual(list(vars(s).keys()), ["wa", "root", 
+        self.assertListEqual(list(vars(s).keys()), ["os", "wa", "root", 
                                                     "resroot", "customresroot",
                                                     "cleanup", "sea",
                                                     "log", "results",
