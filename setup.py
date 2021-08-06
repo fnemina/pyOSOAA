@@ -37,13 +37,16 @@ setup(
     name                  = "pyOSOAA",
     packages              = ['pyOSOAA'],
     install_requires      = REQS,
-    version               = "1.4",
+    version               = "1.4.post",
     author                = "Francisco Nemiña",
     author_email          = "fnemina@conae.gov.ar",
     description           = SHORT_DESCRIPTION,
     license               = "GPL-3.0",
-    url                   = "None",
+    url                   = "https://github.com/fnemina/pyOSOAA",
     long_description      = LONG_DESCRIPTION,
+    project_urls={
+        "Bug Tracker": "https://github.com/fnemina/pyOSOAA/issues",
+    },    
     classifiers           = [
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Science/Research",
