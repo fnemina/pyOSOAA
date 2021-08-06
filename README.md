@@ -25,7 +25,16 @@ The installation of the `pyOSOAA` has two parts.
 
 First, you need to install the OSOAA software package from https://github.com/CNES/RadiativeTransferCode-OSOAA.
 
-Second, you need to download the last version of the `pyOSOAA` from [github](https://github.com/fnemina/pyOSOAA/releases/latest).
+Second, install pyOSOAA. There are two ways to install pyOSOAA.
+
+### Install pyOSOAA from pypi
+
+```bash
+pip install pyOSOAA
+```
+
+### Install pyOSOAA from source code
+Download the last version of the `pyOSOAA` from [github](https://github.com/fnemina/pyOSOAA/releases/latest).
 
 Once downloaded decompress it, go to the folder containing the code and run
 
