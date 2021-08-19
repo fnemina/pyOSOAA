@@ -404,7 +404,7 @@ class SED(object):
     class JD(object):
         """ This is a Junge distribution for the different models. """
 
-        def __init__(self, mrwa, miwa, slope, rmin, rmax, rate):
+        def __init__(self, mrwa=1.15, miwa=0.0, slope=4.0, rmin=0.01, rmax=200, rate=1.0):
             """ Init function for the Junges distribution.
                 mrwa        Real part of the refractive index for mineral-like
                             particles at the simulation wavelength: main mode
@@ -465,12 +465,12 @@ class SED(object):
         """
 
         self.csed = csed
-        self.jd = None
+        self.jd = self.JD()
         self.sm = None
         self.tm = None
 
-    def SetPrimaryMode(self, mrwa=1.2, miwa=0, slope=-4,
-                       rmin=None, rmax=None, rate=1):
+    def SetPrimaryMode(self, mrwa=1.2, miwa=0, slope=4,
+                       rmin=0.01, rmax=200, rate=1):
         """ Sets the primary mode using Junge's law
                 mrwa        Real part of the refractive index for mineral-like
                             particles at the simulation wavelength: main mode
