@@ -74,9 +74,7 @@ def RunWavelengths(s, wavelengths=[0.550], angle=0, output="I", taur=False, sun=
 
     tau = {}
 
-    if type(angle) is int or type(angle) is float or type(angle) is np.float64 or type(angle) is np.int64:
-        angle = np.zeros(np.size(wavelengths))+angle
-
+    angle = np.full_like(wavelengths,angle)
     if (sun is None) and (phi is None):
         if type(taur) is np.ndarray:
             for idx, wl in np.ndenumerate(wavelengths):
