@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyOSOAA"
+version = "1.5"
+authors = [
+  { name="Francisco Nemiña", email="fnemina@conae.gov.ar" },
+]
+description = "pyOSOAA is a python interface for the Ocean Successive Orders with Atmosphere - Advanced (OSOAA) radiative transfer."
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Atmospheric Science",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/fnemina/pyOSOAA"
+"Bug Tracker" = "https://github.com/fnemina/pyOSOAA/issues"
