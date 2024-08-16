@@ -26,11 +26,7 @@ LONG_DESCRIPTION = read_file("README.md")
 SHORT_DESCRIPTION = "pyOSOAA is a python interface for the Ocean Successive"\
                     + "Orders with Atmosphere - Advanced (OSOAA)"\
                     + "radiative transfer."
-REQS = [
-    'numpy',
-    'matplotlib',
-    'scipy'
-]
+REQS = []
 
 
 setup(
