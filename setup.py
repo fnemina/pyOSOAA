@@ -37,7 +37,6 @@ setup(
     author                = "Francisco Nemiña",
     author_email          = "fnemina@conae.gov.ar",
     description           = SHORT_DESCRIPTION,
-    license               = "GPL-3.0",
     url                   = "https://github.com/fnemina/pyOSOAA",
     long_description      = LONG_DESCRIPTION,
     project_urls={
