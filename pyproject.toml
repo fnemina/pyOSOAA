@@ -1,16 +1,17 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyOSOAA"
-version = "1.5"
+version = "1.5.0"
 authors = [
-  { name="Francisco Nemiña", email="fnemina@conae.gov.ar" },
+  { name = "Francisco Nemiña", email = "fnemina@conae.gov.ar" },
 ]
 description = "pyOSOAA is a python interface for the Ocean Successive Orders with Atmosphere - Advanced (OSOAA) radiative transfer."
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.8"
+license = { file = "LICENSE" }
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Science/Research",
@@ -18,10 +19,34 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Physics",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     "Operating System :: OS Independent",
 ]
+keywords = ["radiative transfer", "OSOAA", "atmospheric science", "oceanography"]
+dependencies = [
+    "numpy>=1.21.0",
+    "scipy>=1.7.0",
+    "matplotlib>=3.4.0",
+]
 
 [project.urls]
-"Homepage" = "https://github.com/fnemina/pyOSOAA"
-"Bug Tracker" = "https://github.com/fnemina/pyOSOAA/issues"
+Homepage = "https://github.com/fnemina/pyOSOAA"
+BugTracker = "https://github.com/fnemina/pyOSOAA/issues"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=6.0",
+    "black>=22.0",
+    "flake8>=4.0",
+]
+docs = [
+    "sphinx>=4.0",
+    "sphinx-rtd-theme>=1.0",
+]
+
+[tool.setuptools.packages.find]

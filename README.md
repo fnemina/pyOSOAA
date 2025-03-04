@@ -39,7 +39,7 @@ Download the last version of the `pyOSOAA` from [github](https://github.com/fnem
 Once downloaded decompress it, go to the folder containing the code and run
 
 ```bash
-python setup.py install
+pip install .
 ```
 
 To then check that software installed correctly
