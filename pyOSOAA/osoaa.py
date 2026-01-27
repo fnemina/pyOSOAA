@@ -3,10 +3,10 @@
 import hashlib
 import os
 import platform
-import random
+import shlex
 import shutil
-import string
-from io import open
+import subprocess
+from tempfile import TemporaryDirectory
 
 from .outputs import OUTPUTS
 
@@ -1015,21 +1015,13 @@ class OSOAA(object):
         cleanup     True to delete the directories with the results.
                     False by default.
         """
+        self.salt = ''
         # Determine the type of operating system
         self.os = platform.system()
 
         self.wa = wa
         self.root = os.getenv("OSOAA_ROOT")
-        if resroot is None:
-            # rnd = ''.join(random.choice(string.ascii_uppercase +
-            #                            string.ascii_lowercase +
-            #                            string.digits) for _ in range(16))
-            # self.resroot = self.root+"/results/"+rnd
-            self.resroot = None
-            self.customresroot = False
-        else:
-            self.resroot = resroot
-            self.customresroot = True
+        self.resroot = resroot
 
         self.cleanup = cleanup
 
@@ -1049,6 +1041,257 @@ class OSOAA(object):
         self.view = VIEW()
         self.logfile = logfile
 
+    def _bake_arguments(self, resroot, fatm_null=False):
+        if fatm_null:
+            exe = "OSOAA_MAIN_FATM_NULL.exe"
+        else:
+            exe = "OSOAA_MAIN.exe"
+
+        sc = [os.path.join(self.root, "exe", exe)]
+        #
+        #   Angles calculation parameters :
+        #   --------------------------------
+        sc += ["-ANG.Thetas", str(self.ang.thetas)]
+        if self.ang.rad.nbgauss is not None:
+            sc += ["-ANG.Rad.NbGauss", str(self.ang.rad.nbgauss)]
+        if self.ang.rad.userangfile is not None:
+            sc += ["-ANG.Rad.UserAngFile", str(self.ang.rad.userangfile)]
+        if self.results.angrad is not None:
+            sc += ["-ANG.Rad.ResFile", str(self.results.angrad)]
+        if self.ang.mie.nbgauss is not None:
+            sc += ["-ANG.Mie.NbGauss", str(self.ang.mie.nbgauss)]
+        if self.ang.mie.userangfile is not None:
+            sc += ["-ANG.Mie.UserAngFile", str(self.ang.mie.userangfile)]
+        if self.results.angmie is not None:
+            sc += ["-ANG.Mie.ResFile", str(self.results.angmie)]
+        if self.log.ang is not None:
+            sc += ["-ANG.Log", str(self.log.ang)]
+        #
+        #   Radiance calculation parameters :
+        #   --------------------------------
+        if self.log.osoaa is not None:
+            sc += ["-OSOAA.Log", str(self.log.osoaa)]
+        sc += ["-OSOAA.Wa", str(self.wa)]
+        #
+        sc += ["-SEA.SurfAlb", str(self.sea.surfalb)]
+        sc += ["-SEA.BotType", str(self.sea.bottype)]
+        if self.sea.bottype == 1:
+            sc += ["-SEA.BotAlb", str(self.sea.botalb)]
+        #
+        sc += ["-OSOAA.View.Phi", str(self.view.phi)]
+        sc += ["-OSOAA.View.Level", str(self.view.level)]
+        if self.results.advup is not None:
+            sc += ["-OSOAA.ResFile.Adv.Up", str(self.results.advup)]
+        if self.results.advdown is not None:
+            sc += ["-OSOAA.ResFile.Adv.Down", str(self.results.advdown)]
+        if self.results.advphi is not None:
+            sc += ["-OSOAA.ResFile.Adv.Phi", str(self.results.advphi)]
+        if self.view.level == 5:
+            sc += ["-OSOAA.View.Z", str(self.view.z)]
+            sc += ["-OSOAA.View.VZA", str(self.view.vza)]
+            sc += ["-OSOAA.ResFile.vsZ", str(self.results.vsz)]
+        if self.results.vsvza is not None:
+            sc += ["-OSOAA.ResFile.vsVZA", str(self.results.vsvza)]
+        #
+        if self.log.sos is not None:
+            sc += ["-SOS.Log", str(self.log.sos)]
+        if self.sos.igmax is not None:
+            sc += ["-SOS.IGmax", str(self.sos.igmax)]
+        if self.results.sosbin is not None:
+            sc += ["-SOS.ResFile.Bin", str(self.results.sosbin)]
+        #
+        #   Profile parameters :
+        #   -------------------
+        if self.log.profile is not None:
+            sc += ["-PROFILE.Log", str(self.log.profile)]
+        #
+        #     Atmospheric Profile parameters
+        if self.results.profileatm is not None:
+            sc += ["-PROFILE_ATM.ResFile", str(self.results.profileatm)]
+        if self.ap.mot is not None:
+            sc += ["-AP.MOT", str(self.ap.mot)]
+        sc += ["-AP.HR", str(self.ap.hr)]
+        if self.ap.pressure is not None:
+            sc += ["-AP.Pressure", str(self.ap.pressure)]
+        sc += ["-AP.HA", str(self.ap.ha)]
+        #
+        #     Sea Profile parameters
+        if self.results.profilesea is not None:
+            sc += ["-PROFILE_SEA.ResFile", str(self.results.profilesea)]
+        if self.sea.depth is not None:
+            sc += ["-SEA.Depth", str(self.sea.depth)]
+        sc += ["-PHYTO.Chl", str(self.phyto.chl)]
+        if self.phyto.chl >= 0:
+            sc += ["-PHYTO.ProfilType", str(self.phyto.profiltype)]
+        if self.phyto.profiltype == 2:
+            sc += ["-PHYTO.GP.Chlbg", str(self.phyto.gp.chlbg)]
+            sc += ["-PHYTO.GP.Deep", str(self.phyto.gp.deep)]
+            sc += ["-PHYTO.GP.Width", str(self.phyto.gp.width)]
+        if self.phyto.profiltype == 3:
+            sc += ["-PHYTO.Userfile", str(self.phyto.usefile)]
+        sc += ["-SED.Csed", str(self.sed.csed)]
+        sc += ["-YS.Abs440", str(self.ys.abs440)]
+        if self.ys.abs440 > 0:
+            if self.ys.swa is not None:
+                sc += ["-YS.Swa", str(self.ys.swa)]
+        sc += ["-DET.Abs440", str(self.det.abs440)]
+        if self.det.abs440 > 0:
+            if self.det.swa is not None:
+                sc += ["-DET.Swa", str(self.det.swa)]
+        #
+        #   Aerosols parameters :
+        #   ---------------------
+        if self.results.aer is not None:
+            sc += ["-AER.ResFile", str(self.results.aer)]
+        if self.log.aer is not None:
+            sc += ["-AER.Log", str(self.log.aer)]
+        if self.aer.aotref >= 0.0:
+            # FIXME
+            sc += ["-AER.DirMie", str(self.dirmie.aer)]
+        if self.log.aermie is not None:
+            sc += ["-AER.MieLog", str(self.log.aermie)]
+        sc += ["-AER.Waref", str(self.aer.waref)]
+        sc += ["-AER.AOTref", str(self.aer.aotref)]
+        if self.aer.tronca is not None:
+            sc += ["-AER.Tronca", str(self.aer.tronca)]
+        if self.aer.aotref > 0.0:
+            sc += ["-AER.Model", str(self.aer.model)]
+        #     Aerosols parameters for mono-modal models :
+        if self.aer.model == 0:
+            sc += ["-AER.MMD.MRwa", str(self.aer.mm.mrwa)]
+            sc += ["-AER.MMD.MIwa", str(self.aer.mm.miwa)]
+            if self.wa is not self.aer.waref:
+                sc += ["-AER.MMD.MRwaref", str(self.aer.mm.mrwaref)]
+                sc += ["-AER.MMD.MIwaref", str(self.aer.mm.miwaref)]
+            sc += ["-AER.MMD.SDtype", str(self.aer.mm.sdtype)]
+            if self.aer.mm.sdtype == 1:
+                sc += ["-AER.MMD.LNDradius", str(self.aer.mm.sdradius)]
+                sc += ["-AER.MMD.LNDvar", str(self.aer.mm.sdvar)]
+            elif self.aer.mm.sdtype == 2:
+                sc += ["-AER.MMD.JD.slope", str(self.aer.mm.slope)]
+                sc += ["-AER.MMD.JD.rmin", str(self.aer.mm.rmin)]
+                sc += ["-AER.MMD.JD.rmax", str(self.aer.mm.rmax)]
+        #     Aerosols parameters for WMO models :
+        elif self.aer.model == 1:
+            sc += ["-AER.WMO.Model", str(self.aer.wmo.model)]
+            if self.aer.wmo.model == 4:
+                sc += ["-AER.WMO.DL", str(self.aer.wmo.dl)]
+                sc += ["-AER.WMO.WS", str(self.aer.wmo.ws)]
+                sc += ["-AER.WMO.OC", str(self.aer.wmo.oc)]
+                sc += ["-AER.WMO.SO", str(self.aer.wmo.so)]
+        #     Aerosols parameters for Shettle&Fenn models :
+        elif self.aer.model == 2:
+            sc += ["-AER.SF.Model", str(self.aer.sf.model)]
+            sc += ["-AER.SF.RH", str(self.aer.sf.rh)]
+        #     Aerosols parameters for LND bi-modal models :
+        elif self.aer.model == 3:
+            sc += ["-AER.BMD.VCdef", str(self.aer.lnb.vcdef)]
+            if self.aer.lnb.vcdef == 1:
+                sc += ["-AER.BMD.CoarseVC", str(self.aer.lnb.coarsevc)]
+                sc += ["-AER.BMD.FineVC", str(self.aer.lnb.finevc)]
+            elif self.aer.lnb.vcdef == 2:
+                sc += ["-AER.BMD.RAOT", str(self.aer.lnb.raot)]
+            sc += ["-AER.BMD.CM.MRwa", str(self.aer.lnb.cmrwa)]
+            sc += ["-AER.BMD.CM.MIwa", str(self.aer.lnb.cmiwa)]
+            sc += ["-AER.BMD.CM.MRwaref", str(self.aer.lnb.cmrwaref)]
+            sc += ["-AER.BMD.CM.MIwaref", str(self.aer.lnb.cmiwaref)]
+            sc += ["-AER.BMD.CM.SDradius", str(self.aer.lnb.csdradius)]
+            sc += ["-AER.BMD.CM.SDvar", str(self.aer.lnb.csdvar)]
+            sc += ["-AER.BMD.FM.MRwa", str(self.aer.lnb.fmrwa)]
+            sc += ["-AER.BMD.FM.MIwa", str(self.aer.lnb.fmiwa)]
+            sc += ["-AER.BMD.FM.MRwaref", str(self.aer.lnb.fmrwaref)]
+            sc += ["-AER.BMD.FM.MIwaref", str(self.aer.lnb.fmiwaref)]
+            sc += ["-AER.BMD.FM.SDradius", str(self.aer.lnb.fsdradius)]
+            sc += ["-AER.BMD.FM.SDvar", str(self.aer.lnb.fsdvar)]
+        #    Aerosols parameters for external data (phase functions, scattering
+        #    and extinction coefficients) :
+        elif self.aer.model == 4:
+            sc += ["-AER.ExtData", str(self.aer.extdata)]
+        #
+        #   Hydrosols parameters :
+        #   ---------------------
+        if self.results.phyto is not None:
+            sc += ["-PHYTO.ResFile", str(self.results.phyto)]
+        if self.results.mlp is not None:
+            sc += ["-MLP.ResFile", str(self.results.mlp)]
+        if self.log.hyd is not None:
+            sc += ["-HYD.Log", str(self.log.hyd)]
+        if self.phyto.chl > 0 or self.sed.csed > 0:
+            sc += ["-HYD.DirMie", str(self.dirmie.hyd)]
+        if self.log.hydmie is not None:
+            sc += ["-HYD.MieLog", str(self.log.hydmie)]
+        if self.phyto.chl > 0 or self.sed.csed > 0:
+            sc += ["-HYD.Model", str(self.hyd.model)]
+        #     Phytoplankton model :
+        if self.hyd.model == 1:
+            #     Junge main mode :
+            if self.phyto.jd is not None:
+                sc += ["-PHYTO.JD.slope", str(self.phyto.jd.slope)]
+                sc += ["-PHYTO.JD.rmin", str(self.phyto.jd.rmin)]
+                sc += ["-PHYTO.JD.rmax", str(self.phyto.jd.rmax)]
+                sc += ["-PHYTO.JD.MRwa", str(self.phyto.jd.mrwa)]
+                sc += ["-PHYTO.JD.MIwa", str(self.phyto.jd.miwa)]
+                sc += ["-PHYTO.JD.rate", str(self.phyto.jd.rate)]
+            #     Secondary LND mode :
+            if self.phyto.sm is not None:
+                sc += ["-PHYTO.LND.SM.SDradius", str(self.phyto.sm.sdradius)]
+                sc += ["-PHYTO.LND.SM.SDvar", str(self.phyto.sm.sdvar)]
+                sc += ["-PHYTO.LND.SM.MRwa", str(self.phyto.sm.mrwa)]
+                sc += ["-PHYTO.LND.SM.MIwa", str(self.phyto.sm.miwa)]
+                sc += ["-PHYTO.LND.SM.rate", str(self.phyto.sm.rate)]
+            #     Tertiary LND mode :"
+            if self.phyto.tm is not None:
+                sc += ["-PHYTO.LND.TM.SDradius", str(self.phyto.tm.sdradius)]
+                sc += ["-PHYTO.LND.TM.SDvar", str(self.phyto.tm.sdvar)]
+                sc += ["-PHYTO.LND.TM.MRwa", str(self.phyto.tm.mrwa)]
+                sc += ["-PHYTO.LND.TM.MIwa", str(self.phyto.tm.miwa)]
+                sc += ["-PHYTO.LND.TM.rate", str(self.phyto.tm.rate)]
+        if self.sed.csed > 0.0:
+            #     Mineral-like particles model :
+            #     Junge main mode :
+            if self.sed.jd is not None:
+                sc += ["-SED.JD.slope", str(self.sed.jd.slope)]
+                if self.sed.jd.rmin is not None:
+                    sc += ["-SED.JD.rmin", str(self.sed.jd.rmin)]
+                if self.sed.jd.rmax is not None:
+                    sc += ["-SED.JD.rmax", str(self.sed.jd.rmax)]
+                sc += ["-SED.JD.MRwa", str(self.sed.jd.mrwa)]
+                sc += ["-SED.JD.MIwa", str(self.sed.jd.miwa)]
+                sc += ["-SED.JD.rate", str(self.sed.jd.rate)]
+            #     Secondary LND mode :
+            if self.sed.sm is not None:
+                sc += ["-SED.LND.SM.SDradius", str(self.sed.sm.sdradius)]
+                sc += ["-SED.LND.SM.SDvar", str(self.sed.sm.sdvar)]
+                sc += ["-SED.LND.SM.MRwa", str(self.sed.sm.mrwa)]
+                sc += ["-SED.LND.SM.MIwa", str(self.sed.sm.miwa)]
+                sc += ["-SED.LND.SM.rate", str(self.sed.sm.rate)]
+            #     Tertiary LND mode :
+            if self.sed.tm is not None:
+                sc += ["-SED.LND.TM.SDradius", str(self.sed.tm.sdradius)]
+                sc += ["-SED.LND.TM.SDvar", str(self.sed.tm.sdvar)]
+                sc += ["-SED.LND.TM.MRwa", str(self.sed.tm.mrwa)]
+                sc += ["-SED.LND.TM.MIwa", str(self.sed.tm.miwa)]
+                sc += ["-SED.LND.TM.rate", str(self.sed.tm.rate)]
+        #     Hydrosols parameters for external data (phase functions,
+        #     scattering and extinction coefficients) :
+        if self.hyd.model == 2:
+            sc += ["-HYD.ExtData", str(self.hyd.extdata)]
+        #
+        #   Sea / atmosphere interface parameters :
+        #   --------------------------------------
+        if self.log.sea is not None:
+            sc += ["-SEA.Log", str(self.log.sea)]
+        sc += ["-SEA.Dir", str(self.dirmie.sea)]
+        sc += ["-SEA.Ind", str(self.sea.ind)]
+
+        sc += ["-SEA.Wind", str(self.sea.wind)]
+
+        key = hashlib.sha1(shlex.join(sc).encode()).hexdigest()
+
+        sc += ["-OSOAA.ResRoot", str(resroot)]
+
+        return key, sc
+
     def run(self, root=None, forcerun=False, fatm_null=False):
         """Run OSOAA. If no root directory is given for OSOAA the one
         configured by the system is used.
@@ -1062,300 +1305,10 @@ class OSOAA(object):
         if root is not None:
             self.root = root
 
-        if fatm_null:
-            exe = "OSOAA_MAIN_FATM_NULL.exe"
-        else:
-            exe = "OSOAA_MAIN.exe"
+        if self.root is None:
+            raise Exception(...)
 
-        sc = os.path.join(self.root, "exe", exe)
-        #
-        #   Angles calculation parameters :
-        #   --------------------------------
-        sc = sc + " \\\n" + "-ANG.Thetas {} \\".format(self.ang.thetas)
-        if self.ang.rad.nbgauss is not None:
-            sc = sc + "\n" + "-ANG.Rad.NbGauss {} \\".format(self.ang.rad.nbgauss)
-        if self.ang.rad.userangfile is not None:
-            sc = (
-                sc
-                + "\n"
-                + "-ANG.Rad.UserAngFile {} \\".format(self.ang.rad.userangfile)
-            )
-        if self.results.angrad is not None:
-            sc = sc + "\n" + "-ANG.Rad.ResFile {} \\".format(self.results.angrad)
-        if self.ang.mie.nbgauss is not None:
-            sc = sc + "\n" + "-ANG.Mie.NbGauss {} \\".format(self.ang.mie.nbgauss)
-        if self.ang.mie.userangfile is not None:
-            sc = (
-                sc
-                + "\n"
-                + "-ANG.Mie.UserAngFile {} \\".format(self.ang.mie.userangfile)
-            )
-        if self.results.angmie is not None:
-            sc = sc + "\n" + "-ANG.Mie.ResFile {} \\".format(self.results.angmie)
-        if self.log.ang is not None:
-            sc = sc + "\n" + "-ANG.Log {} \\".format(self.log.ang)
-        #
-        #   Radiance calculation parameters :
-        #   --------------------------------
-        if self.log.osoaa is not None:
-            sc = sc + "\n" + "-OSOAA.Log {} \\".format(self.log.osoaa)
-        sc = sc + "\n" + "-OSOAA.Wa  {} \\".format(self.wa)
-        #
-        sc = sc + "\n" + "-SEA.SurfAlb {} \\".format(self.sea.surfalb)
-        sc = sc + "\n" + "-SEA.BotType {} \\".format(self.sea.bottype)
-        if self.sea.bottype == 1:
-            sc = sc + "\n" + "-SEA.BotAlb {} \\".format(self.sea.botalb)
-        #
-        sc = sc + "\n" + "-OSOAA.View.Phi {} \\".format(self.view.phi)
-        sc = sc + "\n" + "-OSOAA.View.Level {} \\".format(self.view.level)
-        if self.results.advup is not None:
-            sc = sc + "\n" + "-OSOAA.ResFile.Adv.Up {} \\".format(self.results.advup)
-        if self.results.advdown is not None:
-            sc = (
-                sc + "\n" + "-OSOAA.ResFile.Adv.Down {} \\".format(self.results.advdown)
-            )
-        if self.results.advphi is not None:
-            sc = sc + "\n" + "-OSOAA.ResFile.Adv.Phi {} \\".format(self.results.advphi)
-        if self.view.level == 5:
-            sc = sc + "\n" + "-OSOAA.View.Z {} \\".format(self.view.z)
-            sc = sc + "\n" + "-OSOAA.View.VZA {} \\".format(self.view.vza)
-            sc = sc + "\n" + "-OSOAA.ResFile.vsZ  {} \\".format(self.results.vsz)
-        if self.results.vsvza is not None:
-            sc = sc + "\n" + "-OSOAA.ResFile.vsVZA {} \\".format(self.results.vsvza)
-        #
-        if self.log.sos is not None:
-            sc = sc + "\n" + "-SOS.Log {} \\".format(self.log.sos)
-        if self.sos.igmax is not None:
-            sc = sc + "\n" + "-SOS.IGmax {} \\".format(self.sos.igmax)
-        if self.results.sosbin is not None:
-            sc = sc + "\n" + "-SOS.ResFile.Bin {} \\".format(self.results.sosbin)
-        #
-        #   Profile parameters :
-        #   -------------------
-        if self.log.profile is not None:
-            sc = sc + "\n" + "-PROFILE.Log {} \\".format(self.log.profile)
-        #
-        #     Atmospheric Profile parameters
-        if self.results.profileatm is not None:
-            sc = (
-                sc + "\n" + "-PROFILE_ATM.ResFile {} \\".format(self.results.profileatm)
-            )
-        if self.ap.mot is not None:
-            sc = sc + "\n" + "-AP.MOT {} \\".format(self.ap.mot)
-        sc = sc + "\n" + "-AP.HR {} \\".format(self.ap.hr)
-        if self.ap.pressure is not None:
-            sc = sc + "\n" + "-AP.Pressure {} \\".format(self.ap.pressure)
-        sc = sc + "\n" + "-AP.HA {} \\".format(self.ap.ha)
-        #
-        #     Sea Profile parameters
-        if self.results.profilesea is not None:
-            sc = (
-                sc + "\n" + "-PROFILE_SEA.ResFile {} \\".format(self.results.profilesea)
-            )
-        if self.sea.depth is not None:
-            sc = sc + "\n" + "-SEA.Depth {} \\".format(self.sea.depth)
-        sc = sc + "\n" + "-PHYTO.Chl {} \\".format(self.phyto.chl)
-        if self.phyto.chl >= 0:
-            sc = sc + "\n" + "-PHYTO.ProfilType {} \\".format(self.phyto.profiltype)
-        if self.phyto.profiltype == 2:
-            sc = sc + "\n" + "-PHYTO.GP.Chlbg {} \\".format(self.phyto.gp.chlbg)
-            sc = sc + "\n" + "-PHYTO.GP.Deep {} \\".format(self.phyto.gp.deep)
-            sc = sc + "\n" + "-PHYTO.GP.Width {} \\".format(self.phyto.gp.width)
-        if self.phyto.profiltype == 3:
-            sc = sc + "\n" + "-PHYTO.Userfile {} \\".format(self.phyto.usefile)
-        sc = sc + "\n" + "-SED.Csed {} \\".format(self.sed.csed)
-        sc = sc + "\n" + "-YS.Abs440 {} \\".format(self.ys.abs440)
-        if self.ys.abs440 > 0:
-            if self.ys.swa is not None:
-                sc = sc + "\n" + "-YS.Swa {} \\".format(self.ys.swa)
-        sc = sc + "\n" + "-DET.Abs440 {} \\".format(self.det.abs440)
-        if self.det.abs440 > 0:
-            if self.det.swa is not None:
-                sc = sc + "\n" + "-DET.Swa {} \\".format(self.det.swa)
-        #
-        #   Aerosols parameters :
-        #   ---------------------
-        if self.results.aer is not None:
-            sc = sc + "\n" + "-AER.ResFile {} \\".format(self.results.aer)
-        if self.log.aer is not None:
-            sc = sc + "\n" + "-AER.Log {} \\".format(self.log.aer)
-        if self.aer.aotref >= 0.0:
-            sc = sc + "\n" + "-AER.DirMie  {} \\".format(self.dirmie.aer)
-        if self.log.aermie is not None:
-            sc = sc + "\n" + "-AER.MieLog {} \\".format(self.log.aermie)
-        sc = sc + "\n" + "-AER.Waref  {} \\".format(self.aer.waref)
-        sc = sc + "\n" + "-AER.AOTref {} \\".format(self.aer.aotref)
-        if self.aer.tronca is not None:
-            sc = sc + "\n" + "-AER.Tronca {} \\".format(self.aer.tronca)
-        if self.aer.aotref > 0.0:
-            sc = sc + "\n" + "-AER.Model {} \\".format(self.aer.model)
-        #     Aerosols parameters for mono-modal models :
-        if self.aer.model == 0:
-            sc = sc + "\n" + "-AER.MMD.MRwa {} \\".format(self.aer.mm.mrwa)
-            sc = sc + "\n" + "-AER.MMD.MIwa {} \\".format(self.aer.mm.miwa)
-            if self.wa is not self.aer.waref:
-                sc = sc + "\n" + "-AER.MMD.MRwaref {} \\".format(self.aer.mm.mrwaref)
-                sc = sc + "\n" + "-AER.MMD.MIwaref {} \\".format(self.aer.mm.miwaref)
-            sc = sc + "\n" + "-AER.MMD.SDtype {} \\".format(self.aer.mm.sdtype)
-            if self.aer.mm.sdtype == 1:
-                sc = sc + "\n" + "-AER.MMD.LNDradius {} \\".format(self.aer.mm.sdradius)
-                sc = sc + "\n" + "-AER.MMD.LNDvar {} \\".format(self.aer.mm.sdvar)
-            elif self.aer.mm.sdtype == 2:
-                sc = sc + "\n" + "-AER.MMD.JD.slope {} \\".format(self.aer.mm.slope)
-                sc = sc + "\n" + "-AER.MMD.JD.rmin {} \\".format(self.aer.mm.rmin)
-                sc = sc + "\n" + "-AER.MMD.JD.rmax {} \\".format(self.aer.mm.rmax)
-        #     Aerosols parameters for WMO models :
-        elif self.aer.model == 1:
-            sc = sc + "\n" + "-AER.WMO.Model {} \\".format(self.aer.wmo.model)
-            if self.aer.wmo.model == 4:
-                sc = sc + "\n" + "-AER.WMO.DL {} \\".format(self.aer.wmo.dl)
-                sc = sc + "\n" + "-AER.WMO.WS {} \\".format(self.aer.wmo.ws)
-                sc = sc + "\n" + "-AER.WMO.OC {} \\".format(self.aer.wmo.oc)
-                sc = sc + "\n" + "-AER.WMO.SO {} \\".format(self.aer.wmo.so)
-        #     Aerosols parameters for Shettle&Fenn models :
-        elif self.aer.model == 2:
-            sc = sc + "\n" + "-AER.SF.Model {} \\".format(self.aer.sf.model)
-            sc = sc + "\n" + "-AER.SF.RH {} \\".format(self.aer.sf.rh)
-        #     Aerosols parameters for LND bi-modal models :
-        elif self.aer.model == 3:
-            sc = sc + "\n" + "-AER.BMD.VCdef {} \\".format(self.aer.lnb.vcdef)
-            if self.aer.lnb.vcdef == 1:
-                sc = sc + "\n" + "-AER.BMD.CoarseVC {} \\".format(self.aer.lnb.coarsevc)
-                sc = sc + "\n" + "-AER.BMD.FineVC {} \\".format(self.aer.lnb.finevc)
-            elif self.aer.lnb.vcdef == 2:
-                sc = sc + "\n" + "-AER.BMD.RAOT {} \\".format(self.aer.lnb.raot)
-            sc = sc + "\n" + "-AER.BMD.CM.MRwa {} \\".format(self.aer.lnb.cmrwa)
-            sc = sc + "\n" + "-AER.BMD.CM.MIwa {} \\".format(self.aer.lnb.cmiwa)
-            sc = sc + "\n" + "-AER.BMD.CM.MRwaref {} \\".format(self.aer.lnb.cmrwaref)
-            sc = sc + "\n" + "-AER.BMD.CM.MIwaref {} \\".format(self.aer.lnb.cmiwaref)
-            sc = sc + "\n" + "-AER.BMD.CM.SDradius {} \\".format(self.aer.lnb.csdradius)
-            sc = sc + "\n" + "-AER.BMD.CM.SDvar {} \\".format(self.aer.lnb.csdvar)
-            sc = sc + "\n" + "-AER.BMD.FM.MRwa {} \\".format(self.aer.lnb.fmrwa)
-            sc = sc + "\n" + "-AER.BMD.FM.MIwa {} \\".format(self.aer.lnb.fmiwa)
-            sc = sc + "\n" + "-AER.BMD.FM.MRwaref {} \\".format(self.aer.lnb.fmrwaref)
-            sc = sc + "\n" + "-AER.BMD.FM.MIwaref {} \\".format(self.aer.lnb.fmiwaref)
-            sc = sc + "\n" + "-AER.BMD.FM.SDradius {} \\".format(self.aer.lnb.fsdradius)
-            sc = sc + "\n" + "-AER.BMD.FM.SDvar {} \\".format(self.aer.lnb.fsdvar)
-        #    Aerosols parameters for external data (phase functions, scattering
-        #    and extinction coefficients) :
-        elif self.aer.model == 4:
-            sc = sc + "\n" + "-AER.ExtData {} \\".format(self.aer.extdata)
-        #
-        #   Hydrosols parameters :
-        #   ---------------------
-        if self.results.phyto is not None:
-            sc = sc + "\n" + "-PHYTO.ResFile {} \\".format(self.results.phyto)
-        if self.results.mlp is not None:
-            sc = sc + "\n" + "-MLP.ResFile {} \\".format(self.results.mlp)
-        if self.log.hyd is not None:
-            sc = sc + "\n" + "-HYD.Log {} \\".format(self.log.hyd)
-        if self.phyto.chl > 0 or self.sed.csed > 0:
-            sc = sc + "\n" + "-HYD.DirMie {} \\".format(self.dirmie.hyd)
-        if self.log.hydmie is not None:
-            sc = sc + "\n" + "-HYD.MieLog {} \\".format(self.log.hydmie)
-        if self.phyto.chl > 0 or self.sed.csed > 0:
-            sc = sc + "\n" + "-HYD.Model {} \\".format(self.hyd.model)
-        #     Phytoplankton model :
-        if self.hyd.model == 1:
-            #     Junge main mode :
-            if self.phyto.jd is not None:
-                sc = sc + "\n" + "-PHYTO.JD.slope {} \\".format(self.phyto.jd.slope)
-                sc = sc + "\n" + "-PHYTO.JD.rmin {} \\".format(self.phyto.jd.rmin)
-                sc = sc + "\n" + "-PHYTO.JD.rmax {} \\".format(self.phyto.jd.rmax)
-                sc = sc + "\n" + "-PHYTO.JD.MRwa {} \\".format(self.phyto.jd.mrwa)
-                sc = sc + "\n" + "-PHYTO.JD.MIwa {} \\".format(self.phyto.jd.miwa)
-                sc = sc + "\n" + "-PHYTO.JD.rate {} \\".format(self.phyto.jd.rate)
-            #     Secondary LND mode :
-            if self.phyto.sm is not None:
-                sc = (
-                    sc
-                    + "\n"
-                    + "-PHYTO.LND.SM.SDradius {} \\".format(self.phyto.sm.sdradius)
-                )
-                sc = sc + "\n" + "-PHYTO.LND.SM.SDvar {} \\".format(self.phyto.sm.sdvar)
-                sc = sc + "\n" + "-PHYTO.LND.SM.MRwa {} \\".format(self.phyto.sm.mrwa)
-                sc = sc + "\n" + "-PHYTO.LND.SM.MIwa {} \\".format(self.phyto.sm.miwa)
-                sc = sc + "\n" + "-PHYTO.LND.SM.rate {} \\".format(self.phyto.sm.rate)
-            #     Tertiary LND mode :"
-            if self.phyto.tm is not None:
-                sc = (
-                    sc
-                    + "\n"
-                    + "-PHYTO.LND.TM.SDradius {} \\".format(self.phyto.tm.sdradius)
-                )
-                sc = sc + "\n" + "-PHYTO.LND.TM.SDvar {} \\".format(self.phyto.tm.sdvar)
-                sc = sc + "\n" + "-PHYTO.LND.TM.MRwa {} \\".format(self.phyto.tm.mrwa)
-                sc = sc + "\n" + "-PHYTO.LND.TM.MIwa {} \\".format(self.phyto.tm.miwa)
-                sc = sc + "\n" + "-PHYTO.LND.TM.rate {} \\".format(self.phyto.tm.rate)
-        if self.sed.csed > 0.0:
-            #     Mineral-like particles model :
-            #     Junge main mode :
-            if self.sed.jd is not None:
-                sc = sc + "\n" + "-SED.JD.slope {} \\".format(self.sed.jd.slope)
-                if self.sed.jd.rmin is not None:
-                    sc = sc + "\n" + "-SED.JD.rmin {} \\".format(self.sed.jd.rmin)
-                if self.sed.jd.rmax is not None:
-                    sc = sc + "\n" + "-SED.JD.rmax {} \\".format(self.sed.jd.rmax)
-                sc = sc + "\n" + "-SED.JD.MRwa {} \\".format(self.sed.jd.mrwa)
-                sc = sc + "\n" + "-SED.JD.MIwa {} \\".format(self.sed.jd.miwa)
-                sc = sc + "\n" + "-SED.JD.rate {} \\".format(self.sed.jd.rate)
-            #     Secondary LND mode :
-            if self.sed.sm is not None:
-                sc = (
-                    sc
-                    + "\n"
-                    + "-SED.LND.SM.SDradius {} \\".format(self.sed.sm.sdradius)
-                )
-                sc = sc + "\n" + "-SED.LND.SM.SDvar {} \\".format(self.sed.sm.sdvar)
-                sc = sc + "\n" + "-SED.LND.SM.MRwa {} \\".format(self.sed.sm.mrwa)
-                sc = sc + "\n" + "-SED.LND.SM.MIwa {} \\".format(self.sed.sm.miwa)
-                sc = sc + "\n" + "-SED.LND.SM.rate {} \\".format(self.sed.sm.rate)
-            #     Tertiary LND mode :
-            if self.sed.tm is not None:
-                sc = (
-                    sc
-                    + "\n"
-                    + "-SED.LND.TM.SDradius {} \\".format(self.sed.tm.sdradius)
-                )
-                sc = sc + "\n" + "-SED.LND.TM.SDvar {} \\".format(self.sed.tm.sdvar)
-                sc = sc + "\n" + "-SED.LND.TM.MRwa {} \\".format(self.sed.tm.mrwa)
-                sc = sc + "\n" + "-SED.LND.TM.MIwa {} \\".format(self.sed.tm.miwa)
-                sc = sc + "\n" + "-SED.LND.TM.rate {} \\".format(self.sed.tm.rate)
-        #     Hydrosols parameters for external data (phase functions,
-        #     scattering and extinction coefficients) :
-        if self.hyd.model == 2:
-            sc = sc + "\n" + "-HYD.ExtData {} \\".format(self.hyd.extdata)
-        #
-        #   Sea / atmosphere interface parameters :
-        #   --------------------------------------
-        if self.log.sea is not None:
-            sc = sc + "\n" + "-SEA.Log {} \\".format(self.log.sea)
-        sc = sc + "\n" + "-SEA.Dir {} \\".format(self.dirmie.sea)
-        sc = sc + "\n" + "-SEA.Ind {} \\".format(self.sea.ind)
-
-        sc = sc + "\n" + "-SEA.Wind {} \\".format(self.sea.wind)
-
-        #   Definition of the working folder :
-        #   ----------------------------------
-        # We hash the config file to use as folder name
-        if self.customresroot is False:
-            hashed = hashlib.md5(sc.encode()).hexdigest()
-            self.resroot = os.path.join(self.root, "results", hashed)
-
-        if self.logfile is None:
-            sc = sc + "\n" + "-OSOAA.ResRoot {}".format(self.resroot)
-        else:
-            sc = (
-                sc + "\n" + "-OSOAA.ResRoot {} >> {}".format(self.resroot, self.logfile)
-            )
-
-        # Variable to check if we have to perform the excution
-
-        # Check if directory exists
-        # If we asked for not calculated variables, we compute them
-        if not os.path.exists(self.resroot):
-            os.makedirs(self.resroot)
-            forcerun = True
+        # XXX
         if not os.path.exists(self.dirmie.aer):
             os.makedirs(self.dirmie.aer)
         if not os.path.exists(self.dirmie.hyd):
@@ -1363,37 +1316,31 @@ class OSOAA(object):
         if not os.path.exists(self.dirmie.sea):
             os.makedirs(self.dirmie.sea)
 
-        if self.os == "Windows":
-            with open(self.resroot + "/script.bat", "w") as file:
-                sc = sc.replace(" \\", " ^")
-                file.write(sc)
-        else:
-            # We generate the script
-            with open(self.resroot + "/script.kzh", "w") as file:
-                file.write(sc)
+        with TemporaryDirectory() as temp_dir:
+            key, sc = self._bake_arguments(resroot=temp_dir, fatm_null=fatm_null)
+            # print(sc)
 
-        # Change directory
-        old_dir = os.getcwd()
-        os.chdir(self.resroot)
+            perm_dir = self.resroot or os.path.join(self.root, "results", key)
+            if os.path.exists(perm_dir):
+                if not forcerun:
+                    self.outputs = OUTPUTS(perm_dir, self.results)
+                    return
+                else:
+                    shutil.rmtree(perm_dir)
 
-        if self.os == "Windows":
-            # Run script with ksh
-            if forcerun:
-                os.system(self.resroot + "/script.bat")
-        else:
-            # Run script with ksh
-            if forcerun:
-                os.system("ksh " + self.resroot + "/script.kzh")
+            r = subprocess.run(sc, cwd=temp_dir, capture_output=True)
 
-        # read OUTPUTS
-        self.outputs = OUTPUTS(self.resroot, self.results)
+            if r.returncode or r.stderr:
+                raise Exception(f'OSOAA finished with code {r.returncode}: {r.stderr} {r.stdout}')
 
-        # delete result file
-        if self.cleanup is True:
-            shutil.rmtree(self.resroot)
+            if self.logfile is not None:
+                with open(self.logfile, 'wb') as logfile:
+                    logfile.write(r.stdout)
 
-        # Return to current dir
-        os.chdir(old_dir)
+            self.outputs = OUTPUTS(temp_dir, self.results)
+
+            if not self.cleanup:
+                shutil.copytree(temp_dir, perm_dir)
 
 
 def test():
